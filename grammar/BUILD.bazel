@@ -19,5 +19,5 @@ go_test(
     name = "grammar_test",
     srcs = ["grammar_test.go"],
     embed = [":grammar"],
-    deps = ["@com_github_smartystreets_goconvey//convey"],
+    deps = ["@com_github_stretchr_testify//assert"],
 )

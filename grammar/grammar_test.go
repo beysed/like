@@ -7,6 +7,7 @@ import (
 )
 
 func TestHelloName(t *testing.T) {
-
-	assert.Equal(t, true, true)
+	r, e := Parse("example.like", []byte("hell"))
+	t.Log(r)
+	assert.Equal(t, true, e == nil)
 }

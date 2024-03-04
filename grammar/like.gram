@@ -1,0 +1,8 @@
+{
+package grammar;
+
+}
+
+a=[0-9];
+p=a / b;
+

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+genrule(
+    name = "generate",
+    srcs = ["like.gram"],
+    outs = ["parser.go"],
+    cmd = "go generate ./grammar && cp ./grammar/parser.go $@",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "grammar",
+    srcs = ["grammar.go", "//grammar:generate"],
+    importpath = "like/grammar",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "grammar_test",
+    srcs = ["grammar_test.go"],
+    embed = [":grammar"],
+    deps = ["@com_github_smartystreets_goconvey//convey"],
+)

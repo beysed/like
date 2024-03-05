@@ -60,20 +60,53 @@ func TestGrammar(t *testing.T) {
 
 var _ = Describe("Grammar", func() {
 	It("Parses_Empty ", func() {
-		_, e := Parse("a.like", []byte(""))
+		_, e := Parse("a.like", text(""))
 		Expect(e).To(BeNil())
 	})
 
-	DescribeTable("Parses_Comments",
-		func(a TestEntry) {
-			actual, err := Parse("a.like", text(a.input), Entrypoint("comment"))
-			Expect(err).To(BeNil())
-			Expect(actual.(string)).To(Equal(a.expected))
-		},
+	var parseInput = func(input string, rule string, expected string) {
+		actual, err := Parse("a.like", text(input), Entrypoint(rule))
+		Expect(err).To(BeNil())
+		Expect(actual.(string)).To(Equal(expected))
+	}
 
-		Entry("empty comment", NewTestEntry("#", "#")),
-		Entry("ordinal comment", NewTestEntry("#asd", "#asd")),
-		Entry("comment after directive", NewTestEntry("// include file #asd", "#asd")))
+	var parse = func(rule string) func(TestEntry) {
+		return func(a TestEntry) {
+			parseInput(a.input, rule, a.expected)
+		}
+	}
+
+	var same = func(s string) TableEntry {
+		return Entry(s, NewTestEntry(s, s))
+	}
+
+	It("Parses q ", func() {
+		parseInput("asd.my", "unquotedString", "asd.my")
+	})
+
+	It("Parses include q ", func() {
+		parseInput("asd.my", "include", "asd.my")
+	})
+
+	DescribeTable("Parses comment", parse("comment"),
+		same("#"),
+		same("#asd"))
+
+	DescribeTable("Parses unquotedString", parse("unquotedString"),
+		same("asd.my"))
+
+	DescribeTable("Parses string param", parse("stringParam"),
+		same("asd.my"),
+		same("'asd.my'"),
+		same("\"asd.my\""))
+
+	DescribeTable("Parses_Line",
+		parse("line"),
+		Entry("include: file param", NewTestEntry("include a", "include a")),
+		Entry("include: quoted string", NewTestEntry("include 'a'", "include 'a'")),
+		Entry("include: file param comment", NewTestEntry("include a", "#")),
+		Entry("include: quoted string comment", NewTestEntry("include a", "#")),
+		Entry("include: quoted string space comment", NewTestEntry("include a", "#")))
 })
 
 type TestEntry struct {

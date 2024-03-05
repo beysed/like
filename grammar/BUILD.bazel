@@ -1,4 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+#load("///ginkgo.bzl", "ginkgo_test")
+#use_extension("///ginkgo.bzl", "my_custom_rule")
+#load("@///ginkgo.bzl", "ginkgo_test")
 
 genrule(
     name = "generate",
@@ -19,5 +22,16 @@ go_test(
     name = "grammar_test",
     srcs = ["grammar_test.go"],
     embed = [":grammar"],
-    deps = ["@com_github_stretchr_testify//assert"],
+    deps = [
+        "@com_github_onsi_ginkgo_v2//:go_default_library",
+        "@com_github_onsi_gomega//:go_default_library",
+    ],
 )
+
+# ginkgo_test(
+#     name = "grammar_test_ginkgo",
+#     #args = [...],
+#     #data = [...],
+#     ginkgo_args = ["-p"],
+#     go_test = ":exp_test",
+# )

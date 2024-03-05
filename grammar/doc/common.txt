@@ -1,0 +1,12 @@
+// {contexts d=docker m=mariadb t=dev}
+// {d.exec -t $t.db.docker} {m.backup target:/var/lib/mysql/backup db:$t.db.name by:$t.db.user pwd:$t.db.pwd}
+
+# comment
+
+-- sources.like
+// sources docker=docker-like mariadb=mysql-like y=yaml-like}
+
+-- back-db.like
+// include sources.like
+// contexts exec=docker.exec("-t") backup=mariadb.backup env=y("env.yaml" "dev")
+>> exec env.docker backup(db:env.db by:env.user pwd:env.pwd to:env.backup_older

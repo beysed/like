@@ -2,7 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 genrule(
     name = "generate",
-    srcs = ["like.gram"],
+    srcs = ["like.peggy"],
     outs = ["parser.go"],
     cmd = "go generate ./grammar && cp ./grammar/parser.go $@",
     visibility = ["//visibility:public"],

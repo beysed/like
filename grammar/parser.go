@@ -20,34 +20,452 @@ import (
 var g = &grammar{
 	rules: []*rule{
 		{
-			name: "a",
-			pos:  position{line: 6, col: 1, offset: 28},
-			expr: &charClassMatcher{
-				pos:        position{line: 6, col: 3, offset: 30},
-				val:        "[0-9]",
-				ranges:     []rune{'0', '9'},
-				ignoreCase: false,
-				inverted:   false,
+			name: "file",
+			pos:  position{line: 5, col: 1, offset: 28},
+			expr: &zeroOrMoreExpr{
+				pos: position{line: 5, col: 8, offset: 35},
+				expr: &ruleRefExpr{
+					pos:  position{line: 5, col: 8, offset: 35},
+					name: "line",
+				},
 			},
 		},
 		{
-			name: "p",
-			pos:  position{line: 7, col: 1, offset: 38},
+			name: "ws",
+			pos:  position{line: 7, col: 1, offset: 45},
 			expr: &choiceExpr{
-				pos: position{line: 7, col: 3, offset: 40},
+				pos: position{line: 7, col: 6, offset: 50},
 				alternatives: []any{
-					&ruleRefExpr{
-						pos:  position{line: 7, col: 3, offset: 40},
-						name: "a",
+					&litMatcher{
+						pos:        position{line: 7, col: 6, offset: 50},
+						val:        " ",
+						ignoreCase: false,
+						want:       "\" \"",
 					},
-					&ruleRefExpr{
-						pos:  position{line: 7, col: 7, offset: 44},
-						name: "b",
+					&litMatcher{
+						pos:        position{line: 7, col: 12, offset: 56},
+						val:        "\t",
+						ignoreCase: false,
+						want:       "\"\\t\"",
 					},
 				},
 			},
 		},
+		{
+			name: "eol",
+			pos:  position{line: 8, col: 1, offset: 63},
+			expr: &choiceExpr{
+				pos: position{line: 8, col: 7, offset: 69},
+				alternatives: []any{
+					&seqExpr{
+						pos: position{line: 8, col: 8, offset: 70},
+						exprs: []any{
+							&zeroOrOneExpr{
+								pos: position{line: 8, col: 8, offset: 70},
+								expr: &litMatcher{
+									pos:        position{line: 8, col: 8, offset: 70},
+									val:        "\r",
+									ignoreCase: false,
+									want:       "\"\\r\"",
+								},
+							},
+							&litMatcher{
+								pos:        position{line: 8, col: 14, offset: 76},
+								val:        "\n",
+								ignoreCase: false,
+								want:       "\"\\n\"",
+							},
+						},
+					},
+					&litMatcher{
+						pos:        position{line: 8, col: 22, offset: 84},
+						val:        "\r",
+						ignoreCase: false,
+						want:       "\"\\r\"",
+					},
+				},
+			},
+		},
+		{
+			name: "line",
+			pos:  position{line: 10, col: 1, offset: 93},
+			expr: &seqExpr{
+				pos: position{line: 10, col: 8, offset: 100},
+				exprs: []any{
+					&choiceExpr{
+						pos: position{line: 10, col: 9, offset: 101},
+						alternatives: []any{
+							&ruleRefExpr{
+								pos:  position{line: 10, col: 9, offset: 101},
+								name: "comment",
+							},
+							&seqExpr{
+								pos: position{line: 10, col: 19, offset: 111},
+								exprs: []any{
+									&ruleRefExpr{
+										pos:  position{line: 10, col: 19, offset: 111},
+										name: "code",
+									},
+									&zeroOrOneExpr{
+										pos: position{line: 10, col: 24, offset: 116},
+										expr: &ruleRefExpr{
+											pos:  position{line: 10, col: 24, offset: 116},
+											name: "comment",
+										},
+									},
+								},
+							},
+						},
+					},
+					&choiceExpr{
+						pos: position{line: 10, col: 35, offset: 127},
+						alternatives: []any{
+							&ruleRefExpr{
+								pos:  position{line: 10, col: 35, offset: 127},
+								name: "eol",
+							},
+							&ruleRefExpr{
+								pos:  position{line: 10, col: 41, offset: 133},
+								name: "eof",
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "comment",
+			pos:  position{line: 12, col: 1, offset: 142},
+			expr: &actionExpr{
+				pos: position{line: 12, col: 11, offset: 152},
+				run: (*parser).calloncomment1,
+				expr: &seqExpr{
+					pos: position{line: 12, col: 11, offset: 152},
+					exprs: []any{
+						&litMatcher{
+							pos:        position{line: 12, col: 11, offset: 152},
+							val:        "#",
+							ignoreCase: false,
+							want:       "\"#\"",
+						},
+						&zeroOrMoreExpr{
+							pos: position{line: 12, col: 15, offset: 156},
+							expr: &seqExpr{
+								pos: position{line: 12, col: 16, offset: 157},
+								exprs: []any{
+									&ruleRefExpr{
+										pos:  position{line: 12, col: 16, offset: 157},
+										name: "any",
+									},
+									&notExpr{
+										pos: position{line: 12, col: 20, offset: 161},
+										expr: &ruleRefExpr{
+											pos:  position{line: 12, col: 21, offset: 162},
+											name: "eol",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "code",
+			pos:  position{line: 13, col: 1, offset: 201},
+			expr: &choiceExpr{
+				pos: position{line: 13, col: 8, offset: 208},
+				alternatives: []any{
+					&ruleRefExpr{
+						pos:  position{line: 13, col: 8, offset: 208},
+						name: "out",
+					},
+					&ruleRefExpr{
+						pos:  position{line: 13, col: 14, offset: 214},
+						name: "command",
+					},
+				},
+			},
+		},
+		{
+			name: "command",
+			pos:  position{line: 15, col: 1, offset: 226},
+			expr: &seqExpr{
+				pos: position{line: 15, col: 11, offset: 236},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 15, col: 11, offset: 236},
+						val:        "// ",
+						ignoreCase: false,
+						want:       "\"// \"",
+					},
+					&choiceExpr{
+						pos: position{line: 15, col: 18, offset: 243},
+						alternatives: []any{
+							&ruleRefExpr{
+								pos:  position{line: 15, col: 18, offset: 243},
+								name: "include",
+							},
+							&ruleRefExpr{
+								pos:  position{line: 15, col: 28, offset: 253},
+								name: "context",
+							},
+							&ruleRefExpr{
+								pos:  position{line: 15, col: 38, offset: 263},
+								name: "source",
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "include",
+			pos:  position{line: 16, col: 1, offset: 273},
+			expr: &seqExpr{
+				pos: position{line: 16, col: 11, offset: 283},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 16, col: 11, offset: 283},
+						val:        "include",
+						ignoreCase: false,
+						want:       "\"include\"",
+					},
+					&oneOrMoreExpr{
+						pos: position{line: 16, col: 21, offset: 293},
+						expr: &ruleRefExpr{
+							pos:  position{line: 16, col: 21, offset: 293},
+							name: "ws",
+						},
+					},
+					&ruleRefExpr{
+						pos:  position{line: 16, col: 25, offset: 297},
+						name: "fileName",
+					},
+				},
+			},
+		},
+		{
+			name: "context",
+			pos:  position{line: 17, col: 1, offset: 308},
+			expr: &seqExpr{
+				pos: position{line: 17, col: 11, offset: 318},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 17, col: 11, offset: 318},
+						val:        "context",
+						ignoreCase: false,
+						want:       "\"context\"",
+					},
+					&zeroOrOneExpr{
+						pos: position{line: 17, col: 21, offset: 328},
+						expr: &litMatcher{
+							pos:        position{line: 17, col: 21, offset: 328},
+							val:        "s",
+							ignoreCase: false,
+							want:       "\"s\"",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "source",
+			pos:  position{line: 18, col: 1, offset: 335},
+			expr: &seqExpr{
+				pos: position{line: 18, col: 10, offset: 344},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 18, col: 10, offset: 344},
+						val:        "source",
+						ignoreCase: false,
+						want:       "\"source\"",
+					},
+					&zeroOrOneExpr{
+						pos: position{line: 18, col: 19, offset: 353},
+						expr: &litMatcher{
+							pos:        position{line: 18, col: 19, offset: 353},
+							val:        "s",
+							ignoreCase: false,
+							want:       "\"s\"",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "fileName",
+			pos:  position{line: 20, col: 1, offset: 362},
+			expr: &ruleRefExpr{
+				pos:  position{line: 20, col: 10, offset: 371},
+				name: "stringParam",
+			},
+		},
+		{
+			name: "stringParam",
+			pos:  position{line: 21, col: 1, offset: 384},
+			expr: &choiceExpr{
+				pos: position{line: 21, col: 15, offset: 398},
+				alternatives: []any{
+					&ruleRefExpr{
+						pos:  position{line: 21, col: 15, offset: 398},
+						name: "quotedString",
+					},
+					&ruleRefExpr{
+						pos:  position{line: 21, col: 30, offset: 413},
+						name: "unquotedString",
+					},
+				},
+			},
+		},
+		{
+			name: "quotedString",
+			pos:  position{line: 22, col: 1, offset: 430},
+			expr: &choiceExpr{
+				pos: position{line: 22, col: 16, offset: 445},
+				alternatives: []any{
+					&ruleRefExpr{
+						pos:  position{line: 22, col: 16, offset: 445},
+						name: "singleQuotedString",
+					},
+					&ruleRefExpr{
+						pos:  position{line: 22, col: 37, offset: 466},
+						name: "doubleQuotedString",
+					},
+				},
+			},
+		},
+		{
+			name: "singleQuotedString",
+			pos:  position{line: 23, col: 1, offset: 487},
+			expr: &seqExpr{
+				pos: position{line: 23, col: 22, offset: 508},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 23, col: 22, offset: 508},
+						val:        "'",
+						ignoreCase: false,
+						want:       "\"'\"",
+					},
+					&notExpr{
+						pos: position{line: 23, col: 26, offset: 512},
+						expr: &zeroOrMoreExpr{
+							pos: position{line: 23, col: 27, offset: 513},
+							expr: &litMatcher{
+								pos:        position{line: 23, col: 27, offset: 513},
+								val:        "'",
+								ignoreCase: false,
+								want:       "\"'\"",
+							},
+						},
+					},
+					&litMatcher{
+						pos:        position{line: 23, col: 32, offset: 518},
+						val:        "'",
+						ignoreCase: false,
+						want:       "\"'\"",
+					},
+				},
+			},
+		},
+		{
+			name: "doubleQuotedString",
+			pos:  position{line: 24, col: 1, offset: 524},
+			expr: &seqExpr{
+				pos: position{line: 24, col: 22, offset: 545},
+				exprs: []any{
+					&litMatcher{
+						pos:        position{line: 24, col: 22, offset: 545},
+						val:        "\"",
+						ignoreCase: false,
+						want:       "\"\\\"\"",
+					},
+					&notExpr{
+						pos: position{line: 24, col: 26, offset: 549},
+						expr: &zeroOrMoreExpr{
+							pos: position{line: 24, col: 27, offset: 550},
+							expr: &litMatcher{
+								pos:        position{line: 24, col: 27, offset: 550},
+								val:        "\"",
+								ignoreCase: false,
+								want:       "\"\\\"\"",
+							},
+						},
+					},
+					&litMatcher{
+						pos:        position{line: 24, col: 32, offset: 555},
+						val:        "\"",
+						ignoreCase: false,
+						want:       "\"\\\"\"",
+					},
+				},
+			},
+		},
+		{
+			name: "unquotedString",
+			pos:  position{line: 25, col: 1, offset: 561},
+			expr: &choiceExpr{
+				pos: position{line: 25, col: 18, offset: 578},
+				alternatives: []any{
+					&notExpr{
+						pos: position{line: 25, col: 18, offset: 578},
+						expr: &oneOrMoreExpr{
+							pos: position{line: 25, col: 19, offset: 579},
+							expr: &ruleRefExpr{
+								pos:  position{line: 25, col: 19, offset: 579},
+								name: "ws",
+							},
+						},
+					},
+					&notExpr{
+						pos: position{line: 25, col: 25, offset: 585},
+						expr: &ruleRefExpr{
+							pos:  position{line: 25, col: 26, offset: 586},
+							name: "eol",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "out",
+			pos:  position{line: 27, col: 1, offset: 594},
+			expr: &litMatcher{
+				pos:        position{line: 27, col: 7, offset: 600},
+				val:        ">> ",
+				ignoreCase: false,
+				want:       "\">> \"",
+			},
+		},
+		{
+			name: "any",
+			pos:  position{line: 29, col: 1, offset: 609},
+			expr: &anyMatcher{
+				line: 29, col: 7, offset: 615,
+			},
+		},
+		{
+			name: "eof",
+			pos:  position{line: 30, col: 1, offset: 618},
+			expr: &notExpr{
+				pos: position{line: 30, col: 7, offset: 624},
+				expr: &anyMatcher{
+					line: 30, col: 8, offset: 625,
+				},
+			},
+		},
 	},
+}
+
+func (c *current) oncomment1() (any, error) {
+	return string(c.text), nil
+}
+
+func (p *parser) calloncomment1() (any, error) {
+	stack := p.vstack[len(p.vstack)-1]
+	_ = stack
+	return p.cur.oncomment1()
 }
 
 var (

@@ -1,21 +1,16 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
-#load("///ginkgo.bzl", "ginkgo_test")
-#use_extension("///ginkgo.bzl", "my_custom_rule")
-#load("@///ginkgo.bzl", "ginkgo_test")
-
-genrule(
-    name = "generate",
-    srcs = ["like.peggy"],
-    outs = ["parser.go"],
-    cmd = "go generate ./grammar && cp ./grammar/parser.go $@",
-    visibility = ["//visibility:public"],
-)
+load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 
 go_library(
     name = "grammar",
-    srcs = ["grammar.go", "//grammar:generate"],
+    srcs = [
+        "grammar.go",
+        "grammar_types.go",
+        "parser.go",
+    ],
     importpath = "like/grammar",
     visibility = ["//visibility:public"],
+    deps = ["@com_github_samber_lo//:lo"],
 )
 
 go_test(
@@ -23,15 +18,7 @@ go_test(
     srcs = ["grammar_test.go"],
     embed = [":grammar"],
     deps = [
-        "@com_github_onsi_ginkgo_v2//:go_default_library",
-        "@com_github_onsi_gomega//:go_default_library",
+        "@com_github_onsi_ginkgo_v2//:ginkgo",
+        "@com_github_onsi_gomega//:gomega",
     ],
 )
-
-# ginkgo_test(
-#     name = "grammar_test_ginkgo",
-#     #args = [...],
-#     #data = [...],
-#     ginkgo_args = ["-p"],
-#     go_test = ":exp_test",
-# )

@@ -55,65 +55,92 @@ func (lst *errList) String() string {
 
 func TestGrammar(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Grammar Suite")
+	RunSpecs(t, "Grammar")
 }
 
 var _ = Describe("Grammar", func() {
-	It("Parses_Empty ", func() {
+	It("Parses: empty ", func() {
 		_, e := Parse("a.like", text(""))
 		Expect(e).To(BeNil())
 	})
 
-	var parseInput = func(input string, rule string, expected string) {
-		actual, err := Parse("a.like", text(input), Entrypoint(rule))
+	var parse = func(input string, entrypoint string, debug bool) any {
+		result, err := Parse("a.like", text(input), Entrypoint(entrypoint), Debug(debug))
 		Expect(err).To(BeNil())
-		Expect(actual.(string)).To(Equal(expected))
+		return result
 	}
 
-	var parse = func(rule string) func(TestEntry) {
-		return func(a TestEntry) {
-			parseInput(a.input, rule, a.expected)
-		}
-	}
+	DescribeTable("Parses: correct indentifiers", func(input string, expected string) {
+		actual := parse(input, "identifier", false)
 
-	var same = func(s string) TableEntry {
-		return Entry(s, NewTestEntry(s, s))
-	}
+		Expect(actual).To(BeAssignableToTypeOf(""))
+		result := actual.(string)
 
-	It("Parses q ", func() {
-		parseInput("asd.my", "unquotedString", "asd.my")
-	})
+		Expect(result).To(Equal(expected))
+	},
+		Entry("single", "a", "a"),
+		Entry("multuple", "Aa", "Aa"))
 
-	It("Parses include q ", func() {
-		parseInput("asd.my", "include", "asd.my")
-	})
+	DescribeTable("Parses: include directive", func(input string, fn string) {
+		var actual = parse(input, "directive", false)
 
-	DescribeTable("Parses comment", parse("comment"),
-		same("#"),
-		same("#asd"))
+		Expect(actual).To(BeAssignableToTypeOf(Include{}))
+		result := actual.(Include)
 
-	DescribeTable("Parses unquotedString", parse("unquotedString"),
-		same("asd.my"))
+		Expect(result.fileName).To(Equal(fn))
+	},
+		Entry("unquoted", "// include asd", "asd"),
+		Entry("unquoted comment", "// include asd#comment", "asd"),
+		Entry("unquoted comment space", "// include asd #comment", "asd"),
+		Entry("single quoted", "// include 'asd'", "'asd'"),
+		Entry("double quoted", "// include \"asd\"", "\"asd\""))
 
-	DescribeTable("Parses string param", parse("stringParam"),
-		same("asd.my"),
-		same("'asd.my'"),
-		same("\"asd.my\""))
+	DescribeTable("Parses: value / array_access", func(input string) {
+		var actual = parse(input, "array_access", false)
 
-	DescribeTable("Parses_Line",
-		parse("line"),
-		Entry("include: file param", NewTestEntry("include a", "include a")),
-		Entry("include: quoted string", NewTestEntry("include 'a'", "include 'a'")),
-		Entry("include: file param comment", NewTestEntry("include a", "#")),
-		Entry("include: quoted string comment", NewTestEntry("include a", "#")),
-		Entry("include: quoted string space comment", NewTestEntry("include a", "#")))
+		Expect(actual).To(BeAssignableToTypeOf(ArrayAccess{}))
+		result := actual.(ArrayAccess)
+		Expect(result.String()).To(Equal(input))
+	},
+		Entry("simple no index", "a"),
+		Entry("double index", "a[0][1]"),
+		Entry("single index", "a[0]"))
+
+	DescribeTable("Parses: value", func(input string) {
+		var actual = parse(input, "value", false)
+
+		Expect(actual).To(BeAssignableToTypeOf(Value{}))
+		result := actual.(Value)
+		Expect(result.String()).To(Equal(input))
+	},
+		Entry("simple value", "a"),
+		Entry("prefixed value", "$a"))
+
+	DescribeTable("Parses: comment", func(input string, expected string) {
+		var actual = parse(input, "comment", false)
+
+		Expect(actual).To(BeAssignableToTypeOf(""))
+		result := actual.(string)
+		Expect(result).To(Equal(expected))
+	},
+		Entry("empty", "#", "#"),
+		Entry("comment", "#asd", "#asd"))
+
+	DescribeTable("Parses: assign", func(input string, indentifier string, source string) {
+		var actual = parse(input, "assign", false)
+
+		Expect(actual).To(BeAssignableToTypeOf(Assign{}))
+		result := actual.(Assign)
+		Expect(result.identifier).To(Equal(indentifier))
+		Expect(stringify(result.source)).To(Equal(source))
+	},
+		Entry("simple a", "a = a", "a", "a"),
+		Entry("simple b", "a = b", "a", "b"),
+		Entry("simple b int", "a = 10", "a", "10"),
+		//Entry("dd", "exec=docker.exec(\"-t\")", "dd", "docker.exec(\"-t\")"),
+		Entry("array int", "a = a[0]", "a", "a[0]"),
+		Entry("array string index", "a = a['asd']", "a", "a['asd']"),
+		Entry("array string string index", "a = 'a'['asd']", "a", "'a'['asd']"),
+		Entry("array int int", "a = a[0][1]", "a", "a[0][1]"),
+		Entry("array string string", "a = 'asd'['def']", "a", "'asd'['def']"))
 })
-
-type TestEntry struct {
-	input    string
-	expected string
-}
-
-func NewTestEntry(input, expected string) TestEntry {
-	return TestEntry{input, expected}
-}

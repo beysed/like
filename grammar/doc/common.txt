@@ -6,7 +6,26 @@
 -- sources.like
 // sources docker=docker-like mariadb=mysql-like y=yaml-like}
 
+-- template.like
+`` create(table length)
+` CREATE TABLE $table
+
 -- back-db.like
 // include sources.like
+// include template.like
 // contexts exec=docker.exec("-t") backup=mariadb.backup env=y("env.yaml" "dev")
->> exec env.docker backup(db:env.db by:env.user pwd:env.pwd to:env.backup_older
+`` exec(command ...)
+` $command $...
+// contexts exec=$exec(docker -t $y.docker) backup=mariadb.backup env=y("env.yaml" "dev")
+> $exec env.docker backup(db:env.db by:env.user pwd:env.pwd to:env.backup_older
+
+
+-- simple.like
+
+# run docker 
+// sources y=yaml-like(dev.yaml) j=json-like(j.json) i=env-like(e.env)
+// var user=y.user docker=y.
+`` func(users)
+` for(user of users) {
+` }
+

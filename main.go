@@ -5,7 +5,14 @@ import (
 	"like/grammar"
 )
 
+type A struct {
+	my string
+}
+
 func main() {
+	a := A{my: "a"}
+	fmt.Println(a.my)
+
 	res, err := grammar.Parse("exmample.like", []byte("hello"))
 
 	fmt.Printf("Hello, World\n")

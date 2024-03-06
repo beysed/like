@@ -91,15 +91,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_mod",
     importpath = "golang.org/x/mod",
-    sum = "h1:SernR4v+D55NyBH2QiEQrlBAnj1ECL6AGrA5+dPaMY8=",
-    version = "v0.15.0",
+    sum = "h1:QX4fJ0Rr5cPQCF7O9lh9Se4pmwfwskqZfq5moyldzic=",
+    version = "v0.16.0",
 )
 
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:AQyQV4dYCvJ7vGmJyKki9+PBdyvhkSd8EIx/qb0AYv4=",
-    version = "v0.21.0",
+    sum = "h1:9sGLhx7iRIHEiX0oAJ3MRZMUCElJgy7Br1nO+AMN3Tc=",
+    version = "v0.22.0",
 )
 
 go_repository(
@@ -119,8 +119,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_tools",
     importpath = "golang.org/x/tools",
-    sum = "h1:k8NLag8AGHnn+PHbl7g43CtqZAwG60vZkLqgyZgIHgQ=",
-    version = "v0.18.0",
+    sum = "h1:tfGCXNR1OsFG+sVdLAitlpjAvD/I6dHDKnYrpEZUHkw=",
+    version = "v0.19.0",
 )
 
 go_repository(
@@ -252,15 +252,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_crypto",
     importpath = "golang.org/x/crypto",
-    sum = "h1:ENy+Az/9Y1vSrlrvBSyna3PITt4tiZLf7sgCjZBX7Wo=",
-    version = "v0.19.0",
+    sum = "h1:X31++rzVUdKhX5sWmSOFZxx8UW/ldWx55cbf08iNAMA=",
+    version = "v0.21.0",
 )
 
 go_repository(
     name = "org_golang_x_term",
     importpath = "golang.org/x/term",
-    sum = "h1:mkTF7LCd6WGJNL3K1Ad7kwxNfYAW6a8a8QqtMblp/4U=",
-    version = "v0.17.0",
+    sum = "h1:FcHjZXDMxI8mM3nwhX9HlKop4C0YQvCVCdwYl2wOtE8=",
+    version = "v0.18.0",
 )
 
 go_repository(
@@ -301,8 +301,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_telemetry",
     importpath = "golang.org/x/telemetry",
-    sum = "h1:+Kc94D8UVEVxJnLXp/+FMfqQARZtWHfVrcRtcG8aT3g=",
-    version = "v0.0.0-20240208230135-b75ee8823808",
+    sum = "h1:IRJeR9r1pYWsHKTRe/IInb7lYvbBVIqOgsX/u0mbOWY=",
+    version = "v0.0.0-20240228155512-f48c80bd79b2",
+)
+
+go_repository(
+    name = "com_github_mna_pigeon",
+    importpath = "github.com/mna/pigeon",
+    sum = "h1:m5FxEbGdQxLaiHF+QurbWUAjmRqd5cstjIPN89svYgg=",
+    version = "v1.2.1",
 )
 
 go_rules_dependencies()

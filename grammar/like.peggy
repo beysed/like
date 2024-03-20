@@ -32,26 +32,28 @@ identifier_start = [A-Za-z_]
 
 integer = [0-9]+ { return string(c.text), nil }
 
-value_prefix = "$" { return string(c.text), nil }
-value = _v:value_prefix? _i:(identifier/integer/quotedString) { 
+value = _i:(identifier/integer/quotedString) { 
   // value
-  return Value{ prefix: castify(_v, ""), identifier: _i.(string)}, nil 
+  return Value{ value: _i.(string) }, nil 
 }
 
-array_access = _a:(value) _i:('[' _i:(value) ']' { return _i, nil } )* { 
-  // array_access
-  return ArrayAccess{value: _a.(Value), indexes : valueArray(_i)}, nil 
+index = '[' value ']'
+memeber_list = identifier index* ('.' memeber_list)*;
+reference = '$' ( ( '(' memeber_list ')' ) / memeber_list );
+
+call_argument_list = _f:reference _r:(ws+ _a:reference { return _a, nil })* { 
+  return append([]IndexedAccess{_f.(IndexedAccess)}, arrayify[IndexedAccess](_r)...), nil 
 }
 
-assign = _i:identifier ws* "=" ws* _f:array_access _r:('.' _a:array_access { return _a, nil })* 
+call = _i:identifier "(" _m:call_argument_list? ")"
+
+assign = _i:identifier ws* "=" ws* _m:memeber_list 
 { 
-  
   return Assign{ 
     identifier: castify(_i, ""), 
-    source: append([]ArrayAccess{_f.(ArrayAccess)}, arrayify[ArrayAccess](_r)...) }, nil 
+    source: _m.([]IndexedAccess), }, nil 
 }
 
-expression = assign
 any = .
 eof = !.
 

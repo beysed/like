@@ -22,10 +22,22 @@
 
 -- simple.like
 
+#
 # run docker 
-// sources y=yaml-like(dev.yaml) j=json-like(j.json) i=env-like(e.env)
-// var user=y.user docker=y.
-`` func(users)
-` for(user of users) {
-` }
+#
 
+| include: my.live
+| source: y=yq(dev.yaml sd)
+| file=config.yaml
+| user=y.user docker=
+| service="$(y[0].user)_svc"
+
+`` template: user name age
+` table head
+` %each user of $users
+`   $user.name $user.age
+` %each parent of $user.parents
+` %if a == 1 
+` 
+
+> $template(Ivan Stukov 42)

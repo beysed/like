@@ -95,11 +95,11 @@ var _ = Describe("Grammar", func() {
 		Entry("single quoted", "// include 'asd'", "'asd'"),
 		Entry("double quoted", "// include \"asd\"", "\"asd\""))
 
-	DescribeTable("Parses: value / array_access", func(input string) {
-		var actual = parse(input, "array_access", false)
+	DescribeTable("Parses: value / memeber_list", func(input string) {
+		var actual = parse(input, "memeber_list", false)
 
-		Expect(actual).To(BeAssignableToTypeOf(ArrayAccess{}))
-		result := actual.(ArrayAccess)
+		Expect(actual).To(BeAssignableToTypeOf(IndexedAccess{}))
+		result := actual.(IndexedAccess)
 		Expect(result.String()).To(Equal(input))
 	},
 		Entry("simple no index", "a"),
@@ -132,12 +132,12 @@ var _ = Describe("Grammar", func() {
 		Expect(actual).To(BeAssignableToTypeOf(Assign{}))
 		result := actual.(Assign)
 		Expect(result.identifier).To(Equal(indentifier))
-		Expect(stringify(result.source)).To(Equal(source))
+		Expect(concat(result.source)).To(Equal(source))
 	},
 		Entry("simple a", "a = a", "a", "a"),
 		Entry("simple b", "a = b", "a", "b"),
 		Entry("simple b int", "a = 10", "a", "10"),
-		//Entry("dd", "exec=docker.exec(\"-t\")", "dd", "docker.exec(\"-t\")"),
+		//Entry("dd", "exec=docker(exec -t $s.container)",
 		Entry("array int", "a = a[0]", "a", "a[0]"),
 		Entry("array string index", "a = a['asd']", "a", "a['asd']"),
 		Entry("array string string index", "a = 'a'['asd']", "a", "'a'['asd']"),

@@ -1,16 +1,41 @@
-// {contexts d=docker m=mariadb t=dev}
-// {d.exec -t $t.db.docker} {m.backup target:/var/lib/mysql/backup db:$t.db.name by:$t.db.user pwd:$t.db.pwd}
-
 # comment
 
 -- sources.like
-// sources docker=docker-like mariadb=mysql-like y=yaml-like}
+// t=param
+// docker=`docker(-t) }
+// d = docker()
+// $docker
 
--- template.like
+
+# ps:
+# docker exec -it `
+#	flagmap-db `
+# mariabackup --backup --target-dir=/var/lib/mysql/backup --databases='flagmap' --user=root --password=flagmap
+
+backup=(dir db user pass) {
+  mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
+}
+
+backup=(dir db user pass) mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
+env=yq `backup
+
+`` service(name label)
+resource "kubernetes_deployment" "postgres" {
+  metadata {
+    name      = "$name"
+    namespace = "postgres"
+
+    labels = {
+      "svc" = "postgres"
+    }
+  }
+``
+
+| serice()
+
 `` create(table length)
 ` CREATE TABLE $table
 
--- back-db.like
 // include sources.like
 // include template.like
 // contexts exec=docker.exec("-t") backup=mariadb.backup env=y("env.yaml" "dev")
@@ -22,22 +47,3 @@
 
 -- simple.like
 
-#
-# run docker 
-#
-
-| include: my.live
-| source: y=yq(dev.yaml sd)
-| file=config.yaml
-| user=y.user docker=
-| service="$(y[0].user)_svc"
-
-`` template: user name age
-` table head
-` %each user of $users
-`   $user.name $user.age
-` %each parent of $user.parents
-` %if a == 1 
-` 
-
-> $template(Ivan Stukov 42)

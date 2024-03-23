@@ -1,24 +1,22 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
-load("@bazel_skylib//rules:run_binary.bzl")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "grammar",
     srcs = [
+        "Assign.go",
+        "Call.go",
+        "Context.go",
+        "Expression.go",
+        "Include.go",
+        "Literal.go",
+        "Member.go",
+        "System.go",
+        "Value.go",
         "grammar.go",
-        "grammar_types.go",
+        "grammar_func.go",
         "parser.go",
     ],
     importpath = "like/grammar",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_samber_lo//:lo"],
-)
-
-go_test(
-    name = "grammar_test",
-    srcs = ["grammar_test.go"],
-    embed = [":grammar"],
-    deps = [
-        "@com_github_onsi_ginkgo_v2//:ginkgo",
-        "@com_github_onsi_gomega//:gomega",
-    ],
+    deps = ["@com_github_samber_lo//:go_default_library"],
 )

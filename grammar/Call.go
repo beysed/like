@@ -1,6 +1,6 @@
 package grammar
 
 type Call struct {
-	value     string
-	arguments []IndexedAccess
+	indentifier string
+	arguments   []Expression
 }

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_test(
+    name = "tests_test",
+    srcs = [
+        "assign_test.go",
+        "comments_test.go",
+        "expression_test.go",
+        "general_test.go",
+        "grammar_test.go",
+        "literal_test.go",
+    ],
+    embed = [":tests"],
+    deps = [
+        "//grammar",
+        "@com_github_onsi_ginkgo_v2//:go_default_library",
+        "@com_github_onsi_gomega//:go_default_library",
+    ],
+)
+
+go_library(
+    name = "tests",
+    srcs = [
+        "TestSystem.go",
+        "common.go",
+    ],
+    importpath = "like/grammar/tests",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//grammar",
+        "@com_github_onsi_gomega//:go_default_library",
+    ],
+)

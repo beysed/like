@@ -1,5 +1,5 @@
 package grammar
 
 type Include struct {
-	fileName string
+	FileName string
 }

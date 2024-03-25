@@ -1,13 +1,3 @@
-﻿bazel run @go_sdk//:bin/go -- mod init
-bazel run @go_sdk//:bin/go -- mod tidy
-bazel run @io_bazel_rules_go//go -- mod tidy -v
+﻿# Like
 
-bazel run @io_bazel_rules_go//go
-bazel run //:gazelle
-
-bazel run //:gazelle -- update-repos -from_file go.mod
-
-The latest versions are always listed on https://registry.bazel.build/.
-
-
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beysed_like)

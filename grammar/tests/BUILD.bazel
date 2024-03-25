@@ -19,6 +19,8 @@ go_test(
     ],
     args = [
         "--ginkgo.no-color",
+        "--coverprofile=.coverage.out",
+        "-coverpkg=./..."
     ],
     data = [":samples"],
     #rundir = "../../../../..",

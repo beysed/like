@@ -33,7 +33,7 @@ jobs:
           key: bazel-coverage
       - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
       - name: ls
-        run: ls -lar bazel-out
+        run: find ./
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

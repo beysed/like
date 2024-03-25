@@ -17,9 +17,10 @@ go_test(
         "literal_test.go",
         "sample_test.go",
     ],
-    # args = [
-    #     "--ginkgo.no-color",
-    # ],
+    args = [
+        "--ginkgo.no-color",
+    ],
+    timeout = "short",
     data = [":samples"],
 
     deps = [

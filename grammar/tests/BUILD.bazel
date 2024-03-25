@@ -17,13 +17,11 @@ go_test(
         "literal_test.go",
         "sample_test.go",
     ],
-    args = [
-        "--ginkgo.no-color",
-        "--coverprofile=.coverage.out",
-        "-coverpkg=./..."
-    ],
+    # args = [
+    #     "--ginkgo.no-color",
+    # ],
     data = [":samples"],
-    #rundir = "../../../../..",
+
     deps = [
         "//expressions",
         "//grammar",

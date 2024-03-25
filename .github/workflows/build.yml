@@ -31,7 +31,7 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: bazel-coverage
-      - run: bazel test //... --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
+      - run: bazel test //... --test_verbose_timeout_warnings --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

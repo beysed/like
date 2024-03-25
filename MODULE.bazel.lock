@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "f58cad80b40462b121c13b8bee51188d94e00e7f00159a2962f7ee84a3a93f43",
+  "moduleFileHash": "8971c65582a0d70d71a8a21b7e51b2a63eba7eb585a70bfc8e89363fdb2ff5fe",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -23,7 +23,36 @@
       "repoName": "",
       "executionPlatformsToRegister": [],
       "toolchainsToRegister": [],
-      "extensionUsages": [],
+      "extensionUsages": [
+        {
+          "extensionBzlFile": "@io_bazel_rules_go//go:extensions.bzl",
+          "extensionName": "go_sdk",
+          "usingModule": "<root>",
+          "location": {
+            "file": "@@//:MODULE.bazel",
+            "line": 5,
+            "column": 23
+          },
+          "imports": {},
+          "devImports": [],
+          "tags": [
+            {
+              "tagName": "nogo",
+              "attributeValues": {
+                "nogo": "//:lint"
+              },
+              "devDependency": false,
+              "location": {
+                "file": "@@//:MODULE.bazel",
+                "line": 6,
+                "column": 12
+              }
+            }
+          ],
+          "hasDevUseExtension": false,
+          "hasNonDevUseExtension": true
+        }
+      ],
       "deps": {
         "bazel_skylib": "bazel_skylib@1.5.0",
         "io_bazel_rules_go": "rules_go@0.46.0",
@@ -1457,7 +1486,7 @@
             "ruleClassName": "go_register_nogo",
             "attributes": {
               "name": "rules_go~0.46.0~go_sdk~io_bazel_rules_nogo",
-              "nogo": "@io_bazel_rules_go//:default_nogo",
+              "nogo": "'@@//:lint'",
               "includes": [
                 "'@@//:__subpackages__'"
               ],

@@ -1,6 +1,9 @@
 package tests
 
 import (
+	g "like/grammar"
+	. "like/grammar/tests/common"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -18,15 +21,14 @@ var _ = Describe("Literals", func() {
 	DescribeTable("Parses: correct literal", func(input string) {
 		var actual = ParseInupt(input, "literal", false)
 
-		Expect(actual).To(BeAssignableToTypeOf(""))
-		result := actual.(string)
-		Expect(result).To(Equal(input))
+		result, ok := actual.(g.Literal)
+		Expect(ok).To(BeTrue())
+
+		Expect(result.String()).To(Equal(input))
 	},
 		Entry("a", "a"),
 		Entry("-b", "-b"),
 		Entry("_b", "-b"),
-		Entry("`b", "`b"),
-		Entry("$b", "$b"),
 		Entry("/b", "/b"),
 		Entry("\\b", "\\b"),
 		Entry("1b", "1b"),
@@ -37,9 +39,9 @@ var _ = Describe("Literals", func() {
 	DescribeTable("Parses: literal list", func(input string, expected []string) {
 		var actual = ParseInupt(input, "literal_list", false)
 
-		Expect(actual).To(BeAssignableToTypeOf([]string{}))
-		result := actual.([]string)
-		Expect(result).To(Equal(expected))
+		result, ok := actual.(g.LiteralList)
+		Expect(ok).To(BeTrue())
+		Expect(result).To(Equal(g.LiteralListMake(expected)))
 	},
 		Entry("single", "a", []string{"a"}),
 		Entry("multi", "a b", []string{"a", "b"}),

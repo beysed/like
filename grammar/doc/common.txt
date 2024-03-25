@@ -1,12 +1,5 @@
 # comment
 
--- sources.like
-// t=param
-// docker=`docker(-t) }
-// d = docker()
-// $docker
-
-
 # ps:
 # docker exec -it `
 #	flagmap-db `
@@ -16,8 +9,8 @@ backup=(dir db user pass) {
   mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
 }
 
-backup=(dir db user pass) mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
-env=yq `backup
+backup = (dir db user pass) mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
+env = map(yq backup.yaml)
 
 `` service(name label)
 resource "kubernetes_deployment" "postgres" {
@@ -32,18 +25,7 @@ resource "kubernetes_deployment" "postgres" {
 ``
 
 | serice()
+|
 
-`` create(table length)
-` CREATE TABLE $table
-
-// include sources.like
-// include template.like
-// contexts exec=docker.exec("-t") backup=mariadb.backup env=y("env.yaml" "dev")
-`` exec(command ...)
-` $command $...
-// contexts exec=$exec(docker -t $y.docker) backup=mariadb.backup env=y("env.yaml" "dev")
-> $exec env.docker backup(db:env.db by:env.user pwd:env.pwd to:env.backup_older
-
-
--- simple.like
-
+a =~ & yq a.yaml
+a =~ & yq a.yaml

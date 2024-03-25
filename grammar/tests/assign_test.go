@@ -1,7 +1,9 @@
 package tests
 
 import (
+	e "like/expressions"
 	g "like/grammar"
+	. "like/grammar/tests/common"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -9,37 +11,40 @@ import (
 
 var _ = Describe("Assigns", func() {
 
-	DescribeTable("Identifier", func(input string, indentifier string) {
+	DescribeTable("Identifier", func(input string, indentifier string, expr string) {
 		var actual = ParseInupt(input, "assign", false)
 		Expect(actual).To(BeAssignableToTypeOf(g.Assign{}))
 		var assign = actual.(g.Assign)
 		Expect(assign.Identifier).To(Equal(indentifier))
-		Expect(assign.Value).NotTo(BeNil())
+		Expect(assign.Value.String()).To(Equal(expr))
 	},
-		Entry("literal", "a = a", "a"),
-		Entry("quoted string", "b = 'a'", "b"))
+		Entry("literal", "a = b", "a", "b"),
+		Entry("quoted string", "b = 'a'", "b", "'a'"),
+		Entry("array int", "a = $a[0]", "a", "a[0]"),
+		Entry("array string index", "a = $a['asd']", "a", "a['asd']"),
+		Entry("array int int", "a = $a[0][1]", "a", "a[0][1]"),
+		Entry("array string string", "a = $'asd'['def']", "a", "'asd'['def']"))
 
 	DescribeTable("Evaluate assigns", func(input string, indentifier string, value string) {
 		var actual = ParseInupt(input, "assign", false)
 
-		assign, ok := actual.(g.Expression)
+		assign, ok := actual.(e.Expression)
 		Expect(ok).To(BeTrue())
 
-		var locals = g.Context{}
-		var globals = g.Context{}
+		var globals = e.Store{}
+		var context = e.Context{
+			Locals:  globals,
+			Globals: globals,
+			Builtin: e.Store{},
+		}
 		var system = TestSystem{}
 
-		var result = assign.Evaluate(system, globals, locals)
-
-		Expect(locals[indentifier]).Should(Equal(value))
-		Expect(locals[indentifier]).Should(Equal(result))
+		result, err := assign.Evaluate(&system, &context)
+		Expect(err).To(BeNil())
+		Expect(context.Locals[indentifier]).Should(Equal(value))
+		Expect(context.Locals[indentifier]).Should(Equal(result))
 	},
-		Entry("literal", "a = b", "a", "b"),
-		Entry("quoted string", "b = 'a'", "b", "'a'"),
-		Entry("a int", "a = 10", "a", "10"),
-		Entry("array int", "a = a[0]", "a", "a[0]"),
-		Entry("array string index", "a = a['asd']", "a", "a['asd']"),
-		Entry("array string string index", "a = 'a'['asd']", "a", "'a'['asd']"),
-		Entry("array int int", "a = a[0][1]", "a", "a[0][1]"),
-		Entry("array string string", "a = 'asd'['def']", "a", "'asd'['def']"))
+		Entry("Evaluate: literal", "a = b", "a", "b"),
+		Entry("Evaluate: quoted string", "b = 'a'", "b", "'a'"),
+		Entry("Evaluate: a int", "a = 10", "a", "10"))
 })

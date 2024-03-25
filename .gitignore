@@ -1,1 +1,3 @@
 ﻿bazel-*/
+**/ginkgo.report
+**/coverage/

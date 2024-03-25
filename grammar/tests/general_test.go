@@ -1,7 +1,9 @@
 package tests
 
 import (
+	e "like/expressions"
 	g "like/grammar"
+	. "like/grammar/tests/common"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -30,7 +32,7 @@ var _ = Describe("Grammar", func() {
 		Expect(actual).To(BeAssignableToTypeOf(g.Include{}))
 		result := actual.(g.Include)
 
-		Expect(result.FileName).To(Equal(fn))
+		Expect(result.FileName.String()).To(Equal(fn))
 	},
 		Entry("unquoted", "// include asd", "asd"),
 		Entry("unquoted comment", "// include asd#comment", "asd"),
@@ -38,25 +40,29 @@ var _ = Describe("Grammar", func() {
 		Entry("single quoted", "// include 'asd'", "'asd'"),
 		Entry("double quoted", "// include \"asd\"", "\"asd\""))
 
-	DescribeTable("Parses: value / memeber_list", func(input string) {
-		var actual = ParseInupt(input, "member", false)
+	DescribeTable("Parses: expression / memeber_list", func(input string) {
+		var actual = ParseInupt(input, "expression", false)
 
-		Expect(actual).To(BeAssignableToTypeOf(g.Member{}))
-		result := actual.(g.Member)
+		result, ok := actual.(e.Expression)
+		Expect(ok).To(BeTrue())
+
 		Expect(result.String()).To(Equal(input))
 	},
 		Entry("simple no index", "a"),
-		Entry("double index", "a[0][1]"),
-		Entry("tripple index", "a[0][1][2]"),
-		Entry("single index", "a[0]"))
+	)
 
-	DescribeTable("Parses: value", func(input string) {
-		var actual = ParseInupt(input, "value", false)
+	DescribeTable("Parses: reference", func(input string, expect string) {
+		var actual = ParseInupt(input, "reference", false)
 
-		Expect(actual).To(BeAssignableToTypeOf(g.Value{}))
-		result := actual.(g.Value)
-		Expect(result.String()).To(Equal(input))
+		result, ok := actual.(g.MemberList)
+		Expect(ok).To(BeTrue())
+
+		Expect(result.String()).To(Equal(expect))
 	},
-		Entry("simple value", "a"),
-		Entry("prefixed value", "$a"))
+		Entry("reference $a", "$a", "a"),
+		Entry("reference $($a)", "$($a)", "a"),
+		Entry("reference $a[0]", "$a[0]", "a[0]"),
+		Entry("reference $(a[0])", "$($a[0])", "a[0]"),
+		Entry("reference $a[0][1]", "$a[0][1]", "a[0][1]"),
+		Entry("reference $a[0][1][2]", "$a[0][1][2]", "a[0][1][2]"))
 })

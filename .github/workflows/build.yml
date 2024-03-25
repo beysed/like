@@ -31,7 +31,7 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: bazel-coverage
-      - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
+      - run: bazel test //... --output_base=./build --noincompatible_sandbox_hermetic_tmp --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
       - name: ls
         run: find -L ./
       - name: SonarCloud Scan

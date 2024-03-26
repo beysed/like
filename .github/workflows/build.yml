@@ -24,9 +24,11 @@ jobs:
         id: version
         with:
           cmd: |
-            jq -r \
-            '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
-            ./test-report.json
+            ls -la
+            pwd
+            # jq -r \
+            # '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
+            # ./test-report.json
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest

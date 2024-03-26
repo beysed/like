@@ -1,8 +1,9 @@
 ﻿
 
-<div style="text-align: center">
+<p style="text-align: center">
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=beysed_like)
-</div>
+</p>
+<p align="right">text</p>
 # Like | Template Engine 
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beysed_like)

@@ -31,7 +31,7 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: bazel-coverage
-      - run: >
+      - run: |
           bazel test //... \
           --noincompatible_sandbox_hermetic_tmp \
           --collect_code_coverage \

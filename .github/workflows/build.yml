@@ -31,9 +31,11 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: bazel-coverage
-      - run: bazel --output_base=./build test //... --noincompatible_sandbox_hermetic_tmp --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
+      - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --collect_code_coverage --combined_report=lcov --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator
+        env:
+          TMPDIR: ${{ runner.temp }}
       - name: ls
-        run: find -L ./
+        run: find -L ${{ runner.temp }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

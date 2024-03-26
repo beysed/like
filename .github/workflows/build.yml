@@ -21,7 +21,7 @@ jobs:
       - run: bazel build //...
       - run: bazel test //grammar/tests:tests_test --test_arg=--ginkgo.json-report --test_arg=../../../../../../../test-report.json
       - name: Test Report0
-        run: ls -la
+        run: find ./ -iname='test-report.json'
       - name: Test Report
         run: |
           jq -r \

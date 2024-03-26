@@ -24,7 +24,7 @@ jobs:
         run: |
           pwd
           find -L $(bazel info bazel-genfiles)
-          ls -la bazel-out
+          ls -Lla bazel-out
       - name: Test Report
         run: |
           jq -r \

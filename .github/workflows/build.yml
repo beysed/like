@@ -19,7 +19,7 @@ jobs:
           path: "~/.cache/bazel"
           key: build
       - run: bazel build //...
-      - run: bazel test //grammar/tests:tests_test --test_arg=--ginkgo.json-report --test_arg=../../../../../../../../test-report.json
+      - run: bazel test //grammar/tests:tests_test --test_arg=--ginkgo.json-report --test_arg=./test-report.json
       - name: File Report
         run: |
           pwd

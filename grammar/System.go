@@ -1,4 +1,4 @@
-package expressions
+package grammar
 
 type System interface {
 	Output(text string)

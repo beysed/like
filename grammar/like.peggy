@@ -2,7 +2,6 @@
   package grammar
   import (
     "strconv"
-    . "like/expressions"
   )
 }
 
@@ -36,7 +35,7 @@ member = _m:(identifier / quotedString) _e:index* {
 };
 
 member_list = _m:member _r:('.' _r:member)* {
-  return (MemberList)(list_from[Member](_m, _r)), nil
+  return (MemberList)(listFrom[Member](_m, _r)), nil
 };
 
 reference = sign 
@@ -79,7 +78,7 @@ identifier = (unds / let) (dig / unds / let)* { return string(c.text), nil }
 
 literal_list = l:literal r:(ws+ t:literal { return t, nil} )* 
   { 
-    return (LiteralList)(list_from[Literal](l, r)), nil 
+    return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 
 literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, nil}) 

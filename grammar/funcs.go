@@ -26,7 +26,7 @@ func arrayify[T any](a any) []T {
 	return lo.Map(a.([]interface{}), func(e interface{}, _ int) T { return e.(T) })
 }
 
-func list_from[T any](f any, rest any) []T {
+func listFrom[T any](f any, rest any) []T {
 	if rest == nil {
 		return []T{f.(T)}
 	}

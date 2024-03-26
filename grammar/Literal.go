@@ -2,7 +2,6 @@ package grammar
 
 import (
 	"fmt"
-	. "like/expressions"
 )
 
 type Literal struct {
@@ -20,7 +19,7 @@ func (v Literal) String() string {
 	}
 }
 
-func (v Literal) Evaluate(system System, context *Context) (any, error) {
+func (v Literal) Evaluate(context *Context) (any, error) {
 	return v.Value, nil
 }
 

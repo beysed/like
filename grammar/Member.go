@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	. "like/expressions"
-
 	"github.com/samber/lo"
 )
 
@@ -32,10 +30,10 @@ func (a Member) String() string {
 		}), ""))
 }
 
-func (a Member) Evaluate(system System, context *Context) (any, error) {
+func (a Member) Evaluate(context *Context) (any, error) {
 	return nil, nil
 }
 
-func (a MemberList) Evaluate(system System, context *Context) (any, error) {
+func (a MemberList) Evaluate(context *Context) (any, error) {
 	return nil, nil
 }

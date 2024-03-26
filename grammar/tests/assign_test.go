@@ -1,7 +1,6 @@
 package tests
 
 import (
-	e "like/expressions"
 	g "like/grammar"
 	. "like/grammar/tests/common"
 
@@ -28,18 +27,20 @@ var _ = Describe("Assigns", func() {
 	DescribeTable("Evaluate assigns", func(input string, indentifier string, value string) {
 		var actual = ParseInupt(input, "assign", false)
 
-		assign, ok := actual.(e.Expression)
+		assign, ok := actual.(g.Expression)
 		Expect(ok).To(BeTrue())
 
-		var globals = e.Store{}
-		var context = e.Context{
-			Locals:  globals,
-			Globals: globals,
-			Builtin: e.Store{},
-		}
 		var system = TestSystem{}
 
-		result, err := assign.Evaluate(&system, &context)
+		var globals = g.Store{}
+		var context = g.Context{
+			Locals:  globals,
+			Globals: globals,
+			System:  &system,
+			//Builtin: g.Store{},
+		}
+
+		result, err := assign.Evaluate(&context)
 		Expect(err).To(BeNil())
 		Expect(context.Locals[indentifier]).Should(Equal(value))
 		Expect(context.Locals[indentifier]).Should(Equal(result))

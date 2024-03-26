@@ -1,7 +1,6 @@
 package tests
 
 import (
-	e "like/expressions"
 	g "like/grammar"
 	. "like/grammar/tests/common"
 
@@ -43,7 +42,7 @@ var _ = Describe("Grammar", func() {
 	DescribeTable("Parses: expression / memeber_list", func(input string) {
 		var actual = ParseInupt(input, "expression", false)
 
-		result, ok := actual.(e.Expression)
+		result, ok := actual.(g.Expression)
 		Expect(ok).To(BeTrue())
 
 		Expect(result.String()).To(Equal(input))

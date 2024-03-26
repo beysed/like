@@ -1,7 +1,8 @@
 ﻿# Like
 
-{: style="text-align: right" }
+<div style="text-align: right">
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=beysed_like)
+</div>
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beysed_like)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=beysed_like)

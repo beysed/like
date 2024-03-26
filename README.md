@@ -1,5 +1,5 @@
 ﻿
-<p align="right"><img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg">SonarCloud</img></p>
+<p align="right"><img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg" alt="SonarCloud"/></p>
 
 # Like | Template Engine 
 

@@ -18,17 +18,15 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: build
-      - run: bazel build //... --noincompatible_sandbox_hermetic_tmp 
+      - run: bazel build //... --noincompatible_sandbox_hermetic_tmp
       - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=test-report.json
-      - uses: sergeysova/jq-action@v2
-        id: version
-        with:
-          cmd: |
-            ls -la
-            pwd
-            # jq -r \
-            # '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
-            # ./test-report.json
+      - name: Install jq
+        run: apt install -y jq
+      - name: Test Report
+        run: |
+          jq -r \
+          '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
+          ./test-report.json
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest

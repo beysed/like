@@ -18,15 +18,15 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: build
-      - run: bazel build //... --noincompatible_sandbox_hermetic_tmp
-      - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=./test-report.json
+      - run: bazel build //...
+      - run: bazel test //grammar/tests:tests_test --test_arg=--ginkgo.json-report --test_arg=../../../../../../../test-report.json
       - name: Test Report0
         run: ls -la
       - name: Test Report
         run: |
           jq -r \
           '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
-          ./test-report.json
+          ./bazel-out/test-report.json
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest

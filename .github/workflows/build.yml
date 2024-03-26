@@ -20,10 +20,6 @@ jobs:
           key: build
       - run: bazel build //...
       - run: bazel test //... --test_output=all --test_arg=--ginkgo.json-report --test_arg=$(bazel info bazel-testlogs)/tests_test.json --spawn_strategy=standalone
-      - name: File Report
-        run: |
-          pwd
-          find -L $(bazel info bazel-testlogs)
       - name: Test Report
         run: |
           jq -r \

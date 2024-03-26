@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
-          key: bazel-coverage
+          key: bazel
       - run: |
           bazel test //... \
           --noincompatible_sandbox_hermetic_tmp \
@@ -38,8 +38,6 @@ jobs:
           --combined_report=lcov \
           --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator \
           && cp bazel-out/_coverage/_coverage_report.dat ./
-      - name: ls
-        run: find -L ${{ runner.temp }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

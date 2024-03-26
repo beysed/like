@@ -20,6 +20,8 @@ go_test(
     ],
     args = [
         "--ginkgo.no-color",
+        "--ginkgo.json-report",
+        "tests_test.json"
     ],
     data = [":samples"],
     deps = [

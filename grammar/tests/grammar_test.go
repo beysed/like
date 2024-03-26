@@ -8,7 +8,7 @@ import (
 )
 
 func TestGrammar(t *testing.T) {
-	RegisterFailHandler(Fail)
 
+	RegisterFailHandler(Fail)
 	RunSpecs(t, "Grammar Suite")
 }

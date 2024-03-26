@@ -21,7 +21,7 @@ jobs:
       - run: bazel build //... --noincompatible_sandbox_hermetic_tmp
       - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=test-report.json
       - name: Install jq
-        run: apt install -y jq
+        run: sudo apt install -y jq
       - name: Test Report
         run: |
           jq -r \

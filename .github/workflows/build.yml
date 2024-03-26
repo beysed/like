@@ -19,14 +19,14 @@ jobs:
           path: "~/.cache/bazel"
           key: build
       - run: bazel build //... --noincompatible_sandbox_hermetic_tmp 
-      # - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=test-report.json
-      # - uses: sergeysova/jq-action@v2
-      #   id: version
-      #   with:
-      #     cmd: |
-      #       jq -r \
-      #       '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
-      #       ./test-report.json
+      - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=test-report.json
+      - uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: |
+            jq -r \
+            '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \
+            ./test-report.json
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest

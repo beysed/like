@@ -1,6 +1,9 @@
 ﻿
 
-# Like | Template Engine | [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=beysed_like)
+<div style="text-align: center">
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=beysed_like)
+</div>
+# Like | Template Engine 
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beysed_like)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=beysed_like)

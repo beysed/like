@@ -23,7 +23,7 @@ jobs:
       - name: File Report
         run: |
           pwd
-          find ./
+          find -L ./
       - name: Test Report
         run: |
           jq -r \

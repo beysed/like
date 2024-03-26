@@ -23,7 +23,7 @@ jobs:
       - name: File Report
         run: |
           pwd
-          find -L $(bazel info bazel-bin)
+          find -L $(bazel info bazel-genfiles)
       - name: Test Report
         run: |
           jq -r \

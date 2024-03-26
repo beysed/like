@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
-          key: bazel-build
+          key: build
       - run: bazel build //... --noincompatible_sandbox_hermetic_tmp 
       # - run: bazel test //... --noincompatible_sandbox_hermetic_tmp --test_arg=--ginkgo.json-report --test_arg=test-report.json
       # - uses: sergeysova/jq-action@v2
@@ -39,7 +39,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
-          key: bazel-sonar
+          key: sonar
       - run: |
           bazel test //... \
           --noincompatible_sandbox_hermetic_tmp \

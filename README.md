@@ -1,7 +1,6 @@
-﻿
-<p align="right"><img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg" alt="SonarCloud"/></p>
+﻿# Like | Template Engine 
 
-# Like | Template Engine 
+<p align="right"><img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg" alt="SonarCloud"/></p>
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beysed_like)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=beysed_like&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=beysed_like)

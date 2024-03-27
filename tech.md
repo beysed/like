@@ -7,7 +7,6 @@ bazel run //:gazelle
 
 bazel run //:gazelle -- update-repos -from_file go.mod
 
-The latest versions are always listed on https://registry.bazel.build/.
+https://registry.bazel.build/.
 
-
-
+<p align="right"><img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg" alt="SonarCloud"/></p>

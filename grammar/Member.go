@@ -35,5 +35,18 @@ func (a Member) Evaluate(context *Context) (any, error) {
 }
 
 func (a MemberList) Evaluate(context *Context) (any, error) {
-	return nil, nil
+	var store Store
+
+	for _, v := range []Store{context.Locals, context.Globals} {
+		if v[a[0].Identifier] != nil {
+			store = v
+			break
+		}
+	}
+
+	if store == nil {
+		return nil, nil
+	}
+
+	return store[a[0].Identifier], nil
 }

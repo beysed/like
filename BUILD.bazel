@@ -1,6 +1,8 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
+# bazel test //... --test_output=all --test_arg=--ginkgo.focus --test_arg='Sample T' --test_arg=--ginkgo.v
+
 nogo(
     name = "lint",
     vet = True,

@@ -9,10 +9,10 @@ file = line*;
 
 eol = ('\r'? '\n') / '\r';
 
-line = (comment / code:code comment? { return code, nil}) (eol / eof)
+line = _l:(comment { return nil, nil} / _c:code comment? { return _c, nil}) (eol / eof) {{ return _l, nil}}
 
 comment = "#" (any !eol)* { return string(c.text), nil }
-code = directive / expression
+code = directive / expression / template
 
 directive = "// " directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
@@ -20,8 +20,6 @@ include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, ni
 quotedString = singleQuotedString / doubleQuotedString{ return string(c.text), nil }
 singleQuotedString = "'" ("\\'" / [^'])* "'" { return string(c.text), nil }
 doubleQuotedString = '"' ("\\\"" / [^"])* '"'{ return string(c.text), nil }
-
-// integer = [0-9]+ { return string(c.text), nil }
 
 expression_list = expression (ws* expression)*;
 call = _i:identifier "(" _m:expression_list? ")"
@@ -56,6 +54,8 @@ expression =
   call /
   reference /
   literal /
+  write /
+  invoke /
   ( '(' _e: expression ')' { return _e, nil} )
 
 block= '{' ws* comment* eol line* '}' comment* eol / eof
@@ -70,9 +70,8 @@ assign = _i:identifier ws* eq ws* _e:(expression / lambda)
     Value: _e.(Expression) }, nil
 }
 
-writeln = gt ws* expression
-write = pipe ws* expression
-invoke = amper expression
+write = pipe ws* _e:expression { return Write { Expression : _e.(Expression) }, nil }
+invoke = amper _e:expression { return Invoke { Expression : _e.(Expression) }, nil }
 
 identifier = (unds / let) (dig / unds / let)* { return string(c.text), nil }
 

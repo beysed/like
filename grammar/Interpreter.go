@@ -1,16 +1,27 @@
 package grammar
 
-type Environment map[string]string
-
-func Execute(context Context, code []byte) (string, error) {
-	_, err := Parse("a.like", code)
+func Execute(context *Context, code []byte) error {
+	result, err := Parse("a.like", code, Entrypoint("file"))
 
 	if err != nil {
-		return "", err
+		return err
 	}
-	return "", nil
-	// expressions = arrayify[Expression](result)
 
-	// for e := range expressions {
-	// }
+	exprs := arrayify[any](result)
+
+	for _, e := range exprs {
+		expr, ok := e.(Expression)
+
+		if !ok {
+			continue
+		}
+
+		_, err = expr.Evaluate(context)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

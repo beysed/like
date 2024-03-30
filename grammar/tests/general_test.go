@@ -53,15 +53,15 @@ var _ = Describe("Grammar", func() {
 	DescribeTable("Parses: reference", func(input string, expect string) {
 		var actual = ParseInupt(input, "reference", false)
 
-		result, ok := actual.(g.MemberList)
+		result, ok := actual.(g.Reference)
 		Expect(ok).To(BeTrue())
 
 		Expect(result.String()).To(Equal(expect))
 	},
-		Entry("reference $a", "$a", "a"),
-		Entry("reference $($a)", "$($a)", "a"),
-		Entry("reference $a[0]", "$a[0]", "a[0]"),
-		Entry("reference $(a[0])", "$($a[0])", "a[0]"),
-		Entry("reference $a[0][1]", "$a[0][1]", "a[0][1]"),
-		Entry("reference $a[0][1][2]", "$a[0][1][2]", "a[0][1][2]"))
+		Entry("reference $a", "$a", "$a"),
+		Entry("reference $($a)", "$($a)", "$$a"),
+		Entry("reference $a[0]", "$a[0]", "$a[0]"),
+		Entry("reference $(a[0])", "$($a[0])", "$$a[0]"),
+		Entry("reference $a[0][1]", "$a[0][1]", "$a[0][1]"),
+		Entry("reference $a[0][1][2]", "$a[0][1][2]", "$a[0][1][2]"))
 })

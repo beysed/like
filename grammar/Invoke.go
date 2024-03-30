@@ -2,10 +2,13 @@ package grammar
 
 import (
 	"fmt"
+	"strings"
+
+	"github.com/samber/lo"
 )
 
 type Invoke struct {
-	Expression Expression
+	Expressions []Expression
 }
 
 func (a *Invoke) Evaluate(context *Context) (any, error) {
@@ -13,5 +16,10 @@ func (a *Invoke) Evaluate(context *Context) (any, error) {
 }
 
 func (a *Invoke) String() string {
-	return fmt.Sprintf("& %s", a.Expression.String())
+	return fmt.Sprintf("& %s",
+		strings.Join(
+			lo.Map(a.Expressions,
+				func(e Expression, _ int) string {
+					return e.String()
+				}), " "))
 }

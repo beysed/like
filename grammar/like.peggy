@@ -39,9 +39,9 @@ member_list = _m:member _r:('.' _r:member)* {
 reference = sign 
   _m: (
     _m:(member_list / expression) { return _m, nil } / 
-    ('(' _m:reference ')' { return _m, nil })) 
+    ('(' _m:(member_list / expression) ')' { return _m, nil })) 
   { 
-    return _m, nil 
+    return Reference { Expression : _m.(Expression) }, nil 
   }
 
 dblquot = quot quot
@@ -74,8 +74,8 @@ assign = _i:member_list ws* eq ws* _e:(expression / lambda)
     Value: _e.(Expression) }, nil
 }
 
-write = quot ws* _e:expression { return Write { Expression : _e.(Expression) }, nil }
-invoke = amper _e:expression { return Invoke { Expression : _e.(Expression) }, nil }
+write = quot ws* _e:expression* { return Write { Expressions : arrayify[Expression](_e) }, nil }
+invoke = amper _e:expression+ { return Invoke { Expressions : arrayify[Expression](_e) }, nil }
 
 identifier = (unds / let) (dig / unds / let)* { return string(c.text), nil }
 

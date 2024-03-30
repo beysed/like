@@ -12,8 +12,6 @@ type Member struct {
 	Indexes    []Expression
 }
 
-type MemberList []Member
-
 func (a Member) String() string {
 
 	if a.Indexes == nil || len(a.Indexes) == 0 {
@@ -27,26 +25,31 @@ func (a Member) String() string {
 }
 
 func (a Member) Evaluate(context *Context) (any, error) {
-	return nil, nil
-}
-
-func (a MemberList) String() string {
-	return strings.Join(lo.Map(a, func(s Member, _ int) string { return s.String() }), ".")
-}
-
-func (a MemberList) Evaluate(context *Context) (any, error) {
 	var store Store
+	var stores []Store
 
-	for _, v := range []Store{context.Locals, context.Globals} {
-		if v[a[0].Identifier] != nil {
+	if &context.Locals == &context.Globals {
+		stores = []Store{context.Locals}
+	} else {
+		stores = []Store{context.Locals, context.Globals}
+	}
+
+	for _, v := range stores {
+		if v[a.Identifier] != nil {
 			store = v
 			break
 		}
 	}
 
 	if store == nil {
-		return nil, nil
+		store = context.Locals
 	}
 
-	return store[a[0].Identifier], nil
+	// todo: indexes
+	//isArray := len(a.Indexes) > 0
+	if store[a.Identifier] == nil {
+		store[a.Identifier] = Store{}
+	}
+
+	return store[a.Identifier], nil
 }

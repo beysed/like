@@ -10,16 +10,10 @@ func (a Assign) String() string {
 }
 
 func (a Assign) Evaluate(context *Context) (any, error) {
-	var v any
-	var err error
+	store, _ := a.Identifier.Evaluate(context)
+	v, _ := a.Value.Evaluate(context)
 
-	if a.Value != nil {
-		v, err = a.Value.Evaluate(context)
-	}
+	store.(Store)["value"] = v
 
-	if err == nil {
-		context.Locals[a.Identifier[0].String()] = v
-	}
-
-	return v, err
+	return v, nil
 }

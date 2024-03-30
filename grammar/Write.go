@@ -1,17 +1,23 @@
 package grammar
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/samber/lo"
+)
 
 type Write struct {
-	Expression Expression
+	Expressions []Expression
 }
 
 func (a Write) Evaluate(context *Context) (any, error) {
-	result, err := a.Expression.Evaluate(context)
-
-	if err != nil {
-		return nil, err
-	}
+	result := strings.Join(lo.Map(
+		a.Expressions,
+		func(e Expression, _ int) string {
+			r, _ := e.Evaluate(context)
+			return fmt.Sprintf("%s", r)
+		}), "")
 
 	context.System.Output(result)
 
@@ -19,5 +25,10 @@ func (a Write) Evaluate(context *Context) (any, error) {
 }
 
 func (a Write) String() string {
-	return fmt.Sprintf("> %s", a.Expression.String())
+	return fmt.Sprintf("` %s",
+		strings.Join(
+			lo.Map(a.Expressions,
+				func(e Expression, _ int) string {
+					return e.String()
+				}), " "))
 }

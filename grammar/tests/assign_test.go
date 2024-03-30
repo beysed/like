@@ -19,10 +19,10 @@ var _ = Describe("Assigns", func() {
 	},
 		Entry("literal", "a = b", "a", "b"),
 		Entry("quoted string", "b = 'a'", "b", "'a'"),
-		Entry("array int", "a = $a[0]", "a", "a[0]"),
-		Entry("array string index", "a = $a['asd']", "a", "a['asd']"),
-		Entry("array int int", "a = $a[0][1]", "a", "a[0][1]"),
-		Entry("array string string", "a = $'asd'['def']", "a", "'asd'['def']"))
+		Entry("array int", "a = $a[0]", "a", "$a[0]"),
+		Entry("array string index", "a = $a['asd']", "a", "$a['asd']"),
+		Entry("array int int", "a = $a[0][1]", "a", "$a[0][1]"),
+		Entry("array string string", "a = $'asd'['def']", "a", "$'asd'['def']"))
 
 	DescribeTable("Evaluate assigns", func(input string, indentifier string, value string) {
 		var actual = ParseInupt(input, "assign", false)
@@ -42,8 +42,8 @@ var _ = Describe("Assigns", func() {
 
 		result, err := assign.Evaluate(&context)
 		Expect(err).To(BeNil())
-		Expect(context.Locals[indentifier]).Should(Equal(value))
-		Expect(context.Locals[indentifier]).Should(Equal(result))
+		Expect(context.Locals[indentifier].(g.Store)["value"]).Should(Equal(value))
+		Expect(context.Locals[indentifier].(g.Store)["value"]).Should(Equal(result))
 	},
 		Entry("Evaluate: literal", "a = b", "a", "b"),
 		Entry("Evaluate: quoted string", "b = 'a'", "b", "'a'"),

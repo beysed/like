@@ -9,9 +9,8 @@ import (
 )
 
 var _ = Describe("Sample", func() {
-	DescribeTable("T", func(f string) {
+	DescribeTable("T", func(f string, e string) {
 		var c = Read(f)
-		//Log(string(c))
 		system := TestSystem{}
 		store := g.Store{}
 
@@ -20,9 +19,12 @@ var _ = Describe("Sample", func() {
 			Locals:  store,
 			Globals: store,
 		}
+
 		err := g.Execute(&context, c)
 		Expect(err).To(BeNil())
-		Expect(system.Result.String()).To(Equal("b"))
+		Expect(system.Result.String()).To(Equal(e))
 
-	}, Entry("samples/sample.like", "samples/sample.like"))
+	},
+		Entry("samples/sample.like", "samples/sample.like", "b"),
+		Entry("samples/simple_template.like", "samples/simple_template.like", "aaacbbb"))
 })

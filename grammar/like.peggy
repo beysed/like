@@ -118,11 +118,11 @@ assign = _i:store ws* eq ws* _e:(lambda /expression)
     Value: _e.(Expression) }, nil
 }
 
-write = quot ws* _e:expression* { 
-  return Write { Expressions : arrayify[Expression](_e) }, nil }
+write = quot ws* _e:super_expression? { 
+  return Write { Expressions : []Expression{ castify(_e, (Expression)(MakeLiteral(""))) } }, nil }
 
-invoke = amper _e:expression+ { 
-  return Invoke { Expressions : arrayify[Expression](_e) }, nil }
+invoke = amper _e:super_expression { 
+  return Invoke { Expressions : []Expression{_e.(Expression)} }, nil }
 
 identifier = (unds / let) (dig / unds / let)* { 
   return string(c.text), nil }

@@ -48,6 +48,9 @@ dblquot = quot quot
 template = dblquot ws* _i:identifier ws* _a:argument_decl comment* eol !dblquot dblquot
 parse = identifier ws* eq tilda expression
 
+pipe_receive = invoke / call
+pipe_send = invoke / call / reference / literal
+
 expression =
   parse /
   assign /
@@ -56,6 +59,7 @@ expression =
   literal /
   write /
   invoke /
+  (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
 block= '{' ws* comment* eol line* '}' comment* eol / eof
@@ -70,7 +74,7 @@ assign = _i:identifier ws* eq ws* _e:(expression / lambda)
     Value: _e.(Expression) }, nil
 }
 
-write = pipe ws* _e:expression { return Write { Expression : _e.(Expression) }, nil }
+write = quot ws* _e:expression { return Write { Expression : _e.(Expression) }, nil }
 invoke = amper _e:expression { return Invoke { Expression : _e.(Expression) }, nil }
 
 identifier = (unds / let) (dig / unds / let)* { return string(c.text), nil }
@@ -99,10 +103,11 @@ quot = '`'
 sign = '$'
 pipe = '|'
 gt = '>'
+lt = '<'
 eq = '='
 amper = '&'
 tilda = '~'
-
+pipe_in = sign lt // $<
 any = .
 eof = !.
 

@@ -46,5 +46,6 @@ var _ = Describe("Grammar", func() {
 		Expect(res.String()).To(Equal(expexted))
 	},
 		Entry("no arg lambda", "() $a", "() $a"),
-		Entry("one arg lambda", "(a) $a", "(a) $a"))
+		Entry("one arg lambda", "(a) $a", "(a) $a"),
+		Entry("one arg list lambda", "(a) _ $a _", "(a) _ $a _"))
 })

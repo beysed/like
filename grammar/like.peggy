@@ -94,10 +94,24 @@ argument_decl = '(' ws* _i:identifier_list? ws* ')' {
 
   return _i, nil 
 }
-lambda = _a:argument_decl ws* _e:(block / operator / _e:expression* { 
-  return Expressions(arrayify[Expression](_e)), nil }) {
-    return Lambda { Arguments : _a.(IdentifierList), Body: _e.(Expression) }, nil
-}
+
+lambda = _a:argument_decl ws* 
+  _e:(
+    block / 
+    operator / 
+    _s:expression+ _r:(_w:ws+ _l:expression+ { 
+      return Expressions{ 
+        MakeLiteral(" "), 
+        Expressions(arrayify[Expression](_l)) } , nil})* 
+    { 
+      return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil 
+    }
+  ) 
+  {
+    return Lambda { 
+      Arguments : _a.(IdentifierList), 
+      Body: _e.(Expression) }, nil
+  }
 
 assign = _i:store ws* eq ws* _e:(lambda /expression)
 {

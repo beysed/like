@@ -20,5 +20,6 @@ var _ = Describe("Sample", func() {
 	},
 		Entry("samples/sample.like", "samples/sample.like", "b"),
 		Entry("samples/simple_template.like", "samples/simple_template.like", "aaacbbb"),
-		Entry("samples/lambda_invoke", "samples/lambda_invoke.like", "_1_2_"))
+		Entry("samples/lambda_invoke", "samples/lambda_invoke.like", "_1_2_"),
+		Entry("samples/lambda_invoke_space", "samples/lambda_invoke_space.like", "_ 1 2 _"))
 })

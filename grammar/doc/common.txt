@@ -6,10 +6,10 @@
 # mariabackup --backup --target-dir=/var/lib/mysql/backup --databases='flagmap' --user=root --password=flagmap
 
 backup=(dir db user pass) {
-  mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
+  & mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
 }
 
-backup = (dir db user pass) mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
+backup = (dir db user pass) & mariabackup --backup --target-dir=$dir --databases=$db --user=$user --password=$pass
 env = map(yq backup.yaml)
 
 `` service(name label)
@@ -24,8 +24,7 @@ resource "kubernetes_deployment" "postgres" {
   }
 ``
 
-| serice()
-|
+` serice()
 
 a =~ & yq a.yaml
 a =~ & yq a.yaml

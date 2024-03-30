@@ -14,10 +14,6 @@ type Member struct {
 
 type MemberList []Member
 
-func (a MemberList) String() string {
-	return strings.Join(lo.Map(a, func(s Member, _ int) string { return s.String() }), ".")
-}
-
 func (a Member) String() string {
 
 	if a.Indexes == nil || len(a.Indexes) == 0 {
@@ -32,6 +28,10 @@ func (a Member) String() string {
 
 func (a Member) Evaluate(context *Context) (any, error) {
 	return nil, nil
+}
+
+func (a MemberList) String() string {
+	return strings.Join(lo.Map(a, func(s Member, _ int) string { return s.String() }), ".")
 }
 
 func (a MemberList) Evaluate(context *Context) (any, error) {

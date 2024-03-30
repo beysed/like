@@ -12,14 +12,18 @@ func (v LiteralList) String() string {
 	return strings.Join(lo.Map(v, func(l Literal, _ int) string { return l.String() }), " ")
 }
 
-func LiteralListMake(s []string) LiteralList {
-	return (LiteralList)(lo.Map(s, func(s string, _ int) Literal { return LiteralMake(s) }))
+func (v LiteralList) Evaluate(context *Context) (any, error) {
+	if len(v) == 1 {
+		return v[0].Evaluate(context)
+	}
+
+	return lo.Map(v,
+		func(l Literal, _ int) any {
+			r, _ := l.Evaluate(context)
+			return r
+		}), nil
 }
 
-// func (v Literal) Evaluate(system System, globals Context, locals Context) any {
-// 	return v.Value
-// }
-
-// func LiteralMake(s string) Literal {
-// 	return Literal{Value: s}
-// }
+func MakeLiteralList(s []string) LiteralList {
+	return (LiteralList)(lo.Map(s, func(s string, _ int) Literal { return MakeLiteral(s) }))
+}

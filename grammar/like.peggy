@@ -56,7 +56,7 @@ expression =
   assign /
   call /
   reference /
-  literal /
+  literal_list /
   write /
   invoke /
   (_l:pipe_send pipe _r:pipe_receive) /
@@ -67,10 +67,10 @@ identifier_list= identifier (ws+ identifier)
 argument_decl = '(' ws* identifier_list ws* ')' 
 lambda = argument_decl ws* _e:(block / expression)
 
-assign = _i:identifier ws* eq ws* _e:(expression / lambda)
+assign = _i:member_list ws* eq ws* _e:(expression / lambda)
 {
   return Assign{
-    Identifier: castify(_i, ""),
+    Identifier: _i.(MemberList),
     Value: _e.(Expression) }, nil
 }
 
@@ -86,7 +86,7 @@ literal_list = l:literal r:(ws+ t:literal { return t, nil} )*
 
 literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, nil}) 
   { 
-    return LiteralMake(t.(string)), nil 
+    return MakeLiteral(t.(string)), nil 
   }
 
 lit = sym / let / dig

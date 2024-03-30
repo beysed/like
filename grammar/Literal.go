@@ -23,6 +23,6 @@ func (v Literal) Evaluate(context *Context) (any, error) {
 	return v.Value, nil
 }
 
-func LiteralMake(s string) Literal {
+func MakeLiteral(s string) Literal {
 	return Literal{Value: s}
 }

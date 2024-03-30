@@ -41,7 +41,7 @@ var _ = Describe("Literals", func() {
 
 		result, ok := actual.(g.LiteralList)
 		Expect(ok).To(BeTrue())
-		Expect(result).To(Equal(g.LiteralListMake(expected)))
+		Expect(result).To(Equal(g.MakeLiteralList(expected)))
 	},
 		Entry("single", "a", []string{"a"}),
 		Entry("multi", "a b", []string{"a", "b"}),

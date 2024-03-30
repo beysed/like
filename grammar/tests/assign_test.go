@@ -14,7 +14,7 @@ var _ = Describe("Assigns", func() {
 		var actual = ParseInupt(input, "assign", false)
 		Expect(actual).To(BeAssignableToTypeOf(g.Assign{}))
 		var assign = actual.(g.Assign)
-		Expect(assign.Identifier).To(Equal(indentifier))
+		Expect(assign.Identifier.String()).To(Equal(indentifier))
 		Expect(assign.Value.String()).To(Equal(expr))
 	},
 		Entry("literal", "a = b", "a", "b"),

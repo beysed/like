@@ -1,12 +1,12 @@
 package grammar
 
 type Assign struct {
-	Identifier string
+	Identifier MemberList
 	Value      Expression
 }
 
 func (a Assign) String() string {
-	return a.Identifier + " = " + a.Value.String()
+	return a.Identifier.String() + " = " + a.Value.String()
 }
 
 func (a Assign) Evaluate(context *Context) (any, error) {
@@ -18,7 +18,7 @@ func (a Assign) Evaluate(context *Context) (any, error) {
 	}
 
 	if err == nil {
-		context.Locals[a.Identifier] = v
+		context.Locals[a.Identifier[0].String()] = v
 	}
 
 	return v, err

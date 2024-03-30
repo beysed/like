@@ -9,12 +9,6 @@ import (
 )
 
 var _ = Describe("Grammar", func() {
-	// BeforeEach(func() {
-	// 	DeferCleanup(AttachProgressReporter(func() string {
-	// 		return "--+"
-	// 	}))
-	// })
-
 	It("Parses: empty ", func() {
 		_, e := g.Parse("a.like", Text(""))
 		Expect(e).To(BeNil())

@@ -4,6 +4,7 @@ go_library(
     name = "grammar",
     srcs = [
         "Assign.go",
+        "Block.go",
         "Call.go",
         "Context.go",
         "Expression.go",

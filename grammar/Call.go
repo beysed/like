@@ -30,13 +30,13 @@ func (a Call) Evaluate(context *Context) (any, error) {
 		System:  context.System,
 	}
 
-	argc := len(a.Arguments.Expressions)
+	argc := len(a.Arguments)
 	for i, v := range lambda.Arguments.Identifiers {
 		if i >= argc {
 			break
 			// todo: warning args mismatch
 		}
-		arg, err := a.Arguments.Expressions[i].Evaluate(context)
+		arg, err := a.Arguments[i].Evaluate(context)
 		if err != nil {
 			return arg, err
 		}

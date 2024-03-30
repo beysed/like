@@ -48,4 +48,16 @@ var _ = Describe("Grammar", func() {
 		Entry("no arg lambda", "() $a", "() $a"),
 		Entry("one arg lambda", "(a) $a", "(a) $a"),
 		Entry("one arg list lambda", "(a) _ $a _", "(a) _ $a _"))
+
+	DescribeTable("Parses: block lambda", func(input string, expexted string) {
+		var actual = ParseInupt(input, "lambda")
+
+		res, ok := actual.(g.Lambda)
+		Expect(ok).To(BeTrue())
+		Expect(res.String()).To(Equal(expexted))
+	},
+		Entry("no arg empty", "() {\n}", "() {\n\n}"),
+		Entry("one arg assign", "(a) {\na=b\n}", "(a) {\na = b\n}"),
+		Entry("one arg operator", "(a) {\n` a\n}", "(a) {\n` a\n}"),
+		Entry("one arg space operator", "(a) {\n ` a\n}", "(a) {\n` a\n}"))
 })

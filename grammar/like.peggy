@@ -9,7 +9,7 @@ file = line*;
 
 eol = ('\r'? '\n') / '\r';
 
-line = _l:(comment { return nil, nil} / _c:code comment? { return _c, nil}) (eol / eof) {{ return _l, nil}}
+line = ws* _l:(comment { return nil, nil} / _c:code comment? { return _c, nil}) (eol / eof) {{ return _l, nil}}
 
 comment = "#" (any !eol)* { return string(c.text), nil }
 code = directive / operator / template
@@ -22,8 +22,7 @@ singleQuotedString = "'" ("\\'" / [^'])* "'" { return string(c.text), nil }
 doubleQuotedString = '"' ("\\\"" / [^"])* '"'{ return string(c.text), nil }
 
 expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
-    return ExpressionList { 
-    Expressions: listFrom[Expression](_e, _r) }, nil
+    return ExpressionList(listFrom[Expression](_e, _r)), nil
 }
 
 call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
@@ -80,7 +79,9 @@ expression =
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
-block= '{' ws* comment* eol _l:line* '}' comment* eol / eof
+block= '{' ws* comment* eol _l:line* '}' comment* (eol / eof) { 
+  return Block(arrayify[Expression](_l)) ,nil 
+}
 
 identifier_list= _i:identifier _r:(ws+ _i: identifier { return _i, nil } )* { 
   return IdentifierList { 

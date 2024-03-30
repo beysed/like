@@ -19,7 +19,7 @@ func (a Write) Evaluate(context *Context) (any, error) {
 			return fmt.Sprintf("%s", r)
 		}), "")
 
-	context.System.Output(result)
+	context.System.Output(fmt.Sprintf("%s\n", result))
 
 	return result, nil
 }

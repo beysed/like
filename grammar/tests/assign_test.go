@@ -42,8 +42,8 @@ var _ = Describe("Assigns", func() {
 
 		result, err := assign.Evaluate(&context)
 		Expect(err).To(BeNil())
-		Expect(context.Locals[indentifier].(g.Store)["value"]).Should(Equal(value))
-		Expect(context.Locals[indentifier].(g.Store)["value"]).Should(Equal(result))
+		Expect(context.Locals[indentifier].(g.Store)[g.ValueKey]).Should(Equal(value))
+		Expect(context.Locals[indentifier].(g.Store)[g.ValueKey]).Should(Equal(result))
 	},
 		Entry("Evaluate: literal", "a = b", "a", "b"),
 		Entry("Evaluate: quoted string", "b = 'a'", "b", "'a'"),

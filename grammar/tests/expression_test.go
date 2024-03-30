@@ -28,4 +28,23 @@ var _ = Describe("Grammar", func() {
 	},
 		Entry("a", "a", "a"),
 		Entry("a.b", "a.b", "a.b"))
+
+	DescribeTable("Parses: lambda assign", func(input string, expected string) {
+		var actual = ParseInupt(input, "assign")
+
+		res, ok := actual.(g.Assign)
+		Expect(ok).To(BeTrue())
+		Expect(res.String()).To(Equal(expected))
+	},
+		Entry("simple lambda", "a = (a) $a", "a = (a) $a"))
+
+	DescribeTable("Parses: lambda", func(input string, expexted string) {
+		var actual = ParseInupt(input, "lambda")
+
+		res, ok := actual.(g.Lambda)
+		Expect(ok).To(BeTrue())
+		Expect(res.String()).To(Equal(expexted))
+	},
+		Entry("no arg lambda", "() $a", "() $a"),
+		Entry("one arg lambda", "(a) $a", "(a) $a"))
 })

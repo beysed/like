@@ -10,19 +10,20 @@ type Reference struct {
 
 func (a Reference) Evaluate(context *Context) (any, error) {
 	var expr Expression
-	if e, ok := a.Expression.(LiteralList); ok {
-		// todo list
+	if e, ok := a.Expression.(Literal); ok {
+
 		i, _ := e.Evaluate(context)
-		expr = &StoreAccess{Reference: Member{
-			Identifier: i.(string),
-		}}
+		expr = &StoreAccess{
+			Reference: Member{
+				Identifier: i.(string),
+			}}
 	} else {
 		expr = a.Expression
 	}
-
+	// todo list
 	ref, _ := expr.Evaluate(context)
 
-	return ref.(Store)["value"], nil
+	return ref.(Store)[ValueKey], nil
 }
 
 func (a Reference) String() string {

@@ -2,6 +2,8 @@ package grammar
 
 import "strings"
 
+const ValueKey = "$value"
+
 type Store map[string]any
 
 type SystemContext struct {

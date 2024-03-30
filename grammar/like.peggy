@@ -21,8 +21,16 @@ quotedString = singleQuotedString / doubleQuotedString{ return string(c.text), n
 singleQuotedString = "'" ("\\'" / [^'])* "'" { return string(c.text), nil }
 doubleQuotedString = '"' ("\\\"" / [^"])* '"'{ return string(c.text), nil }
 
-expression_list = expression (ws* expression)*;
-call = _i:identifier "(" _m:expression_list? ")"
+expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
+    return ExpressionList { 
+    Expressions: listFrom[Expression](_e, _r) }, nil
+}
+
+call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
+  return Call {
+    Store: _i.(StoreAccess),
+    Arguments: _m.(ExpressionList) }, nil
+}
 
 index = '[' _e:expression ']' { return _e, nil };
 
@@ -41,7 +49,7 @@ reference = sign
 
 dblquot = quot quot
 template = dblquot ws* _i:identifier ws* _a:argument_decl comment* eol !dblquot dblquot
-parse = store ws* eq tilda expression
+parse = store ws* eq tilda ws* expression
 
 pipe_receive = invoke / call
 pipe_send = invoke / call / reference / literal
@@ -62,35 +70,53 @@ store =
 operator =
   parse /
   assign /
-  call  /
   write /
   invoke;
 
 expression =
+  call  /
   reference /
-  literal_list /
+  literal /
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
-block= '{' ws* comment* eol line* '}' comment* eol / eof
-identifier_list= identifier (ws+ identifier)
-argument_decl = '(' ws* identifier_list ws* ')' 
-lambda = argument_decl ws* _e:(block / expression)
+block= '{' ws* comment* eol _l:line* '}' comment* eol / eof
 
-assign = _i:store ws* eq ws* _e:(expression / lambda)
+identifier_list= _i:identifier _r:(ws+ _i: identifier { return _i, nil } )* { 
+  return IdentifierList { 
+    Identifiers: listFrom[string](_i, _r) }, nil
+}
+
+argument_decl = '(' ws* _i:identifier_list? ws* ')' { 
+  if _i == nil {
+    return IdentifierList{}, nil
+  }
+
+  return _i, nil 
+}
+lambda = _a:argument_decl ws* _e:(block / operator / _e:expression* { 
+  return Expressions(arrayify[Expression](_e)), nil }) {
+    return Lambda { Arguments : _a.(IdentifierList), Body: _e.(Expression) }, nil
+}
+
+assign = _i:store ws* eq ws* _e:(lambda /expression)
 {
   return Assign{
     Store: _i.(StoreAccess),
     Value: _e.(Expression) }, nil
 }
 
-write = quot ws* _e:expression* { return Write { Expressions : arrayify[Expression](_e) }, nil }
-invoke = amper _e:expression+ { return Invoke { Expressions : arrayify[Expression](_e) }, nil }
+write = quot ws* _e:expression* { 
+  return Write { Expressions : arrayify[Expression](_e) }, nil }
 
-identifier = (unds / let) (dig / unds / let)* { return string(c.text), nil }
+invoke = amper _e:expression+ { 
+  return Invoke { Expressions : arrayify[Expression](_e) }, nil }
 
-literal_list = l:literal r:(ws+ t:literal { return t, nil} )* 
-  { 
+identifier = (unds / let) (dig / unds / let)* { 
+  return string(c.text), nil }
+
+literal_list = l:literal r:(ws+ t:literal { 
+  return t, nil} )* { 
     return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 

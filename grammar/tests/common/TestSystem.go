@@ -17,3 +17,14 @@ func (t *TestSystem) Output(text any) {
 func (t *TestSystem) Invoke(command string, args ...[]string) (g.InvokeResult, error) {
 	return g.InvokeResult{Stdout: "{ \"a\" : 1 }"}, nil
 }
+
+func MakeContext() (g.Context, *strings.Builder) {
+	system := TestSystem{}
+	store := g.Store{}
+
+	return g.Context{
+		System:  &system,
+		Locals:  store,
+		Globals: store,
+	}, &system.Result
+}

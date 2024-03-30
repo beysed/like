@@ -13,7 +13,7 @@ func (a Assign) Evaluate(context *Context) (any, error) {
 	store, _ := a.Store.Evaluate(context)
 	v, _ := a.Value.Evaluate(context)
 
-	store.(Store)["value"] = v
+	store.(Store)[ValueKey] = v
 
 	return v, nil
 }

@@ -1,27 +1,11 @@
 package grammar
 
-import (
-	"fmt"
-	"strings"
-
-	"github.com/samber/lo"
-)
-
 type Member struct {
 	Identifier string
-	Indexes    []Expression
 }
 
 func (a Member) String() string {
-
-	if a.Indexes == nil || len(a.Indexes) == 0 {
-		return a.Identifier
-	}
-
-	return fmt.Sprintf("%s%s", a.Identifier, strings.Join(lo.Map(a.Indexes,
-		func(e Expression, _ int) string {
-			return fmt.Sprintf("[%s]", e.String())
-		}), ""))
+	return a.Identifier
 }
 
 func (a Member) Evaluate(context *Context) (any, error) {
@@ -45,8 +29,6 @@ func (a Member) Evaluate(context *Context) (any, error) {
 		store = context.Locals
 	}
 
-	// todo: indexes
-	//isArray := len(a.Indexes) > 0
 	if store[a.Identifier] == nil {
 		store[a.Identifier] = Store{}
 	}

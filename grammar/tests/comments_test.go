@@ -9,7 +9,7 @@ import (
 
 var _ = Describe("Comments tests", func() {
 	DescribeTable("Comments", func(input string, expected string) {
-		var actual = ParseInupt(input, "comment", false)
+		var actual = ParseInupt(input, "comment")
 
 		Expect(actual).To(BeAssignableToTypeOf(""))
 		result := actual.(string)

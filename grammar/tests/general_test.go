@@ -15,7 +15,7 @@ var _ = Describe("Grammar", func() {
 	})
 
 	DescribeTable("Parses: correct indentifiers", func(input string, expected string) {
-		actual := ParseInupt(input, "identifier", false)
+		actual := ParseInupt(input, "identifier")
 
 		Expect(actual).To(BeAssignableToTypeOf(""))
 		result := actual.(string)
@@ -26,7 +26,7 @@ var _ = Describe("Grammar", func() {
 		Entry("multuple", "Aa", "Aa"))
 
 	DescribeTable("Parses: include directive", func(input string, fn string) {
-		var actual = ParseInupt(input, "directive", false)
+		var actual = ParseInupt(input, "directive")
 
 		Expect(actual).To(BeAssignableToTypeOf(g.Include{}))
 		result := actual.(g.Include)
@@ -40,7 +40,7 @@ var _ = Describe("Grammar", func() {
 		Entry("double quoted", "// include \"asd\"", "\"asd\""))
 
 	DescribeTable("Parses: expression / memeber_list", func(input string) {
-		var actual = ParseInupt(input, "expression", false)
+		var actual = ParseInupt(input, "expression")
 
 		result, ok := actual.(g.Expression)
 		Expect(ok).To(BeTrue())
@@ -51,17 +51,15 @@ var _ = Describe("Grammar", func() {
 	)
 
 	DescribeTable("Parses: reference", func(input string, expect string) {
-		var actual = ParseInupt(input, "reference", false)
+		var actual = ParseInupt(input, "reference")
 
 		result, ok := actual.(g.Reference)
 		Expect(ok).To(BeTrue())
 
 		Expect(result.String()).To(Equal(expect))
 	},
-		Entry("reference $a", "$a", "$a"),
-		Entry("reference $($a)", "$($a)", "$$a"),
-		Entry("reference $a[0]", "$a[0]", "$a[0]"),
-		Entry("reference $(a[0])", "$($a[0])", "$$a[0]"),
-		Entry("reference $a[0][1]", "$a[0][1]", "$a[0][1]"),
-		Entry("reference $a[0][1][2]", "$a[0][1][2]", "$a[0][1][2]"))
+		Entry("a", "$a", "$a"),
+		Entry("simple index", "$a[0]", "$a[0]"),
+		Entry("a[0][1]", "$a[0][1]", "$a[0][1]"),
+		Entry("a[0][1][2]", "$a[0][1][2]", "$a[0][1][2]"))
 })

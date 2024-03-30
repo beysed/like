@@ -11,7 +11,7 @@ import (
 var _ = Describe("Literals", func() {
 
 	DescribeTable("Incorrect literal", func(input string) {
-		var _, err = ParseInuptIncorrect(input, "literal", false)
+		var _, err = ParseInuptIncorrect(input, "literal")
 		Expect(err).NotTo(BeNil())
 	},
 		Entry("#a", "#a"),
@@ -19,7 +19,7 @@ var _ = Describe("Literals", func() {
 		Entry("(a", "(a"))
 
 	DescribeTable("Parses: correct literal", func(input string) {
-		var actual = ParseInupt(input, "literal", false)
+		var actual = ParseInupt(input, "literal")
 
 		result, ok := actual.(g.Literal)
 		Expect(ok).To(BeTrue())
@@ -37,7 +37,7 @@ var _ = Describe("Literals", func() {
 		Entry("10", "10"))
 
 	DescribeTable("Parses: literal list", func(input string, expected []string) {
-		var actual = ParseInupt(input, "literal_list", false)
+		var actual = ParseInupt(input, "literal_list")
 
 		result, ok := actual.(g.LiteralList)
 		Expect(ok).To(BeTrue())

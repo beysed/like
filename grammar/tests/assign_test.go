@@ -11,10 +11,10 @@ import (
 var _ = Describe("Assigns", func() {
 
 	DescribeTable("Identifier", func(input string, indentifier string, expr string) {
-		var actual = ParseInupt(input, "assign", false)
+		var actual = ParseInupt(input, "assign")
 		Expect(actual).To(BeAssignableToTypeOf(g.Assign{}))
 		var assign = actual.(g.Assign)
-		Expect(assign.Identifier.String()).To(Equal(indentifier))
+		Expect(assign.Store.String()).To(Equal(indentifier))
 		Expect(assign.Value.String()).To(Equal(expr))
 	},
 		Entry("literal", "a = b", "a", "b"),
@@ -25,7 +25,7 @@ var _ = Describe("Assigns", func() {
 		Entry("array string string", "a = $'asd'['def']", "a", "$'asd'['def']"))
 
 	DescribeTable("Evaluate assigns", func(input string, indentifier string, value string) {
-		var actual = ParseInupt(input, "assign", false)
+		var actual = ParseInupt(input, "assign")
 
 		assign, ok := actual.(g.Expression)
 		Expect(ok).To(BeTrue())

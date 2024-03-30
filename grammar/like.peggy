@@ -12,7 +12,7 @@ eol = ('\r'? '\n') / '\r';
 line = _l:(comment { return nil, nil} / _c:code comment? { return _c, nil}) (eol / eof) {{ return _l, nil}}
 
 comment = "#" (any !eol)* { return string(c.text), nil }
-code = directive / expression / template
+code = directive / operator / template
 
 directive = "// " directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
@@ -26,39 +26,49 @@ call = _i:identifier "(" _m:expression_list? ")"
 
 index = '[' _e:expression ']' { return _e, nil };
 
-member = _m:(identifier / quotedString) _e:index* { 
+member = _m:(identifier / quotedString) { 
   return Member{ 
-    Identifier: castify(_m, ""), 
-    Indexes: arrayify[Expression](_e) }, nil
-};
-
-member_list = _m:member _r:('.' _r:member)* {
-  return (MemberList)(listFrom[Member](_m, _r)), nil
+    Identifier: castify(_m, "") }, nil
 };
 
 reference = sign 
   _m: (
-    _m:(member_list / expression) { return _m, nil } / 
-    ('(' _m:(member_list / expression) ')' { return _m, nil })) 
+    store / 
+    ('(' _m:store ')' { return _m, nil })) 
   { 
     return Reference { Expression : _m.(Expression) }, nil 
   }
 
 dblquot = quot quot
 template = dblquot ws* _i:identifier ws* _a:argument_decl comment* eol !dblquot dblquot
-parse = identifier ws* eq tilda expression
+parse = store ws* eq tilda expression
 
 pipe_receive = invoke / call
 pipe_send = invoke / call / reference / literal
 
-expression =
+store = 
+  (_e:store _i:index { 
+    return StoreAccess { 
+      Reference: _e.(Expression), 
+      Index: _i.(Expression)}, nil }) /
+  (_e:store '.' _i:store { 
+    return StoreAccess { 
+      Reference: _e.(Expression), 
+      Index: _i.(Expression)}, nil }) /
+  _e:literal { 
+    return StoreAccess { 
+      Reference: _e.(Expression) }, nil}
+
+operator =
   parse /
   assign /
-  call /
+  call  /
+  write /
+  invoke;
+
+expression =
   reference /
   literal_list /
-  write /
-  invoke /
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
@@ -67,10 +77,10 @@ identifier_list= identifier (ws+ identifier)
 argument_decl = '(' ws* identifier_list ws* ')' 
 lambda = argument_decl ws* _e:(block / expression)
 
-assign = _i:member_list ws* eq ws* _e:(expression / lambda)
+assign = _i:store ws* eq ws* _e:(expression / lambda)
 {
   return Assign{
-    Identifier: _i.(MemberList),
+    Store: _i.(StoreAccess),
     Value: _e.(Expression) }, nil
 }
 

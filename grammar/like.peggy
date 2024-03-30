@@ -95,18 +95,16 @@ argument_decl = '(' ws* _i:identifier_list? ws* ')' {
   return _i, nil 
 }
 
-lambda = _a:argument_decl ws* 
-  _e:(
-    block / 
-    operator / 
-    _s:expression+ _r:(_w:ws+ _l:expression+ { 
+super_expression = _s:expression+ _r:(_w:ws+ _l:expression+ { 
       return Expressions{ 
         MakeLiteral(" "), 
         Expressions(arrayify[Expression](_l)) } , nil})* 
     { 
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil 
     }
-  ) 
+
+lambda = _a:argument_decl ws* 
+  _e:( block / operator / super_expression ) 
   {
     return Lambda { 
       Arguments : _a.(IdentifierList), 

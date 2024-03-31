@@ -18,11 +18,12 @@ var _ = Describe("Sample", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
-		Entry("samples/sample.like", "samples/sample.like", "b\n"),
-		Entry("samples/simple_template.like", "samples/simple_template.like", "aaacbbb\n"),
+		Entry("samples/sample", "samples/sample.like", "b\n"),
+		Entry("samples/simple_template", "samples/simple_template.like", "aaacbbb\n"),
 		Entry("samples/lambda_invoke", "samples/lambda_invoke.like", "_1_2_\n"),
 		Entry("samples/lambda_invoke_space", "samples/lambda_invoke_space.like", "_ 1 2 _\n"),
 		Entry("samples/func", "samples/func.like", "one\na oops\na oops\n"),
+		Entry("samples/assigns", "samples/assigns.like", "1\n"),
 		Entry("samples/template", "samples/template.like", "AfredB\n___\n"))
 
 	DescribeTable("Valid file", func(f string, e string) {

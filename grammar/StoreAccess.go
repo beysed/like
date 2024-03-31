@@ -36,7 +36,6 @@ func (a StoreAccess) String() string {
 }
 
 func (a StoreAccess) Evaluate(context *Context) (any, error) {
-
 	if literal, ok := a.Reference.(Literal); ok {
 		var v = literal.String()
 		if context.Locals[v] != nil {
@@ -49,7 +48,27 @@ func (a StoreAccess) Evaluate(context *Context) (any, error) {
 		}
 	}
 
-	// todo: complex references
+	if store, ok := a.Reference.(StoreAccess); ok {
+		v, e := store.Evaluate(context)
+		if e != nil {
+			return v, e
+		}
+
+		s := v.(Store)
+		if a.Index == nil {
+			return s, nil
+		}
+
+		local := &Context{
+			Globals: s,
+			Locals:  s,
+			System:  context.System,
+		}
+
+		n := StoreAccess{
+			Reference: a.Index}
+		return n.Evaluate(local)
+	}
 
 	return nil, nil
 }

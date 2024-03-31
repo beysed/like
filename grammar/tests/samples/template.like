@@ -1,0 +1,5 @@
+`` story(user)
+A$(user)B
+___
+``
+` story(fred)

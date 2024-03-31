@@ -7,15 +7,9 @@ func Execute(context *Context, code []byte) error {
 		return err
 	}
 
-	exprs := arrayify[any](result)
+	exprs := result.([]Expression)
 
-	for _, e := range exprs {
-		expr, ok := e.(Expression)
-
-		if !ok {
-			continue
-		}
-
+	for _, expr := range exprs {
 		_, err = expr.Evaluate(context)
 
 		if err != nil {

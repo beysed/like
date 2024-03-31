@@ -5,14 +5,22 @@
   )
 }
 
-file = line*;
+file = 
+  _s:line* eof { 
+    return arrayify[Expression](_s,), nil
+  }
 
 eol = ('\r'? '\n') / '\r';
 
-line = ws* _l:(comment { return nil, nil} / _c:code comment? { return _c, nil}) (eol / eof) {{ return _l, nil}}
+eoa = eol / eof
 
-comment = "#" (any !eol)* { return string(c.text), nil }
-code = directive / operator / template
+empty_line 
+  = (eol / ws+ eoa / ws* comment eoa) { return MakeLiteral(""), nil }
+
+line = template / empty_line / (ws* _c:code comment? eoa { return _c, nil })
+
+comment = "#" (any !eoa)* any? { return string(c.text), nil }
+code = operator / directive / call 
 
 directive = "// " directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
@@ -26,9 +34,17 @@ expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
 }
 
 call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
+  var t ExpressionList 
+
+  if _m != nil {
+    t = _m.(ExpressionList)
+  } else {
+    t = ExpressionList {}
+  }
+
   return Call {
     Store: _i.(StoreAccess),
-    Arguments: _m.(ExpressionList) }, nil
+    Arguments: t }, nil
 }
 
 index = '[' _e:expression ']' { return _e, nil };
@@ -47,7 +63,20 @@ reference = sign
   }
 
 dblquot = quot quot
-template = dblquot ws* _i:identifier ws* _a:argument_decl comment* eol !dblquot dblquot
+template_end = eol dblquot
+template_body = _a:( _a:any !template_end { return MakeLiteral(_a.(string)), nil})*  { return _a, nil }
+template = 
+  dblquot ws+ _i:identifier _a:argument_decl ws* eol 
+  _b:( reference/_a:any !dblquot { return MakeLiteral(_a.(string)), nil } )* 
+  template_end
+{
+  e := arrayify[Expression](_b)
+  return Assign {
+    Store: StoreAccess { Reference: MakeLiteral(_i.(string)) },
+    Value: Lambda {
+      Arguments : _a.(IdentifierList),
+      Body: Expressions(e)}},nil }
+
 parse = store ws* eq tilda ws* expression
 
 pipe_receive = invoke / call
@@ -112,7 +141,7 @@ lambda = _a:argument_decl ws*
       Body: _e.(Expression) }, nil
   }
 
-assign = _i:store ws* eq ws* _e:(lambda /expression)
+assign = _i:store ws* eq ws* _e:(lambda / expression)
 {
   return Assign{
     Store: _i.(StoreAccess),
@@ -149,6 +178,7 @@ unds = '_'
 slsh = '/'
 bslh = '\\'
 quot = '`'
+dblsign = sign sign
 sign = '$'
 pipe = '|'
 gt = '>'
@@ -157,7 +187,7 @@ eq = '='
 amper = '&'
 tilda = '~'
 pipe_in = sign lt // $<
-any = .
+any = . { return string(c.text), nil }
 eof = !.
 
 

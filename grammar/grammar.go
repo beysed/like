@@ -1,3 +1,4 @@
 package grammar
 
-//go:generate pigeon -support-left-recursion -o parser.go -optimize-parser like.peggy
+//-optimize-parser
+//go:generate pigeon -support-left-recursion -o parser.go  like.peggy

@@ -16,5 +16,6 @@ var _ = Describe("Comments tests", func() {
 		Expect(result).To(Equal(expected))
 	},
 		Entry("empty", "#", "#"),
-		Entry("comment", "#asd", "#asd"))
+		Entry("comment", "#asd", "#asd"),
+		Entry("comment", "#asd\n", "#asd"))
 })

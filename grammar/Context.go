@@ -1,6 +1,9 @@
 package grammar
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 const ValueKey = "$value"
 
@@ -15,16 +18,7 @@ func MakeSystemContext() SystemContext {
 }
 
 func (c *SystemContext) Output(text string) {
-}
-
-type InvokeResult struct {
-	Stdout  string
-	Stderr  string
-	ErrCode int
-}
-
-func InvokeCommand(command string, args ...[]string) InvokeResult {
-	return InvokeResult{}
+	fmt.Print(text)
 }
 
 type Context struct {

@@ -1,0 +1,2 @@
+a = & bash -c 'echo AAA'
+` $a

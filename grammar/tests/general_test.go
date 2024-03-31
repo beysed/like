@@ -31,7 +31,8 @@ var _ = Describe("Grammar", func() {
 		Expect(actual).To(BeAssignableToTypeOf(g.Include{}))
 		result := actual.(g.Include)
 
-		Expect(result.FileName.String()).To(Equal(fn))
+		a := result.FileName.String()
+		Expect(a).To(Equal(fn))
 	},
 		Entry("unquoted", "// include asd", "asd"),
 		Entry("unquoted comment", "// include asd#comment", "asd"),

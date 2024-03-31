@@ -103,6 +103,7 @@ operator =
 
 expression =
   call  /
+  invoke /
   reference /
   literal /
   (_l:pipe_send pipe _r:pipe_receive) /
@@ -151,8 +152,8 @@ assign = _i:store ws* eq ws* _e:(lambda / expression)
 write = quot ws* _e:super_expression? { 
   return Write { Expressions : []Expression{ castify(_e, (Expression)(MakeLiteral(""))) } }, nil }
 
-invoke = amper _e:super_expression { 
-  return Invoke { Expressions : []Expression{_e.(Expression)} }, nil }
+invoke = amper ws* _e:super_expression { 
+  return Invoke{Expressions: _e.(Expressions)}, nil }
 
 identifier = (unds / let) (dig / unds / let)* { 
   return string(c.text), nil }
@@ -162,15 +163,15 @@ literal_list = l:literal r:(ws+ t:literal {
     return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 
-literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, nil}) 
-  { 
-    return MakeLiteral(t.(string)), nil 
-  }
+literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, nil})
+{
+  return MakeLiteral(t.(string)), nil
+}
 
 lit = sym / let / dig
 dig = [0-9]
 let = [a-zA-Z]
-sym = dash / unds / slsh / bslh
+sym = [^{}()#=&|$<>~ \n\r\t]
 
 ws = ' ' / '\t'
 dash = '-'

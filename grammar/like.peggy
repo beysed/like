@@ -26,8 +26,8 @@ directive = "// " directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
 
 quotedString = singleQuotedString / doubleQuotedString
-singleQuotedString = "'" _s:("\\'" / [^'])* "'" { return MakeParsedString("'", castify(_s, "")), nil }
-doubleQuotedString = '"' _s:("\\\"" / [^"])* '"'{ return MakeParsedString("\"", castify(_s, "")), nil }
+singleQuotedString = "'" ("\\'" / [^'])* "'" { return MakeParsedString("'", string(c.text[1:len(c.text)-1])), nil }
+doubleQuotedString = '"' ("\\\"" / [^"])* '"'{ return MakeParsedString("\"", string(c.text[1:len(c.text)-1])), nil }
 
 expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
     return ExpressionList(listFrom[Expression](_e, _r)), nil
@@ -49,7 +49,7 @@ call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
 
 index = '[' _e:expression ']' { return _e, nil };
 
-member = _m:(identifier / quotedString) { 
+member = _m:(identifier / s:quotedString { return unquote(s), nil }) { 
   return Member{ 
     Identifier: castify(_m, "") }, nil
 };
@@ -163,7 +163,7 @@ literal_list = l:literal r:(ws+ t:literal {
     return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 
-literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, nil})
+literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return unquote(s), nil})
 {
   return MakeLiteral(t.(string)), nil
 }
@@ -171,7 +171,7 @@ literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return s, ni
 lit = sym / let / dig
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^{}()#=&|$<>~ \n\r\t]
+sym = [^{}()#=&|$<>~'" \n\r\t\][.]
 
 ws = ' ' / '\t'
 dash = '-'

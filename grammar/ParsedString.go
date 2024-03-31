@@ -14,8 +14,12 @@ func (a ParsedString) String() string {
 	return fmt.Sprintf("%s%s%s", a.Quote, a.RawBody, a.Quote)
 }
 
+func (a ParsedString) Unquote() string {
+	return strings.ReplaceAll(a.RawBody, "\\"+a.Quote, a.Quote)
+}
+
 func (a ParsedString) Evaluate(context *Context) (any, error) {
-	return strings.ReplaceAll(a.RawBody, "\\"+a.Quote, a.Quote), nil
+	return a.Unquote(), nil
 }
 
 func MakeParsedString(quote string, body string) ParsedString {

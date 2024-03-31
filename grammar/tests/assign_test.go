@@ -18,11 +18,11 @@ var _ = Describe("Assigns", func() {
 		Expect(assign.Value.String()).To(Equal(expr))
 	},
 		Entry("literal", "a = b", "a", "b"),
-		Entry("quoted string", "b = 'a'", "b", "'a'"),
+		Entry("quoted string", "b = 'a'", "b", "a"),
 		Entry("array int", "a = $a[0]", "a", "$a[0]"),
-		Entry("array string index", "a = $a['asd']", "a", "$a['asd']"),
+		Entry("array string index", "a = $a['asd']", "a", "$a.asd"),
 		Entry("array int int", "a = $a[0][1]", "a", "$a[0][1]"),
-		Entry("array string string", "a = $'asd'['def']", "a", "$'asd'['def']"))
+		Entry("array string string", "a = $'asd'['def']", "a", "$asd.def"))
 
 	DescribeTable("Evaluate assigns", func(input string, indentifier string, value string) {
 		var actual = ParseInupt(input, "assign")
@@ -46,6 +46,6 @@ var _ = Describe("Assigns", func() {
 		Expect(context.Locals[indentifier].(g.Store)[g.ValueKey]).Should(Equal(result))
 	},
 		Entry("Evaluate: literal", "a = b", "a", "b"),
-		Entry("Evaluate: quoted string", "b = 'a'", "b", "'a'"),
+		Entry("Evaluate: quoted string", "b = 'a'", "b", "a"),
 		Entry("Evaluate: a int", "a = 10", "a", "10"))
 })

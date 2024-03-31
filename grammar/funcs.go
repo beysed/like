@@ -33,3 +33,7 @@ func listFrom[T any](f any, rest any) []T {
 
 	return append([]T{f.(T)}, arrayify[T](rest)...)
 }
+
+func unquote(s any) string {
+	return s.(ParsedString).Unquote()
+}

@@ -32,8 +32,8 @@ var _ = Describe("Literals", func() {
 		Entry("/b", "/b"),
 		Entry("\\b", "\\b"),
 		Entry("1b", "1b"),
-		Entry("'asd'", "'asd'"),
-		Entry("\"asd\"", "\"asd\""),
+		Entry("'asd'", "asd"),
+		Entry("\"asd\"", "asd"),
 		Entry("10", "10"))
 
 	DescribeTable("Parses: literal list", func(input string, expected []string) {

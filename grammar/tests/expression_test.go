@@ -14,9 +14,9 @@ import (
 
 var _ = Describe("Grammar", func() {
 	DescribeTable("Parses: list expressions with reference", func(input string) {
-		var actual = ParseInupt(input, "write")
+		var actual = ParseInupt(input, "writeln")
 
-		_, ok := actual.(g.Write)
+		_, ok := actual.(g.WriteLn)
 		Expect(ok).To(BeTrue())
 	},
 		Entry("a", "` aaa$b"),

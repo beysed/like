@@ -99,6 +99,7 @@ operator =
   parse /
   assign /
   write /
+  writeln /
   invoke;
 
 expression =
@@ -149,8 +150,11 @@ assign = _i:store ws* eq ws* _e:(lambda / expression)
     Value: _e.(Expression) }, nil
 }
 
-write = quot ws* _e:super_expression? { 
-  return Write { Expressions : []Expression{ castify(_e, (Expression)(MakeLiteral(""))) } }, nil }
+writeln = quot ws* _e:super_expression { 
+  return WriteLn { Expression : _e.(Expressions) }, nil }
+
+write = tilda ws* _e:super_expression { 
+  return Write { Expression : _e.(Expressions) }, nil }
 
 invoke = amper ws* _e:super_expression { 
   return Invoke{Expressions: _e.(Expressions)}, nil }

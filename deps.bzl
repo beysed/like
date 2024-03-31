@@ -8,6 +8,12 @@ def go_dependencies():
         version = "v0.46.0",
     )
     go_repository(
+        name = "com_github_beysed_shell",
+        importpath = "github.com/beysed/shell",
+        sum = "h1:r5rMpjup/RVMP+0uEkWceg3h6xC9RSARkWYO6fcKSUE=",
+        version = "v0.0.0-20240331160355-7815f1f45210",
+    )
+    go_repository(
         name = "com_github_chzyer_logex",
         importpath = "github.com/chzyer/logex",
         sum = "h1:Swpa1K6QvQznwJRcfTfQJmTE72DqScAa40E+fbHEXEE=",
@@ -112,8 +118,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_stretchr_testify",
         importpath = "github.com/stretchr/testify",
-        sum = "h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=",
-        version = "v1.6.1",
+        sum = "h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=",
+        version = "v1.9.0",
     )
     go_repository(
         name = "com_github_yuin_goldmark",

@@ -1,6 +1,6 @@
 module like
 
-go 1.22
+go 1.22.1
 
 require (
 	github.com/bazelbuild/rules_go v0.46.0
@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/beysed/shell v0.0.0-20240331160355-7815f1f45210 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect

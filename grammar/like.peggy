@@ -2,6 +2,7 @@
   package grammar
   import (
     "strconv"
+    "strings"
   )
 }
 
@@ -171,15 +172,15 @@ literal_list = l:literal r:(ws+ t:literal {
     return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 
-literal = t:( lit+ { return string(c.text), nil }/ s:quotedString { return unquote(s), nil})
+literal = t:( l:lit+ { return convert(l), nil }/ s:quotedString { return unquote(s), nil})
 {
   return MakeLiteral(t.(string)), nil
 }
 
-lit = sym / let / dig
+lit = ("\\\"" { return "\"", nil }) / ("\\'"{ return "'", nil }) / (sym / let / dig) { return string(c.text), nil}
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^{}()#=&|$<>~'" \n\r\t\][.]
+sym = [^{}()#=&|$<>~'" \n\r\t\][.] 
 
 ws = ' ' / '\t'
 dash = '-'

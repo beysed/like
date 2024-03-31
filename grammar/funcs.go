@@ -37,3 +37,7 @@ func listFrom[T any](f any, rest any) []T {
 func unquote(s any) string {
 	return s.(ParsedString).Unquote()
 }
+
+func convert(s any) string {
+	return strings.Join(arrayify[string](s), "")
+}

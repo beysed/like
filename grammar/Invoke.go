@@ -16,6 +16,61 @@ func (a Invoke) String() string {
 	return fmt.Sprintf("& %s", a.Expressions.String())
 }
 
+func isEmpty(s any) (string, bool) {
+	q := s.(string)
+	return q, len(strings.TrimSpace(q)) == 0
+}
+
+func flattern(exprs []Expression, context *Context) ([]string, error) {
+	result := []string{}
+
+	var add func(exprs []Expression) error
+
+	add = func(exprs []Expression) error {
+		for _, e := range exprs {
+			if l, ok := e.(Literal); ok {
+				r, e := l.Evaluate(context)
+				if e != nil {
+					return e
+				}
+				if s, e := isEmpty(r); e {
+					continue
+				} else {
+					result = append(result, s)
+				}
+			} else if a, ok := e.(Expressions); ok {
+				err := add(a)
+				if err != nil {
+					return err
+				}
+			} else if a, ok := e.(ExpressionList); ok {
+				err := add(a)
+				if err != nil {
+					return err
+				}
+			} else if a, ok := e.(Reference); ok {
+				res, err := a.Evaluate(context)
+				if err != nil {
+					return err
+				}
+				if a, ok := res.([]interface{}); ok {
+					for _, u := range a {
+						result = append(result, u.(string))
+					}
+				} else {
+					result = append(result, res.(string))
+				}
+			}
+		}
+
+		return nil
+	}
+
+	err := add(exprs)
+
+	return result, err
+}
+
 func (a Invoke) Evaluate(context *Context) (any, error) {
 	output := strings.Builder{}
 
@@ -29,23 +84,9 @@ func (a Invoke) Evaluate(context *Context) (any, error) {
 		return cmdEval, MakeError("command is not string")
 	}
 
-	args := []string{}
-	for _, v := range a.Expressions[1:] {
-		arge, ok := v.(Expressions)
-		if !ok || len(arge) != 2 {
-			return v, MakeError("something wrong with arguments structure")
-		}
-
-		v, err := arge[1].Evaluate(context)
-		if err != nil {
-			return nil, err
-		}
-
-		if str, ok := v.(string); !ok {
-			return v, MakeError("argument is not string")
-		} else {
-			args = append(args, str)
-		}
+	args, err := flattern(a.Expressions[1:], context)
+	if err != nil {
+		return nil, err
 	}
 
 	command := execute.MakeCommand(cmd, args...)

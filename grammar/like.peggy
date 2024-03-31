@@ -102,11 +102,15 @@ operator =
   writeln /
   invoke;
 
+list 
+  = '[' ws* _e:expression_list ws* ']' { return _e, nil }
+
 expression =
   call  /
   invoke /
   reference /
   literal /
+  list /
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 

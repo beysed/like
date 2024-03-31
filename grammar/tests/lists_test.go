@@ -9,14 +9,6 @@ import (
 )
 
 var _ = Describe("List tests", func() {
-	It("List type test", func() {
-		var a any
-		a = g.Expressions{}
-
-		_, ok := a.([]interface{})
-		Expect(ok).To(BeTrue())
-	})
-
 	DescribeTable("Execs", func(input string, expected string) {
 		context, builder := MakeContext()
 

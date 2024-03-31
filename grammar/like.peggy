@@ -25,9 +25,9 @@ code = operator / directive / call
 directive = "// " directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
 
-quotedString = singleQuotedString / doubleQuotedString{ return string(c.text), nil }
-singleQuotedString = "'" ("\\'" / [^'])* "'" { return string(c.text), nil }
-doubleQuotedString = '"' ("\\\"" / [^"])* '"'{ return string(c.text), nil }
+quotedString = singleQuotedString / doubleQuotedString
+singleQuotedString = "'" _s:("\\'" / [^'])* "'" { return MakeParsedString("'", castify(_s, "")), nil }
+doubleQuotedString = '"' _s:("\\\"" / [^"])* '"'{ return MakeParsedString("\"", castify(_s, "")), nil }
 
 expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
     return ExpressionList(listFrom[Expression](_e, _r)), nil

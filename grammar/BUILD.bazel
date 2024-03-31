@@ -19,6 +19,7 @@ go_library(
         "Literal.go",
         "LiteralList.go",
         "Member.go",
+        "ParsedString.go",
         "Reference.go",
         "StoreAccess.go",
         "System.go",

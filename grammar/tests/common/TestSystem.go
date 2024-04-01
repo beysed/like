@@ -22,9 +22,5 @@ func MakeContext() (g.Context, *strings.Builder) {
 	system := TestSystem{}
 	store := g.Store{}
 
-	return g.Context{
-		System:  &system,
-		Locals:  store,
-		Globals: store,
-	}, &system.Result
+	return g.MakeContext(store, store, g.MakeDefaultBuiltIn(), &system), &system.Result
 }

@@ -6,13 +6,28 @@ import (
 	"strings"
 )
 
-// "strings"
-
-// "github.com/samber/lo"
-
 type StoreAccess struct {
 	Reference Expression
 	Index     Expression
+}
+
+type StoreReference struct {
+	Store     Store
+	Reference string
+}
+
+type Value interface {
+	Get() any
+	Set(v any) any
+}
+
+func (a StoreReference) Get() any {
+	return a.Store[a.Reference]
+}
+
+func (a StoreReference) Set(v any) any {
+	a.Store[a.Reference] = v
+	return v
 }
 
 func (a StoreAccess) String() string {
@@ -32,6 +47,7 @@ func (a StoreAccess) String() string {
 	} else {
 		f = "%s.%s"
 	}
+
 	return fmt.Sprintf(f, ref, ind)
 }
 
@@ -39,35 +55,39 @@ func (a StoreAccess) Evaluate(context *Context) (any, error) {
 	if literal, ok := a.Reference.(Literal); ok {
 		var v = literal.String()
 		if context.Locals[v] != nil {
-			return context.Locals[v], nil
+			return &StoreReference{
+				Store:     context.Locals,
+				Reference: v}, nil
 		} else if context.Globals[v] != nil {
-			return context.Globals[v], nil
+			return &StoreReference{
+				Store:     context.Globals,
+				Reference: v}, nil
 		} else {
 			context.Locals[v] = Store{}
-			return context.Locals[v], nil
+			return &StoreReference{
+				Store:     context.Locals,
+				Reference: v}, nil
 		}
 	}
 
-	if store, ok := a.Reference.(StoreAccess); ok {
-		v, e := store.Evaluate(context)
+	if st, ok := a.Reference.(StoreAccess); ok {
+		v, e := st.Evaluate(context)
 		if e != nil {
 			return v, e
 		}
 
-		s := v.(Store)
+		s := v.(*StoreReference)
 		if a.Index == nil {
 			return s, nil
 		}
 
-		local := &Context{
-			Globals: s,
-			Locals:  s,
-			System:  context.System,
-		}
+		store := s.Get().(Store)
+		local := MakeContext(store, store, context.BuiltIn, context.System)
 
 		n := StoreAccess{
 			Reference: a.Index}
-		return n.Evaluate(local)
+
+		return n.Evaluate(&local)
 	}
 
 	return nil, nil

@@ -24,6 +24,7 @@ go_library(
         "Member.go",
         "Not.go",
         "ParsedString.go",
+        "Pointer.go",
         "Reference.go",
         "StoreAccess.go",
         "System.go",

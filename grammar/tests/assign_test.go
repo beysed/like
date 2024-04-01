@@ -33,17 +33,12 @@ var _ = Describe("Assigns", func() {
 		var system = TestSystem{}
 
 		var globals = g.Store{}
-		var context = g.Context{
-			Locals:  globals,
-			Globals: globals,
-			System:  &system,
-			//Builtin: g.Store{},
-		}
+		var context = g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), &system)
 
 		result, err := assign.Evaluate(&context)
 		Expect(err).To(BeNil())
-		Expect(context.Locals[indentifier].(g.Store)[g.ValueKey]).Should(Equal(value))
-		Expect(context.Locals[indentifier].(g.Store)[g.ValueKey]).Should(Equal(result))
+		Expect(context.Locals[indentifier]).Should(Equal(value))
+		Expect(context.Locals[indentifier]).Should(Equal(result))
 	},
 		Entry("Evaluate: literal", "a = b", "a", "b"),
 		Entry("Evaluate: quoted string", "b = 'a'", "b", "a"),

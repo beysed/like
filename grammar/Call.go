@@ -12,37 +12,62 @@ func (a Call) String() string {
 }
 
 func (a Call) Evaluate(context *Context) (any, error) {
-	store, err := a.Store.Evaluate(context)
-	if err != nil {
-		return store, err
-	}
+	var evalFunc func([]any) (any, error)
 
-	lambda, ok := store.(Store)[ValueKey].(Lambda)
-	if !ok {
-		return nil, MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()))
-	}
+	evalArgs := func() ([]any, error) {
+		args := []any{}
 
-	// todo: check len of argument lists
+		for _, v := range a.Arguments {
+			arg, err := v.Evaluate(context)
+			if err != nil {
+				return nil, err
+			}
 
-	local := Context{
-		Locals:  Store{},
-		Globals: context.Globals,
-		System:  context.System,
-	}
-
-	argc := len(a.Arguments)
-	for i, v := range lambda.Arguments.Identifiers {
-		if i >= argc {
-			break
-			// todo: warning args mismatch
+			args = append(args, arg)
 		}
-		arg, err := a.Arguments[i].Evaluate(context)
+
+		return args, nil
+	}
+
+	if f, ok := a.Store.Reference.(Literal); ok {
+		funcName := f.Value.(string)
+		builtInFunc := context.BuiltIn[funcName]
+		evalFunc = builtInFunc
+	}
+
+	if evalFunc == nil {
+		store, err := a.Store.Evaluate(context)
 		if err != nil {
-			return arg, err
+			return store, err
 		}
 
-		local.Locals[v] = Store{ValueKey: arg}
+		lambda, ok := store.(Value).Get().(Lambda)
+		if !ok {
+			return nil, MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()))
+		}
+
+		// todo: check len of argument lists
+
+		evalFunc = func(args []any) (any, error) {
+			local := MakeContext(Store{}, context.Globals, context.BuiltIn, context.System)
+
+			argc := len(args)
+			for i, v := range lambda.Arguments.Identifiers {
+				if i >= argc {
+					return nil, MakeError("lambda arguments mismatch")
+				}
+
+				local.Locals[v] = args[i]
+			}
+
+			return lambda.Body.Evaluate(&local)
+		}
 	}
 
-	return lambda.Body.Evaluate(&local)
+	args, err := evalArgs()
+	if err != nil {
+		return nil, err
+	}
+
+	return evalFunc(args)
 }

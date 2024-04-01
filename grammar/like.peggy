@@ -63,6 +63,14 @@ reference = sign
     return Reference { Expression : _m.(Expression) }, nil 
   }
 
+pointer = '^' 
+  _m: (
+    store / 
+    ('(' _m:store ')' { return _m, nil })) 
+  { 
+    return Pointer { Expression : _m.(Expression) }, nil 
+  }
+
 dblquot = quot quot
 template_end = eol dblquot
 template_body = _a:( _a:any !template_end { return MakeLiteral(_a.(string)), nil})*  { return _a, nil }

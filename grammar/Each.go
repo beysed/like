@@ -21,8 +21,10 @@ func (a Each) Evaluate(context *Context) (any, error) {
 
 	result := []any{}
 
-	var eval = func(l any) (any, error) {
-		context.Locals["_"] = Store{ValueKey: l}
+	var eval = func(i string, l any) (any, error) {
+		context.Locals["_v"] = fmt.Sprint(l)
+		context.Locals["_k"] = fmt.Sprint(i)
+
 		r, err := a.Body.Evaluate(context)
 		if err != nil {
 			return a.Body, err
@@ -32,15 +34,17 @@ func (a Each) Evaluate(context *Context) (any, error) {
 		return r, nil
 	}
 
+	//todo map
+
 	if lst, ok := v.([]any); ok {
-		for _, l := range lst {
-			_, err = eval(l)
+		for k, l := range lst {
+			_, err = eval(fmt.Sprint(k), l)
 			if err != nil {
 				return a.Body, err
 			}
 		}
 	} else {
-		_, err := eval(v)
+		_, err := eval("0", v)
 		if err != nil {
 			return a.Body, err
 		}

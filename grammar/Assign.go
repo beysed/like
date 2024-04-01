@@ -10,10 +10,17 @@ func (a Assign) String() string {
 }
 
 func (a Assign) Evaluate(context *Context) (any, error) {
-	store, _ := a.Store.Evaluate(context)
-	v, _ := a.Value.Evaluate(context)
+	store, err := a.Store.Evaluate(context)
+	if err != nil {
+		return store, err
+	}
 
-	store.(Store)[ValueKey] = v
+	v, err := a.Value.Evaluate(context)
+	if err != nil {
+		return v, err
+	}
+
+	store.(Value).Set(v)
 
 	return v, nil
 }

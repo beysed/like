@@ -15,6 +15,8 @@ var _ = Describe("Grammar Logic", func() {
 		Expect(result).To(Equal(expected))
 	},
 		Entry("not", "~ ! ''", "T"),
+		Entry("not not", "~ ! ! ''", ""),
+		Entry("not not paren", "~ !(!'')", ""),
 		Entry("not equal", "~ a != b", "T"),
 		Entry("equal", "~ a == a", "T"))
 })

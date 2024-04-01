@@ -96,7 +96,20 @@ store =
     return StoreAccess { 
       Reference: _e.(Expression) }, nil}
 
+condition 
+  = '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? { 
+    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f, nil)), nil
+  }
+  / '?' ws+ _c:expression ws* eol '%' ws+ _f:body {
+    return MakeCondition(_c.(Expression), nil, _f.(Expression)), nil
+  } 
+
+each 
+  = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
+
 operator =
+  each /
+  condition /
   parse /
   assign /
   write /
@@ -107,6 +120,8 @@ list
   = '[' ws* _e:expression_list ws* ']' { return _e, nil }
 
 expression =
+  each /
+  condition /
   "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
@@ -143,8 +158,10 @@ super_expression = _s:expression+ _r:(_w:ws+ _l:expression+ {
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil 
     }
 
+body =  block / operator / super_expression
+
 lambda = _a:argument_decl ws* 
-  _e:( block / operator / super_expression ) 
+  _e:body 
   {
     return Lambda { 
       Arguments : _a.(IdentifierList), 
@@ -180,10 +197,12 @@ literal = t:( l:lit+ { return convert(l), nil }/ s:quotedString { return unquote
   return MakeLiteral(t.(string)), nil
 }
 
-lit = ("\\\"" { return "\"", nil }) / ("\\'"{ return "'", nil }) / (sym / let / dig) { return string(c.text), nil}
+// escaped= '\\' s:sym { return string(s.([]byte)), nil }
+lit = ("\\" _a:[@!={}()#=&|$<>~'"?% \][.]  { return string(_a.([]byte)), nil }) / (sym / let / dig) { return string(c.text), nil}
+//lit =  '\\"' { return "\"", nil } / (sym / let / dig) { return string(c.text), nil}
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^!={}()#=&|$<>~'" \n\r\t\][.] 
+sym = [^@!={}()#=&|$<>~'"?% \n\r\t\][.] 
 
 ws = ' ' / '\t'
 dash = '-'

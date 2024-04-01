@@ -14,6 +14,9 @@ var _ = Describe("Grammar Logic", func() {
 		Expect(err).To(BeNil())
 		Expect(result).To(Equal(expected))
 	},
+		Entry("simple loop", "@ [1 2 3] ~ a$_", "a1a2a3"),
+		Entry("block loop", "@ [1 2 3] {\n~ a\n~$_\n}", "a1a2a3"),
+		Entry("if yes", "~ ? T yes", "yes"),
 		Entry("not", "~ ! ''", "T"),
 		Entry("not not", "~ ! ! ''", ""),
 		Entry("not not paren", "~ !(!'')", ""),

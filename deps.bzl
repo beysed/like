@@ -12,7 +12,6 @@ def go_dependencies():
         importpath = "github.com/beysed/shell",
         sum = "h1:p0JM4VX18Ba8LEtRvb89Wgm2gFmoFFZBTojOF2vafV8=",
         version = "v0.1.2",
-        #build_file_generation = "on",
     )
     go_repository(
         name = "com_github_chromedp_cdproto",

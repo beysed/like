@@ -21,6 +21,7 @@ jobs:
       - run: bazel build //...
       - run: bazel test //... --test_output=all --test_arg=--ginkgo.json-report --test_arg=$(bazel info bazel-testlogs)/tests_test.json --spawn_strategy=standalone
       - name: Test Report
+        if: success() || failure()
         run: |
           jq -r \
           '.[] | .SpecReports[] | { Test: "\(.ContainerHierarchyTexts | join(" ")) \(.LeafNodeText)", State: .State | ascii_upcase } | "\(.Test) \(.Test | (" " * (70 - length)))\(.State)"' \

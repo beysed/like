@@ -33,7 +33,7 @@ go_library(
         "grammar.go",
         "parser.go",
     ],
-    importpath = "like/grammar",
+    importpath = "github.com/beysed/like/internal/grammar",
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_beysed_shell//execute:go_default_library",

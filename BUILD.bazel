@@ -9,7 +9,7 @@ nogo(
     visibility = ["//visibility:public"],
 )
 
-# gazelle:prefix like
+# gazelle:prefix github.com/beysed/like
 gazelle(name = "gazelle")
 
 gazelle(
@@ -25,7 +25,7 @@ gazelle(
 go_library(
     name = "like_lib",
     srcs = ["main.go"],
-    importpath = "like",
+    importpath = "github.com/beysed/like",
     visibility = ["//visibility:private"],
 )
 

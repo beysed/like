@@ -2,8 +2,9 @@ package common
 
 import (
 	"fmt"
-	g "like/grammar"
 	"strings"
+
+	g "github.com/beysed/like/internal/grammar"
 )
 
 type TestSystem struct {

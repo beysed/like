@@ -1,8 +1,8 @@
 package tests
 
 import (
-	g "like/grammar"
-	. "like/grammar/tests/common"
+	g "github.com/beysed/like/internal/grammar"
+	. "github.com/beysed/like/internal/tests/common"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

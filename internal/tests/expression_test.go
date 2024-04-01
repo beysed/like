@@ -1,9 +1,9 @@
 package tests
 
 import (
-	g "like/grammar"
+	g "github.com/beysed/like/internal/grammar"
 
-	. "like/grammar/tests/common"
+	. "github.com/beysed/like/internal/tests/common"
 
 	"strings"
 

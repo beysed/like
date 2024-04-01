@@ -25,8 +25,8 @@ go_test(
     ],
     data = [":samples"],
     deps = [
-        "//grammar",
-        "//grammar/tests/common",
+        "//internal/grammar",
+        "//internal/tests/common",
         "@com_github_onsi_ginkgo_v2//:go_default_library",
         "@com_github_onsi_gomega//:go_default_library",
         "@com_github_samber_lo//:go_default_library",

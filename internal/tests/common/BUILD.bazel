@@ -6,10 +6,10 @@ go_library(
         "TestSystem.go",
         "common.go",
     ],
-    importpath = "like/grammar/tests/common",
+    importpath = "github.com/beysed/like/internal/tests/common",
     visibility = ["//visibility:public"],
     deps = [
-        "//grammar",
+        "//internal/grammar",
         "@com_github_onsi_ginkgo_v2//:go_default_library",
         "@com_github_onsi_gomega//:go_default_library",
         "@io_bazel_rules_go//go/runfiles:go_default_library",

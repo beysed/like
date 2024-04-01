@@ -1,10 +1,11 @@
 package common
 
 import (
-	g "like/grammar"
 	"os"
 	"path/filepath"
 	"strings"
+
+	g "github.com/beysed/like/internal/grammar"
 
 	"github.com/bazelbuild/rules_go/go/runfiles"
 	k "github.com/onsi/ginkgo/v2"

@@ -17,6 +17,7 @@ go_test(
         "grammar_test.go",
         "lists_test.go",
         "literal_test.go",
+        "logic_test.go",
         "sample_test.go",
     ],
     args = [

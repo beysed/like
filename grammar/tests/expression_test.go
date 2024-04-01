@@ -64,14 +64,14 @@ var _ = Describe("Grammar", func() {
 		Entry("empty line end", "\n", ""),
 		Entry("empty line space end", " \n", ""),
 		Entry("case1", "a=1", "a = 1"),
-		Entry("code comment", "a=1#asd", "a = 1"),
-		Entry("single comment", "#asd", ""),
-		Entry("single line end comment", "#asd\n", ""),
-		Entry("two comment lines", "#asd\n#def", "\n"),
+		Entry("code comment", "a=1# asd", "a = 1"),
+		Entry("single comment", "# asd", ""),
+		Entry("single line end comment", "# asd\n", ""),
+		Entry("two comment lines", "# asd\n# def", "\n"),
 		Entry("case2", "a=1\na=2", "a = 1\na = 2"),
 		Entry("case3", "a=1\n\na=2", "a = 1\n\na = 2"),
 		Entry("case4", "a=1\n \na=2", "a = 1\n\na = 2"),
-		Entry("case5", "a=1\n#asd\na=2", "a = 1\n\na = 2"))
+		Entry("case5", "a=1\n# asd\na=2", "a = 1\n\na = 2"))
 
 	DescribeTable("Parses: block lambda", func(input string, expexted string) {
 		var actual = ParseInupt(input, "lambda")

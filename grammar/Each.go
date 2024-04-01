@@ -21,9 +21,9 @@ func (a Each) Evaluate(context *Context) (any, error) {
 
 	result := []any{}
 
-	var eval = func(i string, l any) (any, error) {
-		context.Locals["_v"] = fmt.Sprint(l)
-		context.Locals["_k"] = fmt.Sprint(i)
+	var eval = func(key string, val any) (any, error) {
+		context.Locals["_k"] = fmt.Sprint(key)
+		context.Locals["_v"] = fmt.Sprint(val)
 
 		r, err := a.Body.Evaluate(context)
 		if err != nil {
@@ -39,6 +39,13 @@ func (a Each) Evaluate(context *Context) (any, error) {
 	if lst, ok := v.([]any); ok {
 		for k, l := range lst {
 			_, err = eval(fmt.Sprint(k), l)
+			if err != nil {
+				return a.Body, err
+			}
+		}
+	} else if m, ok := v.(Store); ok {
+		for k, _ := range m {
+			_, err = eval(k, m[k])
 			if err != nil {
 				return a.Body, err
 			}

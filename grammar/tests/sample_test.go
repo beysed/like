@@ -18,6 +18,7 @@ var _ = Describe("Sample", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/loop", "samples/loop.like", "a1b2c3"),
 		Entry("samples/quotes", "samples/quotes.like", "\"a'"),
 		Entry("samples/sample", "samples/sample.like", "b\n"),
 		Entry("samples/simple_template", "samples/simple_template.like", "aaacbbb\n"),

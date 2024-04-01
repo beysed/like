@@ -2,7 +2,7 @@ package grammar
 
 type System interface {
 	Output(text any)
-	Invoke(command string, args ...[]string) (any, error)
+	ReadFile(filePath string) ([]byte, error)
 	// throw
 	// input+
 }

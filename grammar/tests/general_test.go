@@ -34,11 +34,11 @@ var _ = Describe("Grammar", func() {
 		a := result.FileName.String()
 		Expect(a).To(Equal(fn))
 	},
-		Entry("unquoted", "// include asd", "asd"),
-		Entry("unquoted comment", "// include asd#comment", "asd"),
-		Entry("unquoted comment space", "// include asd #comment", "asd"),
-		Entry("single quoted", "// include 'asd'", "asd"),
-		Entry("double quoted", "// include \"asd\"", "asd"))
+		Entry("unquoted", "#include asd", "asd"),
+		Entry("unquoted comment", "#include asd#comment", "asd"),
+		Entry("unquoted comment space", "#include asd #comment", "asd"),
+		Entry("single quoted", "#include 'asd'", "asd"),
+		Entry("double quoted", "#include \"asd\"", "asd"))
 
 	DescribeTable("Parses: expression / memeber_list", func(input string) {
 		var actual = ParseInupt(input, "expression")

@@ -10,12 +10,12 @@ type TestSystem struct {
 	Result strings.Builder
 }
 
-func (t *TestSystem) Output(text any) {
-	t.Result.WriteString(fmt.Sprintf("%s", text))
+func (t *TestSystem) ReadFile(filePath string) ([]byte, error) {
+	return Read(filePath), nil
 }
 
-func (t *TestSystem) Invoke(command string, args ...[]string) (any, error) {
-	return nil, nil
+func (t *TestSystem) Output(text any) {
+	t.Result.WriteString(fmt.Sprintf("%s", text))
 }
 
 func MakeContext() (g.Context, *strings.Builder) {

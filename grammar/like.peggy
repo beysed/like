@@ -18,12 +18,12 @@ eoa = eol / eof
 empty_line 
   = (eol / ws+ eoa / ws* comment eoa) { return MakeLiteral(""), nil }
 
-line = template / empty_line / (ws* _c:code comment? eoa { return _c, nil })
+line = template / (ws* _c:code comment? eoa { return _c, nil }) / empty_line
 
-comment = "#" (any !eoa)* any? { return string(c.text), nil }
+comment = "#" ws+ (any !eoa)* any? { return string(c.text), nil }
 code = operator / directive / call 
 
-directive = "// " directive:(include) { return directive, nil }
+directive = "#" directive:(include) { return directive, nil }
 include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
 
 quotedString = singleQuotedString / doubleQuotedString

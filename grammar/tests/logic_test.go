@@ -21,6 +21,7 @@ var _ = Describe("Grammar Logic", func() {
 		Expect(err).To(BeNil())
 		Expect(result).To(Equal(expected))
 	},
+		Entry("eval", "eval('~ a')", "a"),
 		Entry("simple loop", "@ [a b c] ~ -$_k$_v", "-0a-1b-2c"),
 		Entry("block loop", "@ [1 2 3] {\n~ a\n~$_v\n}", "a1a2a3"),
 		Entry("if yes", "~ ? T yes", "yes"),

@@ -6,7 +6,7 @@ import (
 )
 
 type Store map[string]any
-type BuiltIn map[string]func([]any) (any, error)
+type BuiltIn map[string]func(context *Context, args []any) (any, error)
 
 type SystemContext struct {
 	Buffer strings.Builder
@@ -14,8 +14,29 @@ type SystemContext struct {
 
 func MakeDefaultBuiltIn() BuiltIn {
 	return BuiltIn{
-		"error": func(a []any) (any, error) {
-			return nil, MakeError(stringify(a))
+		"error": func(context *Context, args []any) (any, error) {
+			return nil, MakeError(stringify(args))
+		},
+		"eval": func(context *Context, args []any) (any, error) {
+			var err error
+
+			lines := []string{}
+			for _, a := range args {
+				var last any
+
+				if t, ok := a.(Expression); ok {
+					last, err = t.Evaluate(context)
+					if err != nil {
+						return t, err
+					}
+				} else {
+					last = a
+				}
+
+				lines = append(lines, fmt.Sprint(last))
+			}
+			text := strings.Join(lines, "\n")
+			return Execute(context, []byte(text))
 		}}
 }
 

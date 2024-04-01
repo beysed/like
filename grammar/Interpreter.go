@@ -1,21 +1,21 @@
 package grammar
 
-func Execute(context *Context, code []byte) error {
+func Execute(context *Context, code []byte) (any, error) {
 	result, err := Parse("a.like", code, Entrypoint("file"))
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	exprs := result.([]Expression)
-
+	var last any
 	for _, expr := range exprs {
-		_, err = expr.Evaluate(context)
+		last, err = expr.Evaluate(context)
 
 		if err != nil {
-			return err
+			return expr, err
 		}
 	}
 
-	return nil
+	return last, nil
 }

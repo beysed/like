@@ -12,7 +12,7 @@ func (a Call) String() string {
 }
 
 func (a Call) Evaluate(context *Context) (any, error) {
-	var evalFunc func([]any) (any, error)
+	var evalFunc func(context *Context, args []any) (any, error)
 
 	evalArgs := func() ([]any, error) {
 		args := []any{}
@@ -48,7 +48,7 @@ func (a Call) Evaluate(context *Context) (any, error) {
 
 		// todo: check len of argument lists
 
-		evalFunc = func(args []any) (any, error) {
+		evalFunc = func(_ *Context, args []any) (any, error) {
 			local := MakeContext(Store{}, context.Globals, context.BuiltIn, context.System)
 
 			argc := len(args)
@@ -69,5 +69,5 @@ func (a Call) Evaluate(context *Context) (any, error) {
 		return nil, err
 	}
 
-	return evalFunc(args)
+	return evalFunc(context, args)
 }

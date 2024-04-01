@@ -12,7 +12,7 @@ var _ = Describe("List tests", func() {
 	DescribeTable("Execs", func(input string, expected string) {
 		context, builder := MakeContext()
 
-		err := g.Execute(&context, ([]byte)(input))
+		_, err := g.Execute(&context, ([]byte)(input))
 		Expect(err).To(BeNil())
 		Expect(builder.String()).To(Equal(expected))
 	},

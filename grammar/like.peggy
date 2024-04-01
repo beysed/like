@@ -105,12 +105,16 @@ store =
       Reference: _e.(Expression) }, nil}
 
 condition 
-  = '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? { 
+  =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {
+    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f, nil)), nil
+  } 
+  / '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? { 
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f, nil)), nil
   }
   / '?' ws+ _c:expression ws* eol '%' ws+ _f:body {
     return MakeCondition(_c.(Expression), nil, _f.(Expression)), nil
   } 
+
 
 each 
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }

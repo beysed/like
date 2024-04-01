@@ -33,7 +33,7 @@ func (a WriteLn) Evaluate(context *Context) (any, error) {
 	return result, nil
 }
 
-func stringify(prefix string, a Expressions) string {
+func stringifyList(prefix string, a Expressions) string {
 	return fmt.Sprintf("%s %s", prefix,
 		strings.Join(
 			lo.Map(a,
@@ -43,9 +43,9 @@ func stringify(prefix string, a Expressions) string {
 }
 
 func (a Write) String() string {
-	return stringify("~", a.Expression)
+	return stringifyList("~", a.Expression)
 }
 
 func (a WriteLn) String() string {
-	return stringify("`", a.Expression)
+	return stringifyList("`", a.Expression)
 }

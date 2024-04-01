@@ -1,7 +1,7 @@
 package common
 
 import (
-	. "like/grammar"
+	g "like/grammar"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,13 +16,13 @@ func Text(input string) []byte {
 }
 
 func ParseInupt(input string, entrypoint string) any {
-	result, err := Parse("a.like", Text(input), Entrypoint(entrypoint))
+	result, err := g.Parse("a.like", Text(input), g.Entrypoint(entrypoint))
 	Expect(err).To(BeNil())
 	return result
 }
 
 func ParseInuptIncorrect(input string, entrypoint string) (any, error) {
-	return Parse("a.like", Text(input), Entrypoint(entrypoint))
+	return g.Parse("a.like", Text(input), g.Entrypoint(entrypoint))
 }
 
 func Log(format string, args ...any) {
@@ -55,4 +55,10 @@ func Read(fileName string) []byte {
 	reader.Read(buf)
 
 	return buf
+}
+
+func Evaluate(code string) (string, error) {
+	context, result := MakeContext()
+	err := g.Execute(&context, []byte(code))
+	return result.String(), err
 }

@@ -28,3 +28,15 @@ resource "kubernetes_deployment" "postgres" {
 
 a =~ & yq a.yaml
 a =~ & yq a.yaml
+
+if $a error
+
+if $a {
+  error
+}
+
+if $a error(a) 
+else 
+error(b)
+
+if $a error(a)

@@ -10,12 +10,12 @@ type Literal struct {
 
 func (v Literal) String() string {
 	switch v := v.Value.(type) {
-	default:
-		return "unknown"
 	case fmt.Stringer:
 		return v.String()
 	case string:
 		return v
+	default:
+		return "unknown"
 	}
 }
 

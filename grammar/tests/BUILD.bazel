@@ -15,6 +15,7 @@ go_test(
         "expression_test.go",
         "general_test.go",
         "grammar_test.go",
+        "lists_test.go",
         "literal_test.go",
         "sample_test.go",
     ],

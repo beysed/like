@@ -107,6 +107,9 @@ list
   = '[' ws* _e:expression_list ws* ']' { return _e, nil }
 
 expression =
+  "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
+  _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
+  _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
   call  /
   invoke /
   reference /
@@ -180,7 +183,7 @@ literal = t:( l:lit+ { return convert(l), nil }/ s:quotedString { return unquote
 lit = ("\\\"" { return "\"", nil }) / ("\\'"{ return "'", nil }) / (sym / let / dig) { return string(c.text), nil}
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^{}()#=&|$<>~'" \n\r\t\][.] 
+sym = [^!={}()#=&|$<>~'" \n\r\t\][.] 
 
 ws = ' ' / '\t'
 dash = '-'

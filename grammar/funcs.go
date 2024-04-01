@@ -41,3 +41,11 @@ func unquote(s any) string {
 func convert(s any) string {
 	return strings.Join(arrayify[string](s), "")
 }
+
+func stringify(s any) string {
+	return fmt.Sprintf("%s", s)
+}
+
+func trim(s string) string {
+	return strings.TrimSpace(s)
+}

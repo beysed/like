@@ -24,7 +24,7 @@ comment = "#" ws+ (any !eoa)* any? { return string(c.text), nil }
 code = operator / directive / call 
 
 directive = "#" directive:(include) { return directive, nil }
-include = "include" ws+ fn:literal { return Include {FileName: fn.(Literal)}, nil }
+include = "include" ws+ fn:expression { return Include {FileName: fn.(Expression)}, nil }
 
 quotedString = singleQuotedString / doubleQuotedString
 singleQuotedString = "'" ("\\'" / [^'])* "'" { return MakeParsedString("'", string(c.text[1:len(c.text)-1])), nil }

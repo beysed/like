@@ -1,7 +1,6 @@
 {
   package grammar
   import (
-    "strconv"
     "strings"
   )
 }
@@ -70,6 +69,11 @@ pointer = '^'
   { 
     return Pointer { Expression : _m.(Expression) }, nil 
   }
+
+string_content 
+  = ("$$" { return MakeLiteral("$"), nil}
+  / reference
+  /_a:any { return MakeLiteral(_a.(string)), nil })*
 
 dblquot = quot quot
 template_end = eol dblquot
@@ -147,6 +151,7 @@ expression =
   invoke /
   reference /
   literal /
+  quotedString /
   list /
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
@@ -210,10 +215,9 @@ literal_list = l:literal r:(ws+ t:literal {
     return (LiteralList)(listFrom[Literal](l, r)), nil 
   }
 
-literal = t:( l:lit+ { return convert(l), nil }/ s:quotedString { return unquote(s), nil})
-{
-  return MakeLiteral(t.(string)), nil
-}
+literal 
+  = lit+ { return MakeLiteral(string(c.text)), nil }
+  / s:quotedString
 
 // escaped= '\\' s:sym { return string(s.([]byte)), nil }
 lit = ("\\" _a:[@!={}()#=&|$<>~'"?% \][.]  { return string(_a.([]byte)), nil }) / (sym / let / dig) { return string(c.text), nil}

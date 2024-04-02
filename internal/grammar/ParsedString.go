@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
+	"github.com/samber/lo"
 )
 
 type ParsedString struct {
@@ -21,8 +22,17 @@ func (a ParsedString) Unquote() string {
 }
 
 func (a ParsedString) Evaluate(context *c.Context) (any, error) {
-	// todo: parse references
-	return a.Unquote(), nil
+	s := a.Unquote()
+	e, err := Parse("a.like", []byte(s), Entrypoint("string_content"))
+	if err != nil {
+		return s, c.MakeError("unable to parse string", err)
+	}
+
+	exps := lo.Map(e.([]any), func(a any, _ int) Expression {
+		return a.(Expression)
+	})
+
+	return Expressions([]Expression(exps)).Evaluate(context)
 }
 
 func MakeParsedString(quote string, body string) ParsedString {

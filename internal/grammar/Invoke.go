@@ -49,7 +49,7 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 				if err != nil {
 					return err
 				}
-			} else if a, ok := e.(Reference); ok {
+			} else if a, ok := e.(Expression); ok {
 				res, err := a.Evaluate(context)
 				if err != nil {
 					return err
@@ -61,6 +61,8 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 				} else {
 					result = append(result, res.(string))
 				}
+			} else {
+				return c.MakeError("unknown element", nil)
 			}
 		}
 

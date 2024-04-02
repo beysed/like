@@ -2,6 +2,7 @@ package grammar
 
 import (
 	"fmt"
+	"os"
 
 	c "github.com/beysed/like/internal/grammar/common"
 )
@@ -17,6 +18,7 @@ func (a Include) String() string {
 func (a Include) Evaluate(context *c.Context) (any, error) {
 	var v any
 	var err error
+	var fileName string
 	var file []byte
 
 	v, err = a.FileName.Evaluate(context)
@@ -24,10 +26,11 @@ func (a Include) Evaluate(context *c.Context) (any, error) {
 		return a.FileName, err
 	}
 
-	file, err = context.System.ReadFile(fmt.Sprint(v))
+	fileName, err = context.System.ResolvePath(fmt.Sprint(v))
+	file, err = os.ReadFile(fileName)
 	if err != nil {
-		return v, err
+		return fileName, err
 	}
 
-	return Execute(context, file)
+	return Execute(fileName, context, file)
 }

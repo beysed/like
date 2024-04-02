@@ -2,8 +2,10 @@ package grammar
 
 import c "github.com/beysed/like/internal/grammar/common"
 
-func Execute(context *c.Context, code []byte) (any, error) {
-	result, err := Parse("a.like", code, Entrypoint("file"))
+func Execute(filePath string, context *c.Context, code []byte) (any, error) {
+	result, err := Parse(filePath, code, Entrypoint("file"))
+	context.PathStack.Push(filePath)
+	defer context.PathStack.Pop()
 
 	if err != nil {
 		return nil, err

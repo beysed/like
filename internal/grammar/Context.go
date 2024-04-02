@@ -35,7 +35,8 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 				lines = append(lines, fmt.Sprint(last))
 			}
 			text := strings.Join(lines, "\n")
-			return Execute(context, []byte(text))
+			_, folder := context.PathStack.Peek()
+			return Execute(folder, context, []byte(text))
 		}}
 }
 

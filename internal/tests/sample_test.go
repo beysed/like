@@ -14,7 +14,7 @@ var _ = Describe("Sample", func() {
 
 		context, result := MakeContext()
 
-		_, err := g.Execute(&context, c)
+		_, err := g.Execute("a.like", &context, c)
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
@@ -37,7 +37,7 @@ var _ = Describe("Sample", func() {
 	DescribeTable("Valid file", func(f string, e string) {
 		context, result := MakeContext()
 
-		_, err := g.Execute(&context, []byte(f))
+		_, err := g.Execute("a.like", &context, []byte(f))
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},

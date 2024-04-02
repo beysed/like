@@ -46,10 +46,11 @@ func File(fileName string) string {
 }
 
 func Read(fileName string) []byte {
-	stat, err := os.Stat(File(fileName))
+	f := File(fileName)
+	stat, err := os.Stat(f)
 	Expect(err).To(BeNil())
 
-	reader, err := os.Open(File(fileName))
+	reader, err := os.Open(f)
 	Expect(err).To(BeNil())
 
 	var buf = make([]byte, stat.Size())
@@ -60,6 +61,7 @@ func Read(fileName string) []byte {
 
 func Evaluate(code string) (string, error) {
 	context, result := MakeContext()
-	_, err := g.Execute(&context, []byte(code))
+	wd, _ := os.Getwd()
+	_, err := g.Execute(wd, &context, []byte(code))
 	return result.String(), err
 }

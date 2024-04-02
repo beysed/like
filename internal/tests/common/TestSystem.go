@@ -14,10 +14,6 @@ type TestSystem struct {
 	Result strings.Builder
 }
 
-func (t *TestSystem) ReadFile(filePath string) ([]byte, error) {
-	return Read(filePath), nil
-}
-
 func (t *TestSystem) ResolvePath(filePath string) (string, error) {
 	f := File(filePath)
 	_, err := os.Stat(File(f))

@@ -11,4 +11,5 @@ go_library(
     ],
     importpath = "github.com/beysed/like/internal/grammar/common",
     visibility = ["//:__subpackages__"],
+    deps = ["@com_github_zeroflucs_given_generics//collections/stack:go_default_library"],
 )

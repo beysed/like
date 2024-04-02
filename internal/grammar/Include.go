@@ -11,7 +11,7 @@ type Include struct {
 }
 
 func (a Include) String() string {
-	return fmt.Sprintf("#include '%s'", a.FileName.String())
+	return fmt.Sprintf("#include %s", a.FileName.String())
 }
 
 func (a Include) Evaluate(context *c.Context) (any, error) {

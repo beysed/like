@@ -170,6 +170,12 @@ def go_dependencies():
         version = "v1.4.13",
     )
     go_repository(
+        name = "com_github_zeroflucs_given_generics",
+        importpath = "github.com/zeroflucs-given/generics",
+        sum = "h1:1ZcF2t0PLpsVOtKHnCK4oJ/oArQV87kOEcnWKkGz9j0=",
+        version = "v0.0.0-20240314015508-5e445e47cf6d",
+    )
+    go_repository(
         name = "in_gopkg_check_v1",
         importpath = "gopkg.in/check.v1",
         sum = "h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=",

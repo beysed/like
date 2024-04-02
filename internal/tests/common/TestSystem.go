@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"os"
+
 	g "github.com/beysed/like/internal/grammar"
 	c "github.com/beysed/like/internal/grammar/common"
 )
@@ -14,6 +16,13 @@ type TestSystem struct {
 
 func (t *TestSystem) ReadFile(filePath string) ([]byte, error) {
 	return Read(filePath), nil
+}
+
+func (t *TestSystem) ResolvePath(filePath string) (string, error) {
+	f := File(filePath)
+	_, err := os.Stat(File(f))
+
+	return f, err
 }
 
 func (t *TestSystem) Output(text any) {

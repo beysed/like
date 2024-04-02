@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type StoreAccess struct {
@@ -12,7 +14,7 @@ type StoreAccess struct {
 }
 
 type StoreReference struct {
-	Store     Store
+	Store     c.Store
 	Reference string
 }
 
@@ -51,7 +53,7 @@ func (a StoreAccess) String() string {
 	return fmt.Sprintf(f, ref, ind)
 }
 
-func (a StoreAccess) Evaluate(context *Context) (any, error) {
+func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 	if literal, ok := a.Reference.(Literal); ok {
 		var v = literal.String()
 		if context.Locals[v] != nil {
@@ -63,7 +65,7 @@ func (a StoreAccess) Evaluate(context *Context) (any, error) {
 				Store:     context.Globals,
 				Reference: v}, nil
 		} else {
-			context.Locals[v] = Store{}
+			context.Locals[v] = c.Store{}
 			return &StoreReference{
 				Store:     context.Locals,
 				Reference: v}, nil
@@ -81,7 +83,7 @@ func (a StoreAccess) Evaluate(context *Context) (any, error) {
 			return s, nil
 		}
 
-		store := s.Get().(Store)
+		store := s.Get().(c.Store)
 		local := MakeContext(store, store, context.BuiltIn, context.System)
 
 		n := StoreAccess{

@@ -2,6 +2,8 @@ package grammar
 
 import (
 	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type Literal struct {
@@ -19,7 +21,7 @@ func (v Literal) String() string {
 	}
 }
 
-func (v Literal) Evaluate(context *Context) (any, error) {
+func (v Literal) Evaluate(context *c.Context) (any, error) {
 	return v.Value, nil
 }
 

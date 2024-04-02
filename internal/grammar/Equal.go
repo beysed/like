@@ -2,6 +2,8 @@ package grammar
 
 import (
 	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type Equal struct {
@@ -13,7 +15,7 @@ func (v Equal) String() string {
 	return fmt.Sprintf("%s == %s", v.Left.String(), v.Right.String())
 }
 
-func (a Equal) Evaluate(context *Context) (any, error) {
+func (a Equal) Evaluate(context *c.Context) (any, error) {
 	l, err := a.Left.Evaluate(context)
 	if err != nil {
 		return a.Left, err

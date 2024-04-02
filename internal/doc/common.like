@@ -26,17 +26,7 @@ resource "kubernetes_deployment" "postgres" {
 
 ` serice()
 
-a =~ & yq a.yaml
-a =~ & yq a.yaml
-
-if $a error
-
-if $a {
-  error
-}
-
-if $a error(a) 
-else 
-error(b)
-
-if $a error(a)
+a =~ json & cat ./file
+a =~ yaml & cat ./file
+a =~ json '{ "a" : 1 }'
+a =~ list '{ "a" : 1 }'

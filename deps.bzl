@@ -158,6 +158,12 @@ def go_dependencies():
         version = "v1.9.0",
     )
     go_repository(
+        name = "com_github_valyala_fastjson",
+        importpath = "github.com/valyala/fastjson",
+        sum = "h1:uAUNq9Z6ymTgGhcm0UynUAB6tlbakBrz6CQFax3BXVQ=",
+        version = "v1.6.4",
+    )
+    go_repository(
         name = "com_github_yuin_goldmark",
         importpath = "github.com/yuin/goldmark",
         sum = "h1:fVcFKWvrslecOb/tg+Cc05dkeYx540o0FuFt3nUVDoE=",

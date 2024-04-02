@@ -2,13 +2,15 @@ package grammar
 
 import (
 	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type Reference struct {
 	Expression Expression
 }
 
-func (a Reference) Evaluate(context *Context) (any, error) {
+func (a Reference) Evaluate(context *c.Context) (any, error) {
 	var expr Expression
 	if e, ok := a.Expression.(Literal); ok {
 		i, _ := e.Evaluate(context)

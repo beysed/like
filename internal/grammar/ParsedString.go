@@ -3,6 +3,8 @@ package grammar
 import (
 	"fmt"
 	"strings"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type ParsedString struct {
@@ -18,7 +20,8 @@ func (a ParsedString) Unquote() string {
 	return strings.ReplaceAll(a.RawBody, "\\"+a.Quote, a.Quote)
 }
 
-func (a ParsedString) Evaluate(context *Context) (any, error) {
+func (a ParsedString) Evaluate(context *c.Context) (any, error) {
+	// todo: parse references
 	return a.Unquote(), nil
 }
 

@@ -1,4 +1,4 @@
-package grammar
+package common
 
 type System interface {
 	Output(text any)

@@ -12,7 +12,8 @@ var _ = Describe("Grammar Logic", func() {
 	It("Error", func() {
 		_, err := Evaluate("error(oops)")
 
-		Expect(err.Error()).To(Equal("[oops]"))
+		Expect(err).ToNot(BeNil())
+		Expect(err.Error()).To(Equal("[[oops]]"))
 	})
 
 	DescribeTable("Not", func(input string, expected string) {

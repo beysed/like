@@ -4,6 +4,7 @@ import (
 	. "github.com/beysed/like/internal/tests/common"
 
 	g "github.com/beysed/like/internal/grammar"
+	c "github.com/beysed/like/internal/grammar/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -32,7 +33,7 @@ var _ = Describe("Assigns", func() {
 
 		var system = TestSystem{}
 
-		var globals = g.Store{}
+		var globals = c.Store{}
 		var context = g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), &system)
 
 		result, err := assign.Evaluate(&context)

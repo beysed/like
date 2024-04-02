@@ -3,6 +3,7 @@ package grammar
 import (
 	"strings"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
 )
 
@@ -12,7 +13,7 @@ func (v LiteralList) String() string {
 	return strings.Join(lo.Map(v, func(l Literal, _ int) string { return l.String() }), " ")
 }
 
-func (v LiteralList) Evaluate(context *Context) (any, error) {
+func (v LiteralList) Evaluate(context *c.Context) (any, error) {
 	if len(v) == 1 {
 		return v[0].Evaluate(context)
 	}

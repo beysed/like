@@ -1,0 +1,8 @@
+`` sample
+a=b
+c = 1
+``
+
+a =~ env sample()
+~ $a.a
+~ $a.c

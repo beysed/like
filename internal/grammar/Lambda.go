@@ -1,6 +1,10 @@
 package grammar
 
-import "fmt"
+import (
+	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
+)
 
 type Lambda struct {
 	Arguments IdentifierList
@@ -11,6 +15,6 @@ func (a Lambda) String() string {
 	return fmt.Sprintf("(%s) %s", a.Arguments.String(), a.Body.String())
 }
 
-func (a Lambda) Evaluate(context *Context) (any, error) {
+func (a Lambda) Evaluate(context *c.Context) (any, error) {
 	return a, nil
 }

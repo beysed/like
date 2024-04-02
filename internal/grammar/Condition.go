@@ -3,6 +3,8 @@ package grammar
 import (
 	"fmt"
 	"strings"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type Condition struct {
@@ -26,7 +28,7 @@ func (a Condition) String() string {
 	return b.String()
 }
 
-func (a Condition) Evaluate(context *Context) (any, error) {
+func (a Condition) Evaluate(context *c.Context) (any, error) {
 	v, err := a.Condition.Evaluate(context)
 	if err != nil {
 		return a.Condition, err

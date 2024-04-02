@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
 )
 
@@ -13,21 +14,21 @@ type Write struct {
 
 type WriteLn Write
 
-func evaluate(a Expressions, context *Context) string {
+func evaluate(a Expressions, context *c.Context) string {
 	return strings.Join(lo.Map(
 		a, func(e Expression, _ int) string {
 			r, _ := e.Evaluate(context)
-			return fmt.Sprintf("%s", r)
+			return fmt.Sprint(r)
 		}), "")
 }
 
-func (a Write) Evaluate(context *Context) (any, error) {
+func (a Write) Evaluate(context *c.Context) (any, error) {
 	result := evaluate(a.Expression, context)
 	context.System.Output(result)
 	return result, nil
 }
 
-func (a WriteLn) Evaluate(context *Context) (any, error) {
+func (a WriteLn) Evaluate(context *c.Context) (any, error) {
 	result := evaluate(a.Expression, context)
 	context.System.Output(fmt.Sprintf("%s\n", result))
 	return result, nil

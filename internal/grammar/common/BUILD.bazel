@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "common",
+    srcs = [
+        "Builtin.go",
+        "Context.go",
+        "LikeError.go",
+        "Store.go",
+        "System.go",
+    ],
+    importpath = "github.com/beysed/like/internal/grammar/common",
+    visibility = ["//:__subpackages__"],
+)

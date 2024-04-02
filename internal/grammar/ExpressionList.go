@@ -3,6 +3,7 @@ package grammar
 import (
 	"strings"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
 )
 
@@ -16,7 +17,7 @@ func (a ExpressionList) String() string {
 			}), " ")
 }
 
-func (a ExpressionList) Evaluate(context *Context) (any, error) {
+func (a ExpressionList) Evaluate(context *c.Context) (any, error) {
 	var result []any
 
 	for _, v := range a {

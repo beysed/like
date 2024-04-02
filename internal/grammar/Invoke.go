@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/beysed/shell/execute"
 )
 
@@ -21,7 +22,7 @@ func isEmpty(s any) (string, bool) {
 	return q, len(strings.TrimSpace(q)) == 0
 }
 
-func flattern(exprs []Expression, context *Context) ([]string, error) {
+func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 	result := []string{}
 
 	var add func(exprs []Expression) error
@@ -71,7 +72,7 @@ func flattern(exprs []Expression, context *Context) ([]string, error) {
 	return result, err
 }
 
-func (a Invoke) Evaluate(context *Context) (any, error) {
+func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	output := strings.Builder{}
 
 	cmdEval, err := a.Expressions[0].Evaluate(context)
@@ -81,7 +82,7 @@ func (a Invoke) Evaluate(context *Context) (any, error) {
 
 	cmd, ok := cmdEval.(string) // todo check
 	if !ok {
-		return cmdEval, MakeError("command is not string")
+		return cmdEval, c.MakeError("command is not string", nil)
 	}
 
 	args, err := flattern(a.Expressions[1:], context)

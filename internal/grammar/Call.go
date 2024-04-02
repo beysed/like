@@ -1,6 +1,10 @@
 package grammar
 
-import "fmt"
+import (
+	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
+)
 
 type Call struct {
 	Store     StoreAccess
@@ -11,8 +15,8 @@ func (a Call) String() string {
 	return fmt.Sprintf("%s(%s)", a.Store.String(), a.Arguments.String())
 }
 
-func (a Call) Evaluate(context *Context) (any, error) {
-	var evalFunc func(context *Context, args []any) (any, error)
+func (a Call) Evaluate(context *c.Context) (any, error) {
+	var evalFunc func(context *c.Context, args []any) (any, error)
 
 	evalArgs := func() ([]any, error) {
 		args := []any{}
@@ -43,18 +47,18 @@ func (a Call) Evaluate(context *Context) (any, error) {
 
 		lambda, ok := store.(Value).Get().(Lambda)
 		if !ok {
-			return nil, MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()))
+			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()), nil)
 		}
 
 		// todo: check len of argument lists
 
-		evalFunc = func(_ *Context, args []any) (any, error) {
-			local := MakeContext(Store{}, context.Globals, context.BuiltIn, context.System)
+		evalFunc = func(_ *c.Context, args []any) (any, error) {
+			local := MakeContext(c.Store{}, context.Globals, context.BuiltIn, context.System)
 
 			argc := len(args)
 			for i, v := range lambda.Arguments.Identifiers {
 				if i >= argc {
-					return nil, MakeError("lambda arguments mismatch")
+					return nil, c.MakeError("lambda arguments mismatch", nil)
 				}
 
 				local.Locals[v] = args[i]

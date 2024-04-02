@@ -1,0 +1,14 @@
+`` sample
+---
+a: "a string"
+b: true
+c: 3
+d:
+  e: f
+``
+
+a =~ yaml sample()
+~ $a.a
+~ $a.b
+~ $a.c
+~ $a.d.e

@@ -1,0 +1,16 @@
+`` sample
+{
+    "a" : 1,
+    "b" : "b",
+    "c" : true,
+    "d" : {
+        "e" : "f"
+    }
+}
+``
+
+a =~ json sample()
+~ $a.a
+~ $a.b
+~ $a.c
+~ $a.d.e

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
 )
 
@@ -19,7 +20,7 @@ func (a Block) String() string {
 	return fmt.Sprintf("{\n%s\n}", body)
 }
 
-func (a Block) Evaluate(context *Context) (any, error) {
+func (a Block) Evaluate(context *c.Context) (any, error) {
 	var last any
 	for _, v := range a {
 		r, err := v.Evaluate(context)

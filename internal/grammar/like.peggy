@@ -52,7 +52,7 @@ index = '[' _e:expression ']' { return _e, nil };
 
 member = _m:(identifier / s:quotedString { return unquote(s), nil }) { 
   return Member{ 
-    Identifier: castify(_m, "") }, nil
+    Identifier: castify[string](_m) }, nil
 };
 
 reference = sign 
@@ -75,7 +75,7 @@ dblquot = quot quot
 template_end = eol dblquot
 template_body = _a:( _a:any !template_end { return MakeLiteral(_a.(string)), nil})*  { return _a, nil }
 template = 
-  dblquot ws+ _i:identifier _a:argument_decl ws* eol 
+  dblquot ws+ _i:identifier _a:argument_decl? ws* eol 
   _b:( reference/_a:any !dblquot { return MakeLiteral(_a.(string)), nil } )* 
   template_end
 {
@@ -83,10 +83,16 @@ template =
   return Assign {
     Store: StoreAccess { Reference: MakeLiteral(_i.(string)) },
     Value: Lambda {
-      Arguments : _a.(IdentifierList),
+      Arguments : castify[IdentifierList](_a),
       Body: Expressions(e)}},nil }
 
-parse = store ws* eq tilda ws* expression
+assign_parse 
+  = _s:store ws* eq tilda ws* _f:literal ws+ _d:expression {
+    return AssignParse {
+      Store: _s.(StoreAccess),
+      Format: _f.(Expression),
+      Data: _d.(Expression) }, nil
+  }
 
 pipe_receive = invoke / call
 pipe_send = invoke / call / reference / literal
@@ -106,10 +112,10 @@ store =
 
 condition 
   =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {
-    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f, nil)), nil
+    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   } 
   / '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? { 
-    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f, nil)), nil
+    return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   }
   / '?' ws+ _c:expression ws* eol '%' ws+ _f:body {
     return MakeCondition(_c.(Expression), nil, _f.(Expression)), nil
@@ -122,7 +128,7 @@ each
 operator =
   each /
   condition /
-  parse /
+  assign_parse /
   assign /
   write /
   writeln /

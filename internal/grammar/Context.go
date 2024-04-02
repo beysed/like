@@ -3,21 +3,20 @@ package grammar
 import (
 	"fmt"
 	"strings"
-)
 
-type Store map[string]any
-type BuiltIn map[string]func(context *Context, args []any) (any, error)
+	c "github.com/beysed/like/internal/grammar/common"
+)
 
 type SystemContext struct {
 	Buffer strings.Builder
 }
 
-func MakeDefaultBuiltIn() BuiltIn {
-	return BuiltIn{
-		"error": func(context *Context, args []any) (any, error) {
-			return nil, MakeError(stringify(args))
+func MakeDefaultBuiltIn() c.BuiltIn {
+	return c.BuiltIn{
+		"error": func(context *c.Context, args []any) (any, error) {
+			return nil, c.MakeError(stringify(args), nil)
 		},
-		"eval": func(context *Context, args []any) (any, error) {
+		"eval": func(context *c.Context, args []any) (any, error) {
 			var err error
 
 			lines := []string{}
@@ -48,15 +47,8 @@ func (c *SystemContext) Output(text string) {
 	fmt.Print(text)
 }
 
-type Context struct {
-	Locals  Store
-	Globals Store
-	BuiltIn BuiltIn
-	System  System
-}
-
-func MakeContext(locals Store, globals Store, builtIn BuiltIn, system System) Context {
-	return Context{
+func MakeContext(locals c.Store, globals c.Store, builtIn c.BuiltIn, system c.System) c.Context {
+	return c.Context{
 		Locals:  locals,
 		Globals: globals,
 		BuiltIn: builtIn,

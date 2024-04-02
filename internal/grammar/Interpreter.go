@@ -1,6 +1,8 @@
 package grammar
 
-func Execute(context *Context, code []byte) (any, error) {
+import c "github.com/beysed/like/internal/grammar/common"
+
+func Execute(context *c.Context, code []byte) (any, error) {
 	result, err := Parse("a.like", code, Entrypoint("file"))
 
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
 )
 
@@ -17,7 +18,7 @@ func (a Expressions) String() string {
 			}), "")
 }
 
-func (a Expressions) Evaluate(context *Context) (any, error) {
+func (a Expressions) Evaluate(context *c.Context) (any, error) {
 	b := strings.Builder{}
 	for _, v := range a {
 		res, err := v.Evaluate(context)
@@ -25,7 +26,7 @@ func (a Expressions) Evaluate(context *Context) (any, error) {
 			return v, err
 		}
 
-		b.WriteString(fmt.Sprintf("%s", res))
+		b.WriteString(fmt.Sprint(res))
 	}
 
 	return b.String(), nil

@@ -2,6 +2,8 @@ package grammar
 
 import (
 	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
 )
 
 type Not struct {
@@ -12,7 +14,7 @@ func (v Not) String() string {
 	return fmt.Sprintf("!%s", v.Expression.String())
 }
 
-func (a Not) Evaluate(context *Context) (any, error) {
+func (a Not) Evaluate(context *c.Context) (any, error) {
 	v, err := a.Expression.Evaluate(context)
 	if err != nil {
 		return nil, err

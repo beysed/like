@@ -92,6 +92,7 @@ func main() {
 
 	_, err = g.Execute(fileName, context, input)
 	if err != nil {
+		os.Stderr.WriteString(fmt.Sprintf("error: %s\n", err.Error()))
 		os.Exit(128)
 	}
 }

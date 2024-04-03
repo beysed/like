@@ -4,12 +4,13 @@ import c "github.com/beysed/like/internal/grammar/common"
 
 func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 	result, err := Parse("", code, Entrypoint("file"))
-	context.PathStack.Push(filePath)
-	defer context.PathStack.Pop()
 
 	if err != nil {
 		return nil, err
 	}
+
+	context.PathStack.Push(filePath)
+	defer context.PathStack.Pop()
 
 	exprs := result.([]Expression)
 	var last any

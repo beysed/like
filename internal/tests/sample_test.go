@@ -8,8 +8,18 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Sample", func() {
-	DescribeTable("T", func(f string, e string) {
+var _ = Describe("Samples", func() {
+	DescribeTable("Sample Incorrect", func(f string, e string) {
+		var c = Read(f)
+
+		context, _ := MakeContext()
+
+		_, err := g.Execute("a.like", context, c)
+		Expect(err).NotTo(BeNil())
+	},
+		Entry("samples/error", "samples/error.like", "bbbb"))
+
+	DescribeTable("Sample Correct", func(f string, e string) {
 		var c = Read(f)
 
 		context, result := MakeContext()

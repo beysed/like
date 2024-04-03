@@ -136,6 +136,7 @@ each
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
 
 operator =
+  reference /
   each /
   condition /
   assign /

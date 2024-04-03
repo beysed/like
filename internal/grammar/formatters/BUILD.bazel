@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "formatters",
+    srcs = [
+        "DataFormatter.go",
+        "EnvFormatter.go",
+        "Formatters.go",
+        "JsonFormatter.go",
+        "YamlFormatter.go",
+    ],
+    importpath = "github.com/beysed/like/internal/grammar/formatters",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/grammar/common",
+        "@in_gopkg_yaml_v3//:go_default_library",
+    ],
+)

@@ -26,7 +26,7 @@ resource "kubernetes_deployment" "postgres" {
 
 ` serice()
 
-a =~ json & cat ./file
-a =~ yaml & cat ./file
-a =~ json '{ "a" : 1 }'
-a =~ list '{ "a" : 1 }'
+a = :< json & cat ./file
+a = :< yaml & cat ./file
+a = :< json '{ "a" : 1 }'
+a = :< list '{ "a" : 1 }'

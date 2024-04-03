@@ -7,17 +7,16 @@ import (
 	p "github.com/beysed/like/internal/grammar/parsers"
 )
 
-type AssignParse struct {
-	Store  Expression
+type ParseData struct {
 	Format Expression
 	Data   Expression
 }
 
-func (v AssignParse) String() string {
-	return fmt.Sprintf("%s =~ %s %s", v.Store.String(), v.Format.String(), v.Data.String())
+func (v ParseData) String() string {
+	return fmt.Sprintf(":< %s %s", v.Format.String(), v.Data.String())
 }
 
-func (a AssignParse) Evaluate(context *c.Context) (any, error) {
+func (a ParseData) Evaluate(context *c.Context) (any, error) {
 	fmt, err := Evaluate[string](a.Format, context)
 
 	if err != nil {
@@ -39,8 +38,5 @@ func (a AssignParse) Evaluate(context *c.Context) (any, error) {
 		return data, err
 	}
 
-	return Evaluate[any](Assign{
-		Store: a.Store,
-		Value: Constant{Value: parsed},
-	}, context)
+	return parsed, nil
 }

@@ -90,10 +90,16 @@ template =
       Arguments : castify[IdentifierList](_a),
       Body: Expressions(e)}},nil }
 
-assign_parse 
-  = _s:store ws* eq tilda ws* _f:literal ws+ _d:expression {
-    return AssignParse {
-      Store: _s.(StoreAccess),
+parse_data 
+  = colon lt ws* _f:literal ws+ _d:expression {
+    return ParseData {
+      Format: _f.(Expression),
+      Data: _d.(Expression) }, nil
+  }
+
+format_data 
+  = colon gt ws* _f:literal ws+ _d:expression {
+    return FormatData {
       Format: _f.(Expression),
       Data: _d.(Expression) }, nil
   }
@@ -132,7 +138,6 @@ each
 operator =
   each /
   condition /
-  assign_parse /
   assign /
   write /
   writeln /
@@ -142,6 +147,8 @@ list
   = '[' ws* _e:expression_list ws* ']' { return _e, nil }
 
 expression =
+  parse_data /
+  format_data /
   each /
   condition /
   "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
@@ -222,14 +229,14 @@ literal
   / s:quotedString
 
 lit 
-  = ("\\" _a:[@!={}()#=&|$<>~'"?% \][.\\] { return string(_a.([]byte)), nil }) 
+  = ("\\" _a:[@!={}()#=&|$<>~'"?%: \][.\\] { return string(_a.([]byte)), nil }) 
   / (sym / let / dig) { return string(c.text), nil}
   / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^\\@!={}()#=&|$<>~'"?% \n\r\t\][.] 
+sym = [^\\@!={}()#=&|$<>~'"?%: \n\r\t\][.] 
 
 ws = ' ' / '\t'
 dash = '-'
@@ -245,6 +252,7 @@ lt = '<'
 eq = '='
 amper = '&'
 tilda = '~'
+colon = ':'
 pipe_in = sign lt // $<
 any = . { return string(c.text), nil }
 eof = !.

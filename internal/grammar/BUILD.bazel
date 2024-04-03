@@ -4,7 +4,6 @@ go_library(
     name = "grammar",
     srcs = [
         "Assign.go",
-        "AssignParse.go",
         "Block.go",
         "BuiltIn.go",
         "Call.go",
@@ -16,6 +15,7 @@ go_library(
         "Expression.go",
         "ExpressionList.go",
         "Expressions.go",
+        "FormatData.go",
         "IdentifierList.go",
         "Include.go",
         "Interpreter.go",
@@ -25,6 +25,7 @@ go_library(
         "LiteralList.go",
         "Member.go",
         "Not.go",
+        "ParseData.go",
         "ParsedString.go",
         "Pointer.go",
         "Reference.go",
@@ -38,6 +39,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//internal/grammar/common",
+        "//internal/grammar/formatters",
         "//internal/grammar/parsers",
         "@com_github_beysed_shell//execute:go_default_library",
         "@com_github_samber_lo//:go_default_library",

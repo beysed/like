@@ -14,24 +14,35 @@ type Write struct {
 
 type WriteLn Write
 
-func evaluate(a Expressions, context *c.Context) string {
-	return strings.Join(lo.Map(
-		a, func(e Expression, _ int) string {
-			r, _ := e.Evaluate(context)
-			return fmt.Sprint(r)
-		}), "")
+func evaluate(a Expressions, context *c.Context) (string, error) {
+	data := []string{}
+
+	for _, e := range a {
+		r, err := e.Evaluate(context)
+		if err != nil {
+			return "", err
+		}
+
+		data = append(data, fmt.Sprint(r))
+	}
+
+	return strings.Join(data, ""), nil
 }
 
 func (a Write) Evaluate(context *c.Context) (any, error) {
-	result := evaluate(a.Expression, context)
+	result, err := evaluate(a.Expression, context)
+	if err != nil {
+		context.System.OutputError(fmt.Sprintf("%s\n", err.Error()))
+		return nil, err
+	}
+
 	context.System.OutputText(result)
 	return result, nil
 }
 
 func (a WriteLn) Evaluate(context *c.Context) (any, error) {
-	result := evaluate(a.Expression, context)
-	context.System.OutputText(fmt.Sprintf("%s\n", result))
-	return result, nil
+	w := Write{Expression: Expressions{a.Expression, Constant{MakeLiteral("\n")}}}
+	return w.Evaluate(context)
 }
 
 func stringifyList(prefix string, a Expressions) string {

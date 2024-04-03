@@ -94,7 +94,12 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 			return s, nil
 		}
 
-		store := s.Get().(c.Store)
+		store, ok := s.Get().(c.Store)
+		if !ok {
+			store = c.Store{}
+			s.Set(store)
+		}
+
 		local := MakeContext(store, store, context.BuiltIn, context.System)
 
 		n := StoreAccess{

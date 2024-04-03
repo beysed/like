@@ -36,7 +36,7 @@ var _ = Describe("Assigns", func() {
 		var globals = c.Store{}
 		var context = g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), &system)
 
-		result, err := assign.Evaluate(&context)
+		result, err := assign.Evaluate(context)
 		Expect(err).To(BeNil())
 		Expect(context.Locals[indentifier]).Should(Equal(value))
 		Expect(context.Locals[indentifier]).Should(Equal(result))

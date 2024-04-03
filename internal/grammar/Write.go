@@ -24,13 +24,13 @@ func evaluate(a Expressions, context *c.Context) string {
 
 func (a Write) Evaluate(context *c.Context) (any, error) {
 	result := evaluate(a.Expression, context)
-	context.System.Output(result)
+	context.System.OutputText(result)
 	return result, nil
 }
 
 func (a WriteLn) Evaluate(context *c.Context) (any, error) {
 	result := evaluate(a.Expression, context)
-	context.System.Output(fmt.Sprintf("%s\n", result))
+	context.System.OutputText(fmt.Sprintf("%s\n", result))
 	return result, nil
 }
 

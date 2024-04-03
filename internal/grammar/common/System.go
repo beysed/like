@@ -1,6 +1,7 @@
 package common
 
 type System interface {
-	Output(text any)
-	ResolvePath(filePath string) (string, error)
+	OutputText(text string)
+	OutputError(text string)
+	ResolvePath(context *Context, filePath string) (string, error)
 }

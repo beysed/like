@@ -64,7 +64,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 				local.Locals[v] = args[i]
 			}
 
-			return lambda.Body.Evaluate(&local)
+			return lambda.Body.Evaluate(local)
 		}
 	}
 

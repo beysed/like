@@ -49,7 +49,7 @@ call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
 
 index = '[' _e:expression ']' { return _e, nil };
 
-member = _m:(identifier / s:quotedString { return unquote(s), nil }) { 
+member = _m:(identifier / s:quotedString) { 
   return Member{ 
     Identifier: castify[string](_m) }, nil
 };
@@ -173,7 +173,9 @@ argument_decl = '(' ws* _i:identifier_list? ws* ')' {
   return _i, nil 
 }
 
-super_expression = _s:expression+ _r:(_w:ws+ _l:expression+ { 
+super_expression 
+  = _s:super_expression+ ws+ { return Expressions{ Expressions(arrayify[Expression](_s)), MakeLiteral(" ") } , nil }
+  / _s:expression+ _r:(_w:ws+ _l:expression+ { 
       return Expressions{ 
         MakeLiteral(" "), 
         Expressions(arrayify[Expression](_l)) } , nil})* 
@@ -216,15 +218,18 @@ literal_list = l:literal r:(ws+ t:literal {
   }
 
 literal 
-  = lit+ { return MakeLiteral(string(c.text)), nil }
+  = a:lit+ { return MakeLiteral(convert(a)), nil }
   / s:quotedString
 
-// escaped= '\\' s:sym { return string(s.([]byte)), nil }
-lit = ("\\" _a:[@!={}()#=&|$<>~'"?% \][.]  { return string(_a.([]byte)), nil }) / (sym / let / dig) { return string(c.text), nil}
-//lit =  '\\"' { return "\"", nil } / (sym / let / dig) { return string(c.text), nil}
+lit 
+  = ("\\" _a:[@!={}()#=&|$<>~'"?% \][.\\] { return string(_a.([]byte)), nil }) 
+  / (sym / let / dig) { return string(c.text), nil}
+  / "\\" _s:sym+ { return string(c.text[1:]), nil }
+  / "\\" { return string(c.text), nil }
+
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^@!={}()#=&|$<>~'"?% \n\r\t\][.] 
+sym = [^\\@!={}()#=&|$<>~'"?% \n\r\t\][.] 
 
 ws = ' ' / '\t'
 dash = '-'

@@ -3,7 +3,7 @@ package grammar
 import c "github.com/beysed/like/internal/grammar/common"
 
 func Execute(filePath string, context *c.Context, code []byte) (any, error) {
-	result, err := Parse(filePath, code, Entrypoint("file"))
+	result, err := Parse("", code, Entrypoint("file"))
 	context.PathStack.Push(filePath)
 	defer context.PathStack.Pop()
 

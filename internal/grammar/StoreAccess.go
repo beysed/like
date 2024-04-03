@@ -54,21 +54,32 @@ func (a StoreAccess) String() string {
 }
 
 func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
-	if literal, ok := a.Reference.(Literal); ok {
-		var v = literal.String()
-		if context.Locals[v] != nil {
+	var ref string
+
+	if s, ok := a.Reference.(Literal); ok {
+		ref = s.String()
+	} else if s, ok := a.Reference.(ParsedString); ok {
+		r, err := s.Evaluate(context)
+		if err != nil {
+			return ref, err
+		}
+		ref = r.(string)
+	}
+
+	if ref != "" {
+		if context.Locals[ref] != nil {
 			return &StoreReference{
 				Store:     context.Locals,
-				Reference: v}, nil
-		} else if context.Globals[v] != nil {
+				Reference: ref}, nil
+		} else if context.Globals[ref] != nil {
 			return &StoreReference{
 				Store:     context.Globals,
-				Reference: v}, nil
+				Reference: ref}, nil
 		} else {
-			context.Locals[v] = c.Store{}
+			context.Locals[ref] = c.Store{}
 			return &StoreReference{
 				Store:     context.Locals,
-				Reference: v}, nil
+				Reference: ref}, nil
 		}
 	}
 
@@ -89,7 +100,7 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 		n := StoreAccess{
 			Reference: a.Index}
 
-		return n.Evaluate(&local)
+		return n.Evaluate(local)
 	}
 
 	return nil, nil

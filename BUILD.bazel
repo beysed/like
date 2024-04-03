@@ -24,9 +24,17 @@ gazelle(
 
 go_library(
     name = "like_lib",
-    srcs = ["main.go"],
+    srcs = [
+        "SystemContext.go",
+        "main.go",
+    ],
     importpath = "github.com/beysed/like",
     visibility = ["//visibility:private"],
+    deps = [
+        "//internal/grammar",
+        "//internal/grammar/common",
+        "//internal/grammar/parsers",
+    ],
 )
 
 go_binary(

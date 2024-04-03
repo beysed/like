@@ -62,6 +62,6 @@ func Read(fileName string) []byte {
 func Evaluate(code string) (string, error) {
 	context, result := MakeContext()
 	wd, _ := os.Getwd()
-	_, err := g.Execute(wd, &context, []byte(code))
+	_, err := g.Execute(wd, context, []byte(code))
 	return result.String(), err
 }

@@ -6,6 +6,7 @@ go_library(
         "Assign.go",
         "AssignParse.go",
         "Block.go",
+        "BuiltIn.go",
         "Call.go",
         "Condition.go",
         "Constant.go",

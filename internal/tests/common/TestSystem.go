@@ -14,18 +14,22 @@ type TestSystem struct {
 	Result strings.Builder
 }
 
-func (t *TestSystem) ResolvePath(filePath string) (string, error) {
+func (t *TestSystem) ResolvePath(context *c.Context, filePath string) (string, error) {
 	f := File(filePath)
 	_, err := os.Stat(File(f))
 
 	return f, err
 }
 
-func (t *TestSystem) Output(text any) {
+func (t *TestSystem) OutputText(text string) {
 	t.Result.WriteString(fmt.Sprint(text))
 }
 
-func MakeContext() (c.Context, *strings.Builder) {
+func (t *TestSystem) OutputError(text string) {
+	t.OutputText(text)
+}
+
+func MakeContext() (*c.Context, *strings.Builder) {
 	system := TestSystem{}
 	store := c.Store{}
 

@@ -5,8 +5,8 @@
   )
 }
 
-file = 
-  _s:line* eof { 
+file =
+  _s:line* eof {
     return arrayify[Expression](_s,), nil
   }
 
@@ -14,13 +14,14 @@ eol = ('\r'? '\n') / '\r';
 
 eoa = eol / eof
 
-empty_line 
+empty_line
   = (eol / ws+ eoa / ws* comment eoa) { return MakeLiteral(""), nil }
 
-line = template / (ws* _c:code comment? eoa { return _c, nil }) / empty_line
+code_line =ws* _c:code comment? eoa { return _c, nil }
+line = template / code_line / empty_line
 
 comment = "#" ws+ (any !eoa)* any? { return string(c.text), nil }
-code = operator / directive / call 
+code = operator / directive / call
 
 directive = "#" directive:(include) { return directive, nil }
 include = "include" ws+ fn:expression { return Include {FileName: fn.(Expression)}, nil }
@@ -34,7 +35,7 @@ expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
 }
 
 call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
-  var t ExpressionList 
+  var t ExpressionList
 
   if _m != nil {
     t = _m.(ExpressionList)
@@ -49,28 +50,28 @@ call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
 
 index = '[' _e:expression ']' { return _e, nil };
 
-member = _m:(identifier / s:quotedString) { 
-  return Member{ 
+member = _m:(identifier / s:quotedString) {
+  return Member{
     Identifier: castify[string](_m) }, nil
 };
 
-reference = sign 
+reference = sign
   _m: (
-    store / 
-    ('(' _m:store ')' { return _m, nil })) 
-  { 
-    return Reference { Expression : _m.(Expression) }, nil 
+    store /
+    ('(' _m:store ')' { return _m, nil }))
+  {
+    return Reference { Expression : _m.(Expression) }, nil
   }
 
-pointer = '^' 
+pointer = '^'
   _m: (
-    store / 
-    ('(' _m:store ')' { return _m, nil })) 
-  { 
-    return Pointer { Expression : _m.(Expression) }, nil 
+    store /
+    ('(' _m:store ')' { return _m, nil }))
+  {
+    return Pointer { Expression : _m.(Expression) }, nil
   }
 
-string_content 
+string_content
   = ("$$" { return MakeLiteral("$"), nil}
   / reference
   /_a:any { return MakeLiteral(_a.(string)), nil })*
@@ -78,9 +79,9 @@ string_content
 dblquot = quot quot
 template_end = eol dblquot
 template_body = _a:( _a:any !template_end { return MakeLiteral(_a.(string)), nil})*  { return _a, nil }
-template = 
-  dblquot ws+ _i:identifier _a:argument_decl? ws* eol 
-  _b:( reference/_a:any !dblquot { return MakeLiteral(_a.(string)), nil } )* 
+template =
+  dblquot ws+ _i:identifier _a:argument_decl? ws* eol
+  _b:( reference/_a:any !dblquot { return MakeLiteral(_a.(string)), nil } )*
   template_end
 {
   e := arrayify[Expression](_b)
@@ -90,14 +91,14 @@ template =
       Arguments : castify[IdentifierList](_a),
       Body: Expressions(e)}},nil }
 
-parse_data 
+parse_data
   = colon lt ws* _f:literal ws+ _d:expression {
     return ParseData {
       Format: _f.(Expression),
       Data: _d.(Expression) }, nil
   }
 
-format_data 
+format_data
   = colon gt ws* _f:literal ws+ _d:expression {
     return FormatData {
       Format: _f.(Expression),
@@ -107,32 +108,32 @@ format_data
 pipe_receive = invoke / call
 pipe_send = invoke / call / reference / literal
 
-store = 
-  (_e:store _i:index { 
-    return StoreAccess { 
-      Reference: _e.(Expression), 
+store =
+  (_e:store _i:index {
+    return StoreAccess {
+      Reference: _e.(Expression),
       Index: _i.(Expression)}, nil }) /
-  (_e:store '.' _i:store { 
-    return StoreAccess { 
-      Reference: _e.(Expression), 
+  (_e:store '.' _i:store {
+    return StoreAccess {
+      Reference: _e.(Expression),
       Index: _i.(Expression)}, nil }) /
-  _e:literal { 
-    return StoreAccess { 
+  _e:literal {
+    return StoreAccess {
       Reference: _e.(Expression) }, nil}
 
-condition 
+condition
   =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
-  } 
-  / '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? { 
+  }
+  / '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? {
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   }
   / '?' ws+ _c:expression ws* eol '%' ws+ _f:body {
     return MakeCondition(_c.(Expression), nil, _f.(Expression)), nil
-  } 
+  }
 
 
-each 
+each
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
 
 operator =
@@ -144,7 +145,7 @@ operator =
   writeln /
   invoke;
 
-list 
+list
   = '[' ws* _e:expression_list ws* ']' { return _e, nil }
 
 expression =
@@ -164,40 +165,40 @@ expression =
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
-block= '{' ws* comment* eol _l:line* '}' comment* (eol / eof) { 
-  return Block(arrayify[Expression](_l)) ,nil 
+block= '{' ws* comment* eol _l:line* '}' comment* (eol / eof) {
+  return Block(arrayify[Expression](_l)) ,nil
 }
 
-identifier_list= _i:identifier _r:(ws+ _i: identifier { return _i, nil } )* { 
-  return IdentifierList { 
+identifier_list= _i:identifier _r:(ws+ _i: identifier { return _i, nil } )* {
+  return IdentifierList {
     Identifiers: listFrom[string](_i, _r) }, nil
 }
 
-argument_decl = '(' ws* _i:identifier_list? ws* ')' { 
+argument_decl = '(' ws* _i:identifier_list? ws* ')' {
   if _i == nil {
     return IdentifierList{}, nil
   }
 
-  return _i, nil 
+  return _i, nil
 }
 
-super_expression 
+super_expression
   = _s:super_expression+ ws+ { return Expressions{ Expressions(arrayify[Expression](_s)), MakeLiteral(" ") } , nil }
-  / _s:expression+ _r:(_w:ws+ _l:expression+ { 
-      return Expressions{ 
-        MakeLiteral(" "), 
-        Expressions(arrayify[Expression](_l)) } , nil})* 
-    { 
-      return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil 
+  / _s:expression+ _r:(_w:ws+ _l:expression+ {
+      return Expressions{
+        MakeLiteral(" "),
+        Expressions(arrayify[Expression](_l)) } , nil})*
+    {
+      return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body =  block / operator / super_expression
+body =  block / code_line
 
-lambda = _a:argument_decl ws* 
-  _e:body 
+lambda = _a:argument_decl ws*
+  _e:body
   {
-    return Lambda { 
-      Arguments : _a.(IdentifierList), 
+    return Lambda {
+      Arguments : _a.(IdentifierList),
       Body: _e.(Expression) }, nil
   }
 
@@ -208,36 +209,36 @@ assign = _i:store ws* eq ws* _e:(lambda / expression)
     Value: _e.(Expression) }, nil
 }
 
-writeln = quot ws* _e:super_expression { 
+writeln = quot ws* _e:super_expression {
   return WriteLn { Expression : _e.(Expressions) }, nil }
 
-write = tilda ws* _e:super_expression { 
+write = tilda ws* _e:super_expression {
   return Write { Expression : _e.(Expressions) }, nil }
 
-invoke = amper ws* _e:super_expression { 
+invoke = amper ws* _e:super_expression {
   return Invoke{Expressions: _e.(Expressions)}, nil }
 
-identifier = (unds / let) (dig / unds / let)* { 
+identifier = (unds / let) (dig / unds / let)* {
   return string(c.text), nil }
 
-literal_list = l:literal r:(ws+ t:literal { 
-  return t, nil} )* { 
-    return (LiteralList)(listFrom[Literal](l, r)), nil 
+literal_list = l:literal r:(ws+ t:literal {
+  return t, nil} )* {
+    return (LiteralList)(listFrom[Literal](l, r)), nil
   }
 
-literal 
+literal
   = a:lit+ { return MakeLiteral(convert(a)), nil }
   / s:quotedString
 
-lit 
-  = ("\\" _a:[@!={}()#=&|$<>~'"?%: \][.\\] { return string(_a.([]byte)), nil }) 
+lit
+  = ("\\" _a:[@!={}()#=&|$<>~'"?%: \][.\\] { return string(_a.([]byte)), nil })
   / (sym / let / dig) { return string(c.text), nil}
   / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^\\@!={}()#=&|$<>~'"?%: \n\r\t\][.] 
+sym = [^\\@!={}()#=&|$<>~'"?%: \n\r\t\][.]
 
 ws = ' ' / '\t'
 dash = '-'

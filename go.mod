@@ -1,6 +1,6 @@
 module github.com/beysed/like
 
-go 1.22.1
+go 1.22.2
 
 require (
 	github.com/bazelbuild/rules_go v0.46.0

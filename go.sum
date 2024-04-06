@@ -1,7 +1,7 @@
 github.com/bazelbuild/rules_go v0.46.0 h1:CTefzjN/D3Cdn3rkrM6qMWuQj59OBcuOjyIp3m4hZ7s=
 github.com/bazelbuild/rules_go v0.46.0/go.mod h1:Dhcz716Kqg1RHNWos+N6MlXNkjNP2EwZQ0LukRKJfMs=
-github.com/beysed/shell v0.1.2 h1:p0JM4VX18Ba8LEtRvb89Wgm2gFmoFFZBTojOF2vafV8=
-github.com/beysed/shell v0.1.2/go.mod h1:G+8WsmhX/p6Zl/UVTRDYs0IZWMDsVqPdQ6Jz3nQM7PQ=
+github.com/beysed/shell v0.2.1 h1:JtOnsD1Zq8t/+14XRcV/uBsS+L4feeoVg7SnQzHK8Ks=
+github.com/beysed/shell v0.2.1/go.mod h1:G+8WsmhX/p6Zl/UVTRDYs0IZWMDsVqPdQ6Jz3nQM7PQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

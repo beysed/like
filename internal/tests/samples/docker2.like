@@ -1,0 +1,2 @@
+docker = () docker exec -it $cmd $p
+~ & echo docker()

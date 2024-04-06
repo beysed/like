@@ -93,7 +93,11 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	}
 
 	command := execute.MakeCommand(cmd, args...)
-	execution, _ := execute.Execute(command)
+	execution, err := execute.Execute(command)
+
+	if err != nil {
+		return nil, err
+	}
 
 	close(execution.Stdin)
 

@@ -10,8 +10,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_beysed_shell",
         importpath = "github.com/beysed/shell",
-        sum = "h1:p0JM4VX18Ba8LEtRvb89Wgm2gFmoFFZBTojOF2vafV8=",
-        version = "v0.1.2",
+        sum = "h1:JtOnsD1Zq8t/+14XRcV/uBsS+L4feeoVg7SnQzHK8Ks=",
+        version = "v0.2.1",
     )
     go_repository(
         name = "com_github_chromedp_cdproto",

@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/bazelbuild/rules_go v0.46.0
-	github.com/beysed/shell v0.2.1
+	github.com/beysed/shell v0.3.1
 	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.32.0
 	github.com/samber/lo v1.39.0

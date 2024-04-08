@@ -50,6 +50,7 @@ var _ = Describe("Grammar", func() {
 	},
 		Entry("no arg lambda", "() $a", "() $a"),
 		Entry("one arg lambda", "(a) $a", "(a) $a"),
+		Entry("one invoke arg list lambda", "(a) & _ $a _", "(a) & _ $a _"),
 		Entry("one arg list lambda", "(a) _ $a _", "(a) _ $a _"))
 
 	DescribeTable("Parses: various files", func(input string, expexted string) {

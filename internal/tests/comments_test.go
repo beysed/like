@@ -17,5 +17,6 @@ var _ = Describe("Comments tests", func() {
 	},
 		Entry("empty", "# ", "# "),
 		Entry("comment", "# asd", "# asd"),
+		Entry("comment wo spc", "#asd", "#asd"),
 		Entry("comment next line", "# asd\n", "# asd"))
 })

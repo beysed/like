@@ -20,7 +20,7 @@ empty_line
 code_line =ws* _c:code comment? eoa { return _c, nil }
 line = template / code_line / empty_line
 
-comment = "#" ws+ (any !eoa)* any? { return string(c.text), nil }
+comment = "#" (any !eoa)* any? { return string(c.text), nil }
 code = operator / directive / call
 
 directive = "#" directive:(include) { return directive, nil }
@@ -146,7 +146,13 @@ operator =
   invoke;
 
 list
-  = '[' ws* _e:expression_list ws* ']' { return _e, nil }
+  = '[' ws* _e:expression_list? ws* ']' {
+  if (_e == nil) {
+    return Constant { Value : []any{} }, nil
+  }
+
+  return _e, nil
+}
 
 expression =
   parse_data /
@@ -192,7 +198,7 @@ super_expression
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body =  block / code_line
+body =  super_expression / block / code_line
 
 lambda = _a:argument_decl ws*
   _e:body

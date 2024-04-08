@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime/debug"
 	"strings"
 
 	g "github.com/beysed/like/internal/grammar"
@@ -11,9 +12,11 @@ import (
 )
 
 func ExitPrintUsage() {
-	fmt.Println("Like | Template Scripting Language")
-	fmt.Println("\tusing file: like input.like [args...]")
-	fmt.Println("\tusing data from stdin: like [args...]")
+	d, _ := debug.ReadBuildInfo()
+
+	fmt.Printf("Like, Template Scripting Language, %s\n", d.Main.Version)
+	fmt.Println("  using file: like input.like [args...]")
+	fmt.Println("  using data from stdin: like [args...]")
 	os.Exit(1)
 }
 

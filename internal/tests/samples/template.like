@@ -2,4 +2,4 @@
 A$(user)B
 ___
 ``
-` story(fred)
+` $story(fred)

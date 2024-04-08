@@ -22,7 +22,7 @@ code_line =ws* _c:code comment? eoa { return _c, nil }
 line = template / code_line / empty_line
 
 comment = "#" (any !eoa)* any? { return string(c.text), nil }
-code = operator / directive / call
+code = operator / directive
 
 directive = "#" directive:(include) { return directive, nil }
 include = "include" ws+ fn:expression { return Include {FileName: fn.(Expression)}, nil }
@@ -35,7 +35,7 @@ expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
     return ExpressionList(listFrom[Expression](_e, _r)), nil
 }
 
-call = _i:store ws* "(" ws* _m:expression_list? ws* ")" {
+call = '$' _i:store ws* "(" ws* _m:expression_list? ws* ")" {
   var t ExpressionList
 
   if _m != nil {
@@ -74,6 +74,7 @@ pointer = '^'
 
 string_content
   = ("$$" { return MakeLiteral("$"), nil}
+  / call
   / reference
   /_a:any { return MakeLiteral(_a.(string)), nil })*
 
@@ -138,6 +139,7 @@ each
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
 
 operator =
+  call /
   reference /
   each /
   condition /

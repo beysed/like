@@ -1,2 +1,2 @@
 docker = (cmd p) docker exec -it $cmd $p
-~ docker([a b c] a)
+~ $docker([a b c] a)

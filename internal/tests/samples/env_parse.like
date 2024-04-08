@@ -3,6 +3,6 @@ a=b
 c = 1
 ``
 
-a = :< env sample()
+a = :< env $sample()
 ~ $a.a
 ~ $a.c

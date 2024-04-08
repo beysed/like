@@ -7,7 +7,7 @@ d:
   e: f
 ``
 
-a = :< yaml sample()
+a = :< yaml $sample()
 ~ $a.a
 ~ $a.b
 ~ $a.c

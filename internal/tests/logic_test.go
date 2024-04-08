@@ -10,7 +10,7 @@ import (
 var _ = Describe("Grammar Logic", func() {
 
 	It("Error", func() {
-		_, err := Evaluate("error(oops)")
+		_, err := Evaluate("$error(oops)")
 
 		Expect(err).ToNot(BeNil())
 		Expect(err.Error()).To(Equal("[[oops]]"))
@@ -22,7 +22,7 @@ var _ = Describe("Grammar Logic", func() {
 		Expect(err).To(BeNil())
 		Expect(result).To(Equal(expected))
 	},
-		Entry("eval", "eval('~ a')", "a"),
+		Entry("eval", "$eval('~ a')", "a"),
 		Entry("simple loop", "@ [a b c] ~ -$_k$_v", "-0a-1b-2c"),
 		Entry("block loop", "@ [1 2 3] {\n~ a\n~$_v\n}", "a1a2a3"),
 		Entry("if yes", "~ T ? yes", "yes"),

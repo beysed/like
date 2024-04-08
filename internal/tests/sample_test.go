@@ -29,6 +29,7 @@ var _ = Describe("Samples", func() {
 		Expect(result.String()).To(Equal(e))
 	},
 		//Entry("samples/docker2", "samples/docker2.like", "docker exec -it [a b c] a"),
+		Entry("samples/bom", "samples/bom.like", "a"),
 		Entry("samples/docker", "samples/docker.like", "docker exec -it [a b c] a"),
 		Entry("samples/indexes", "samples/indexes.like", "bbbb"),
 		Entry("samples/space", "samples/space.like", "Hello World "),

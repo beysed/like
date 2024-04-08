@@ -5,8 +5,9 @@
   )
 }
 
+bom = "\xEF\xBB\xBF" / "\xFE\xFF"
 file =
-  _s:line* eof {
+  bom? _s:line* eof {
     return arrayify[Expression](_s,), nil
   }
 

@@ -101,7 +101,8 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 
 	close(execution.Stdin)
 
-	for run := true; run; {
+	run := true
+	for run {
 		select {
 		case out := <-execution.Stdout:
 			output.Write(out)

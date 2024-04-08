@@ -28,11 +28,40 @@ func (a ParsedString) Evaluate(context *c.Context) (any, error) {
 		return s, c.MakeError("unable to parse string", err)
 	}
 
-	exps := lo.Map(e.([]any), func(a any, _ int) Expression {
-		return a.(Expression)
-	})
+	result := strings.Builder{}
+	for _, a := range e.([]any) {
+		v, ok := a.(Expression)
+		if !ok {
+			return a, c.MakeError("not an expression", nil)
+		}
 
-	return Expressions([]Expression(exps)).Evaluate(context)
+		var r any
+		r = v
+		for {
+			r, err = r.(Expression).Evaluate(context)
+			if err != nil {
+				return v, err
+			}
+			if _, ok := r.(Expression); ok {
+				continue
+			}
+
+			if v, ok := r.([]any); ok {
+				result.WriteString(
+					strings.Join(
+						lo.Map(v,
+							func(v any, _ int) string {
+								return fmt.Sprint(v)
+							}), " "))
+
+			} else {
+				result.WriteString(fmt.Sprint(r))
+			}
+			break
+		}
+	}
+
+	return result.String(), nil
 }
 
 func MakeParsedString(quote string, body string) ParsedString {

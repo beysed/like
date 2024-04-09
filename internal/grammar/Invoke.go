@@ -63,8 +63,14 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 					return err
 				}
 
-				for _, r := range flat(res) {
-					result = append(result, fmt.Sprint(r))
+				f := flat(res)
+				for _, r := range f {
+					s := fmt.Sprint(r)
+					if len(strings.TrimSpace(s)) == 0 {
+						continue
+					}
+
+					result = append(result, s)
 				}
 			} else {
 				return c.MakeError("unknown element", nil)

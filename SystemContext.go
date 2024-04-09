@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"bufio"
 	"os"
 	"strings"
 
@@ -13,9 +13,11 @@ import (
 
 type CliSystem struct {
 	Cwd string
+	Out *bufio.Writer
+	Err *bufio.Writer
 }
 
-func MakeSystemContext() c.System {
+func MakeSystemContext() CliSystem {
 	w, e := os.Getwd()
 	if e != nil {
 		os.Stderr.WriteString("unable to get working directory\n")
@@ -24,7 +26,8 @@ func MakeSystemContext() c.System {
 
 	return CliSystem{
 		Cwd: w,
-	}
+		Out: bufio.NewWriter(os.Stdout),
+		Err: bufio.NewWriter(os.Stderr)}
 }
 
 func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, error) {
@@ -50,11 +53,10 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 	return p, err
 }
 
-func (c CliSystem) OutputText(text string) {
-	// odd: cut last line, need to investigate
-	fmt.Fprintf(os.Stdout, "%s", text)
+func (a CliSystem) OutputText(text string) {
+	a.Out.WriteString(text)
 }
 
-func (c CliSystem) OutputError(text string) {
-	fmt.Fprintf(os.Stderr, "%s", text)
+func (a CliSystem) OutputError(text string) {
+	a.Err.WriteString(text)
 }

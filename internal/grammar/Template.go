@@ -19,7 +19,13 @@ func (a Template) String() string {
 
 func (a Template) Evaluate(context *c.Context) (any, error) {
 	if a.Value == nil {
-		str, err := prepareString([]byte(a.Text))
+		// trim orphan \r
+		arr := []byte(a.Text)
+		if arr[len(arr)-1] < 32 {
+			arr = arr[:len(arr)-1]
+		}
+
+		str, err := prepareString(arr)
 		if err != nil {
 			return nil, err
 		}

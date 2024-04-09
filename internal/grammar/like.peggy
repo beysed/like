@@ -82,11 +82,10 @@ string_content
 }
 
 dblquot = quot quot
-template_end = eol dblquot
 template =
   dblquot ws+ _i:identifier _a:argument_decl? ws* eol
-  _s:(_s:any !dblquot { return _s, nil} )*
-  template_end
+  _s:(_s:any !"``" { return _s, nil} )*
+  eol dblquot
 {
   b := strings.Join(arrayify[string](_s), "")
   s := StoreAccess { Reference: MakeLiteral(_i.(string)) }

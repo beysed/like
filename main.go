@@ -74,7 +74,15 @@ func main() {
 	}
 
 	globals := c.Store{}
-	context := g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), MakeSystemContext())
+	system := MakeSystemContext()
+	cleanup := func(code int) int {
+		system.Out.Flush()
+		system.Err.Flush()
+
+		return code
+	}
+
+	context := g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), system)
 	context.Globals["args"] = args
 	parser := p.EnvParser{}
 
@@ -84,20 +92,22 @@ func main() {
 		if err == nil {
 			senv = strings.Join([]string{senv, string(local)}, "\n")
 		} else {
-			os.Stderr.WriteString("unable to read .env file\n")
+			system.OutputError("unable to read .env file\n")
 		}
 	}
 
 	env, err := parser.Parse(senv)
 	if err != nil {
-		os.Stderr.WriteString("unable to parse environment\n")
+		system.OutputError("unable to parse environment\n")
 	} else {
 		context.Globals["env"] = env
 	}
 
 	_, err = g.Execute(fileName, context, input)
 	if err != nil {
-		os.Stderr.WriteString(fmt.Sprintf("error: %s\n", err.Error()))
-		os.Exit(128)
+		system.OutputError(fmt.Sprintf("error: %s\n", err.Error()))
+		os.Exit(cleanup(128))
 	}
+
+	os.Exit(cleanup(0))
 }

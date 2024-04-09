@@ -175,7 +175,7 @@ expression =
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
-block= '{' ws* comment* eol _l:line* '}' comment* (eol / eof) {
+block= '{' ws* (comment / eol) _l:line* '}' comment? eoa {
   return Block(arrayify[Expression](_l)) ,nil
 }
 

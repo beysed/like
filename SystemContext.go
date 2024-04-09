@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -42,7 +43,6 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 			p = path.Join(l, filePath)
 		} else {
 			p = path.Join(a.Cwd, filePath)
-
 		}
 	}
 
@@ -51,9 +51,9 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 }
 
 func (c CliSystem) OutputText(text string) {
-	os.Stdout.WriteString(text)
+	fmt.Fprint(os.Stdout, text)
 }
 
 func (c CliSystem) OutputError(text string) {
-	os.Stderr.WriteString(text)
+	fmt.Fprint(os.Stderr, text)
 }

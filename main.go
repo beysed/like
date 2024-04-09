@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	g "github.com/beysed/like/internal/grammar"
+	c "github.com/beysed/like/internal/grammar/common"
 	p "github.com/beysed/like/internal/grammar/parsers"
 )
 
@@ -72,7 +73,8 @@ func main() {
 		}
 	}
 
-	context := g.MakeDefaultContextFor(MakeSystemContext())
+	globals := c.Store{}
+	context := g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), MakeSystemContext())
 	context.Globals["args"] = args
 	parser := p.EnvParser{}
 

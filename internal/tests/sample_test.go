@@ -33,6 +33,8 @@ var _ = Describe("Samples", func() {
 		Expect(result.String()).To(Equal(e))
 	},
 		Entry("samples/len", "samples/len.like", "1133"),
+		Entry("samples/global_lambda", "samples/global_lambda.like", "lambda"),
+		Entry("samples/global_lambda2", "samples/global_lambda2.like", "docker exec -it flagmap-db 1a3"),
 		Entry("samples/docker3", "samples/docker3.like", "/a/docker/exec/-it/b////\n"),
 		Entry("samples/docker2", "samples/docker2.like", "a b c\n"),
 		Entry("samples/bom", "samples/bom.like", "a"),

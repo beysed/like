@@ -1,0 +1,3 @@
+sql_backup = (db) $docker_exec([1 $db 3])
+docker_exec = (args) docker exec -it flagmap-db $args
+~ $sql_backup(a)

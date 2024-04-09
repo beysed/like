@@ -1,0 +1,5 @@
+global_lambda = () lambda
+local_lambda = () $global_lambda()
+
+~ $local_lambda()
+

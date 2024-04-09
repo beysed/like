@@ -32,6 +32,8 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/writes", "samples/writes.like", "a\nbbc\nc\n"),
+		Entry("samples/loop_write", "samples/loop_write.like", "a\nb\nc\nabc"),
 		Entry("samples/len", "samples/len.like", "1133"),
 		Entry("samples/global_lambda", "samples/global_lambda.like", "lambda"),
 		Entry("samples/global_lambda2", "samples/global_lambda2.like", "docker exec -it flagmap-db 1a3"),

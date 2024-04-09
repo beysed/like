@@ -203,7 +203,7 @@ super_expression
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body =  super_expression / block / code_line
+body = super_expression / block / operator
 
 lambda = _a:argument_decl ws*
   _e:body
@@ -242,14 +242,14 @@ literal
   / s:quotedString
 
 lit
-  = ("\\" _a:[@!={}()#=&|$<>~'"?%: \][.\\] { return string(_a.([]byte)), nil })
+  = ("\\" _a:[@!={}()#=&|$<>~'"?%:` \][.\\] { return string(_a.([]byte)), nil })
   / (sym / let / dig)+ { return string(c.text), nil}
   / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^\\@!={}()#=&|$<>~'"?%: \n\r\t\][.]
+sym = [^\\@!={}()#=&|$<>~'"?%:` \n\r\t\][.]
 
 ws = ' ' / '\t'
 dash = '-'

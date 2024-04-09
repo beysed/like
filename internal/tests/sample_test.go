@@ -32,6 +32,7 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/exec_arg", "samples/exec_arg.like", "a\n"),
 		Entry("samples/conditions", "samples/conditions.like", "1\n\n3\n6\n3\n\n5\n8\nb1f1\nf2\nb\nf3\n"),
 		Entry("samples/templ_resource", "samples/templ_resource.like", "resource \"name\" {\r\n}a"),
 		Entry("samples/writes", "samples/writes.like", "a\nbbc\nc\n"),

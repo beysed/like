@@ -10,6 +10,7 @@ import (
 	c "github.com/beysed/like/internal/grammar/common"
 	p "github.com/beysed/like/internal/grammar/parsers"
 	"github.com/beysed/shell/execute"
+	"github.com/samber/lo"
 )
 
 // todo: make something better with these globals
@@ -97,11 +98,15 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	if !ok {
 		return cmdEval, c.MakeError("command is not string", nil)
 	}
+	cmd = flat(cmd)
 
 	args, err := flattern(a.Expressions[1:], context)
 	if err != nil {
 		return nil, err
 	}
+
+	args = append(
+		lo.Map(cmd[1:], func(v any, _ int) string { return fmt.Sprint(v) }), args...)
 
 	// todo: make lazy, one time
 	executable := cmd[0].(string)

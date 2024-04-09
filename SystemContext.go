@@ -51,9 +51,10 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 }
 
 func (c CliSystem) OutputText(text string) {
-	fmt.Fprint(os.Stdout, text)
+	// odd: cut last line, need to investigate
+	fmt.Fprintf(os.Stdout, "%s", text)
 }
 
 func (c CliSystem) OutputError(text string) {
-	fmt.Fprint(os.Stderr, text)
+	fmt.Fprintf(os.Stderr, "%s", text)
 }

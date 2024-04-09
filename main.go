@@ -28,7 +28,7 @@ func isInPipeMode() bool {
 		os.Exit(128)
 	}
 
-	return (stat.Mode()&os.ModeCharDevice) == 0 && false
+	return (stat.Mode() & os.ModeCharDevice) == 0
 }
 
 func main() {

@@ -32,6 +32,7 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/conditions", "samples/conditions.like", "1\n\n3\n6\n3\n\n5\n8\nb1f1\nf2\nb\nf3\n"),
 		Entry("samples/templ_resource", "samples/templ_resource.like", "resource \"name\" {\r\n}a"),
 		Entry("samples/writes", "samples/writes.like", "a\nbbc\nc\n"),
 		Entry("samples/loop_write", "samples/loop_write.like", "a\nb\nc\nabc"),
@@ -43,7 +44,7 @@ var _ = Describe("Samples", func() {
 		Entry("samples/bom", "samples/bom.like", "a"),
 		Entry("samples/docker", "samples/docker.like", "docker exec -it abc a\n"),
 		Entry("samples/indexes", "samples/indexes.like", "bbbb"),
-		Entry("samples/space", "samples/space.like", "Hello World "),
+		Entry("samples/space", "samples/space.like", "Hello World"),
 		Entry("samples/interpolation", "samples/interpolation.like", "-asdf-"),
 		Entry("samples/yaml_parse", "samples/yaml_parse.like", "a stringtrue3f"),
 		Entry("samples/json_parse", "samples/json_parse.like", "1btruef"),

@@ -128,13 +128,9 @@ condition
   =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   }
-  / '?' ws+ _c:expression ws+ _t:body _f:(eol '%' ws+ _f:body {return _f, nil})? {
+  / '?' ws+ _c:expression ws+ _t:body _f:(ws+ '%' ws+ _f:body {return _f, nil})? {
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   }
-  / '?' ws+ _c:expression ws* eol '%' ws+ _f:body {
-    return MakeCondition(_c.(Expression), nil, _f.(Expression)), nil
-  }
-
 
 each
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
@@ -175,7 +171,7 @@ expression =
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
-block= '{' ws* (comment / eol) _l:line* '}' comment? eoa {
+block= '{' eol _l:line* ws* '}' {
   return Block(arrayify[Expression](_l)) ,nil
 }
 
@@ -193,8 +189,7 @@ argument_decl = '(' ws* _i:identifier_list? ws* ')' {
 }
 
 super_expression
-  = _s:super_expression+ ws+ { return Expressions{ Expressions(arrayify[Expression](_s)), MakeLiteral(" ") } , nil }
-  / _s:expression+ _r:(_w:ws+ _l:expression+ {
+  = _s:expression+ _r:(_w:ws+ _l:expression+ {
       return Expressions{
         MakeLiteral(" "),
         Expressions(arrayify[Expression](_l)) } , nil})*

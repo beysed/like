@@ -83,7 +83,11 @@ func main() {
 	}
 
 	context := g.MakeContext(globals, globals, g.MakeDefaultBuiltIn(), system)
-	context.Globals["args"] = args
+	context.Globals["args"] = make([]any, len(args))
+	for i, v := range args {
+		context.Globals["args"].([]any)[i] = v
+	}
+
 	parser := p.EnvParser{}
 
 	senv := strings.Join(os.Environ(), "\n")

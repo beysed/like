@@ -1,0 +1,5 @@
+~ $len(1)
+~ $len(asd)
+~ $len([a b c])
+a=[1 2 3]
+~ $len($a)

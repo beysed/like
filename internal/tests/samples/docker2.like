@@ -1,2 +1,2 @@
-docker = () docker exec -it $cmd $p
-~ & bash -c 'echo $docker()'
+docker = () a b c
+~ & \$shell -c 'echo $docker()'

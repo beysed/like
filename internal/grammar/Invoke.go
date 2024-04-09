@@ -2,12 +2,20 @@ package grammar
 
 import (
 	"fmt"
+	"os"
+	"runtime"
 	"strings"
 	"time"
 
 	c "github.com/beysed/like/internal/grammar/common"
+	p "github.com/beysed/like/internal/grammar/parsers"
 	"github.com/beysed/shell/execute"
 )
+
+// todo: make something better with these globals
+var environ = os.Environ()
+var environment, _ = p.GetParser("env").Parse(strings.Join(environ, "\n"))
+var shell = environment["LIKE_SH"]
 
 type Invoke struct {
 	Expressions Expressions
@@ -54,12 +62,9 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 				if err != nil {
 					return err
 				}
-				if a, ok := res.([]interface{}); ok {
-					for _, u := range a {
-						result = append(result, u.(string))
-					}
-				} else {
-					result = append(result, res.(string))
+
+				for _, r := range flat(res) {
+					result = append(result, fmt.Sprint(r))
 				}
 			} else {
 				return c.MakeError("unknown element", nil)
@@ -82,7 +87,7 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 		return cmdEval, err
 	}
 
-	cmd, ok := cmdEval.(string) // todo check
+	cmd, ok := cmdEval.([]any)
 	if !ok {
 		return cmdEval, c.MakeError("command is not string", nil)
 	}
@@ -92,7 +97,21 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 		return nil, err
 	}
 
-	command := execute.MakeCommand(cmd, args...)
+	// todo: make lazy, one time
+	executable := cmd[0].(string)
+	if executable == "$shell" {
+		if shell == nil {
+			if runtime.GOOS != "windows" {
+				executable = "sh"
+			} else {
+				return nil, c.MakeError("LIKE_SH environmnet variable is not set", nil)
+			}
+		} else {
+			executable = shell.(string)
+		}
+	}
+
+	command := execute.MakeCommand(executable, args...)
 	execution, err := execute.Execute(command)
 
 	if err != nil {

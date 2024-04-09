@@ -1,6 +1,8 @@
 package tests
 
 import (
+	"strings"
+
 	g "github.com/beysed/like/internal/grammar"
 	. "github.com/beysed/like/internal/tests/common"
 
@@ -16,8 +18,10 @@ var _ = Describe("Samples", func() {
 
 		_, err := g.Execute("a.like", context, c)
 		Expect(err).NotTo(BeNil())
+		Expect(strings.HasPrefix(err.Error(), e)).To(BeTrue())
 	},
-		Entry("samples/error", "samples/error.like", "bbbb"))
+		Entry("samples/len-error", "samples/len-error.like", "['len' accept only single argument]"),
+		Entry("samples/error", "samples/error.like", "[syntax error] because of"))
 
 	DescribeTable("Sample Correct", func(f string, e string) {
 		var c = Read(f)
@@ -28,9 +32,10 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
-		Entry("samples/docker2", "samples/docker2.like", "docker exec -it a b c a"),
+		Entry("samples/len", "samples/len.like", "1133"),
+		Entry("samples/docker2", "samples/docker2.like", "a b c\n"),
 		Entry("samples/bom", "samples/bom.like", "a"),
-		Entry("samples/docker", "samples/docker.like", "docker exec -it a b c a"),
+		Entry("samples/docker", "samples/docker.like", "docker exec -it abc a\n"),
 		Entry("samples/indexes", "samples/indexes.like", "bbbb"),
 		Entry("samples/space", "samples/space.like", "Hello World "),
 		Entry("samples/interpolation", "samples/interpolation.like", "-asdf-"),

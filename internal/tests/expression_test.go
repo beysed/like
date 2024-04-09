@@ -90,22 +90,22 @@ var _ = Describe("Grammar", func() {
 	DescribeTable("Parses: template", func(input string, expexted string) {
 		var actual = ParseInupt(input, "template")
 
-		res, ok := actual.(g.Assign)
+		res, ok := actual.(g.Template)
 		Expect(ok).To(BeTrue())
 		Expect(res.String()).To(Equal(expexted))
 	},
-		Entry("one arg template empty", "`` t(a)\n\n``", "t = (a) "),
-		Entry("one arg template reference", "`` t(a)\nA$(user)B\n___\n``", "t = (a) A$userB\n___"),
-		Entry("one arg template literal", "`` t(a)\nABCD\n``", "t = (a) ABCD"),
-		Entry("one arg multiline template literal", "`` t(a)\nAB\nCD\n``", "t = (a) AB\nCD"),
-		Entry("one arg multiline reference template literal", "`` t(a)\n$(A)B$c\nCD\n``\n", "t = (a) $AB$c\nCD")) // todo: fix me (paren)
+		Entry("one arg template empty", "`` t(a)\n\n``", "`` t(a)\n\n``"),
+		Entry("one arg template reference", "`` t(a)\nA$(user)B\n___\n``", "`` t(a)\nA$(user)B\n___\n``"),
+		Entry("one arg template literal", "`` t(a)\nABCD\n``", "`` t(a)\nABCD\n``"),
+		Entry("one arg multiline template literal", "`` t(a)\nAB\nCD\n``", "`` t(a)\nAB\nCD\n``"),
+		Entry("one arg multiline reference template literal", "`` t(a)\n$(A)B$c\nCD\n``\n", "`` t(a)\n$(A)B$c\nCD\n``"))
 
 	DescribeTable("Parses: file template", func(input string, expexted string) {
 		var actual = ParseInupt(input, "template")
 
-		res, ok := actual.(g.Assign)
+		res, ok := actual.(g.Template)
 		Expect(ok).To(BeTrue())
 		Expect(res.String()).To(Equal(expexted))
 	},
-		Entry("one arg template empty", "`` t(a)\nA$(b)A\n``", "t = (a) A$bA"))
+		Entry("one arg template empty", "`` t(a)\nA$(b)A\n``", "`` t(a)\nA$(b)A\n``"))
 })

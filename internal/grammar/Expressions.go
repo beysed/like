@@ -1,7 +1,6 @@
 package grammar
 
 import (
-	"fmt"
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
@@ -19,15 +18,15 @@ func (a Expressions) String() string {
 }
 
 func (a Expressions) Evaluate(context *c.Context) (any, error) {
-	b := strings.Builder{}
+	b := []any{}
 	for _, v := range a {
 		res, err := v.Evaluate(context)
 		if err != nil {
 			return v, err
 		}
 
-		b.WriteString(fmt.Sprint(res))
+		b = append(b, res)
 	}
 
-	return b.String(), nil
+	return b, nil
 }

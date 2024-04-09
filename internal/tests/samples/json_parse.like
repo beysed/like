@@ -1,15 +1,16 @@
-`` sample
+`` sample(a)
 {
     "a" : 1,
     "b" : "b",
     "c" : true,
     "d" : {
-        "e" : "f"
+        "e" : "f",
+        "f" : "$a"
     }
 }
 ``
 
-a = :< json $sample()
+a = :< json $sample(a)
 ~ $a.a
 ~ $a.b
 ~ $a.c

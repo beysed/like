@@ -1,2 +1,2 @@
-a = & bash -c 'echo AAA'
+a = & \$shell -c 'echo AAA'
 ~ $a

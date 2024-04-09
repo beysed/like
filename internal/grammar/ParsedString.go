@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
-	"github.com/samber/lo"
 )
 
 type ParsedString struct {
@@ -21,47 +20,58 @@ func (a ParsedString) Unquote() string {
 	return strings.ReplaceAll(a.RawBody, "\\"+a.Quote, a.Quote)
 }
 
-func (a ParsedString) Evaluate(context *c.Context) (any, error) {
-	s := a.Unquote()
+func prepareString(s []byte) (Expressions, error) {
 	e, err := Parse("a.like", []byte(s), Entrypoint("string_content"))
 	if err != nil {
-		return s, c.MakeError("unable to parse string", err)
+		return nil, c.MakeError("unable to parse string", err)
+	}
+
+	return e.(Expressions), nil
+}
+
+func evaluateStringContent(context *c.Context, s []byte) (string, error) {
+	e, err := prepareString(s)
+	if err != nil {
+		return "", err
 	}
 
 	result := strings.Builder{}
-	for _, a := range e.([]any) {
-		v, ok := a.(Expression)
-		if !ok {
-			return a, c.MakeError("not an expression", nil)
-		}
-
+	for _, v := range e {
 		var r any
 		r = v
 		for {
 			r, err = r.(Expression).Evaluate(context)
 			if err != nil {
-				return v, err
+				return "", err
 			}
 			if _, ok := r.(Expression); ok {
 				continue
 			}
 
-			if v, ok := r.([]any); ok {
-				result.WriteString(
-					strings.Join(
-						lo.Map(v,
-							func(v any, _ int) string {
-								return fmt.Sprint(v)
-							}), " "))
-
-			} else {
-				result.WriteString(fmt.Sprint(r))
+			for _, v := range flat(r) {
+				result.WriteString(fmt.Sprint(v))
 			}
+
+			// if v, ok := r.([]any); ok {
+			// 	result.WriteString(
+			// 		strings.Join(
+			// 			lo.Map(v,
+			// 				func(v any, _ int) string {
+			// 					return
+			// 				}), " "))
+			// } else {
+			// 	result.WriteString(fmt.Sprint(r))
+			// }
 			break
 		}
 	}
 
 	return result.String(), nil
+}
+
+func (a ParsedString) Evaluate(context *c.Context) (any, error) {
+	s := a.Unquote()
+	return evaluateStringContent(context, []byte(s))
 }
 
 func MakeParsedString(quote string, body string) ParsedString {

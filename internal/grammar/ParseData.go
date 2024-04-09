@@ -28,7 +28,7 @@ func (a ParseData) Evaluate(context *c.Context) (any, error) {
 		return fmt, c.MakeError("no parser for specified format", nil)
 	}
 
-	data, err := Evaluate[string](a.Data, context)
+	data, err := EvaluateToString(a.Data, context)
 	if err != nil {
 		return a.Data, err
 	}

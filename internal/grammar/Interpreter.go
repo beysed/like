@@ -6,7 +6,7 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 	result, err := Parse("", code, Entrypoint("file"))
 
 	if err != nil {
-		return nil, err
+		return nil, c.MakeError("syntax error", err)
 	}
 
 	context.PathStack.Push(filePath)

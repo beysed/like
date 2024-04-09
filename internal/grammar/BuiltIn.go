@@ -9,6 +9,30 @@ import (
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"len": func(context *c.Context, args []any) (any, error) {
+			if len(args) != 1 {
+				return nil, c.MakeError("'len' accept only single argument", nil)
+			}
+
+			r := args[0]
+			for {
+				if v, ok := r.(Expression); ok {
+					r, err := v.Evaluate(context)
+					if err != nil {
+						return r, err
+					}
+					continue
+				}
+
+				break
+			}
+
+			if v, ok := r.([]any); ok {
+				return len(v), nil
+			}
+			return 1, nil
+		},
+
 		"error": func(context *c.Context, args []any) (any, error) {
 			return nil, c.MakeError(stringify(args), nil)
 		},

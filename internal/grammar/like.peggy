@@ -73,25 +73,27 @@ pointer = '^'
   }
 
 string_content
-  = ("$$" { return MakeLiteral("$"), nil}
+  = _a:("$$" { return MakeLiteral("$"), nil}
   / call
   / reference
-  /_a:any { return MakeLiteral(_a.(string)), nil })*
+  / ws  { return MakeLiteral(string(c.text)), nil }
+  /_a:[^ \t$]+ { return MakeLiteral(string(c.text)), nil})* {
+    return Expressions(arrayify[Expression](_a)), nil
+}
 
 dblquot = quot quot
 template_end = eol dblquot
-template_body = _a:( _a:any !template_end { return MakeLiteral(_a.(string)), nil})*  { return _a, nil }
 template =
   dblquot ws+ _i:identifier _a:argument_decl? ws* eol
-  _b:( reference/_a:any !dblquot { return MakeLiteral(_a.(string)), nil } )*
+  _s:(_s:any !dblquot { return _s, nil} )*
   template_end
 {
-  e := arrayify[Expression](_b)
-  return Assign {
-    Store: StoreAccess { Reference: MakeLiteral(_i.(string)) },
-    Value: Lambda {
-      Arguments : castify[IdentifierList](_a),
-      Body: Expressions(e)}},nil }
+  b := strings.Join(arrayify[string](_s), "")
+  s := StoreAccess { Reference: MakeLiteral(_i.(string)) }
+  i := castify[IdentifierList](_a)
+
+  return MakeTemplate(s, i, b),nil
+}
 
 parse_data
   = colon lt ws* _f:literal ws+ _d:expression {
@@ -241,7 +243,7 @@ literal
 
 lit
   = ("\\" _a:[@!={}()#=&|$<>~'"?%: \][.\\] { return string(_a.([]byte)), nil })
-  / (sym / let / dig) { return string(c.text), nil}
+  / (sym / let / dig)+ { return string(c.text), nil}
   / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 

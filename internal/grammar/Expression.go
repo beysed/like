@@ -1,6 +1,11 @@
 package grammar
 
-import c "github.com/beysed/like/internal/grammar/common"
+import (
+	"fmt"
+	"strings"
+
+	c "github.com/beysed/like/internal/grammar/common"
+)
 
 type Expression interface {
 	String() string
@@ -19,4 +24,22 @@ func Evaluate[T any](expression Expression, context *c.Context) (T, error) {
 	}
 
 	return result, c.MakeError("incorrect type", nil)
+}
+
+func EvaluateToString(expression Expression, context *c.Context) (string, error) {
+	val, err := expression.Evaluate(context)
+	if err != nil {
+		return "", err
+	}
+
+	if lst, ok := val.([]any); ok {
+		result := strings.Builder{}
+		for _, l := range lst {
+			result.WriteString(fmt.Sprint(l))
+		}
+
+		return result.String(), nil
+	}
+
+	return fmt.Sprint(val), nil
 }

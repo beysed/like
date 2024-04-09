@@ -42,7 +42,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 	if evalFunc == nil {
 		store, err := a.Store.Evaluate(context)
 		if err != nil {
-			return store, err
+			return a, err
 		}
 
 		lambda, ok := store.(Value).Get().(Lambda)
@@ -64,7 +64,12 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 				local.Locals[v] = args[i]
 			}
 
-			return lambda.Body.Evaluate(local)
+			result, err := lambda.Body.Evaluate(local)
+			if err != nil {
+				return result, err
+			}
+
+			return result, err
 		}
 	}
 

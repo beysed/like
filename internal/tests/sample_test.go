@@ -34,6 +34,7 @@ var _ = Describe("Samples", func() {
 	},
 		Entry("samples/exec_arg", "samples/exec_arg.like", "a\n"),
 		Entry("samples/conditions", "samples/conditions.like", "1\n\n3\n6\n3\n\n5\n8\nb1f1\nf2\nb\nf3\n"),
+		Entry("samples/conditions2", "samples/conditions2.like", "nnnnyyyy"),
 		Entry("samples/templ_resource", "samples/templ_resource.like", "resource \"name\" {\r\n}a"),
 		Entry("samples/writes", "samples/writes.like", "a\nbbc\nc\n"),
 		Entry("samples/loop_write", "samples/loop_write.like", "a\nb\nc\nabc"),

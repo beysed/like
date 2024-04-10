@@ -34,8 +34,23 @@ func (a Condition) Evaluate(context *c.Context) (any, error) {
 		return a.Condition, err
 	}
 
-	str := trim(stringify(v))
-	if len(str) > 0 {
+	var result bool
+	switch t := v.(type) {
+	case string:
+		result = len(t) > 0
+	case c.Store:
+		result = len(t) > 0
+	case []any:
+		result = len(t) > 0
+	case any:
+		result = t != nil
+	case nil:
+	default:
+		str := trim(stringify(t))
+		result = len(str) > 0
+	}
+
+	if result {
 		if a.True == nil {
 			return "", nil
 		}

@@ -24,6 +24,7 @@ func MakeSystemContext() CliSystem {
 		os.Exit(128)
 	}
 
+	w = strings.ReplaceAll(w, "\\", "/")
 	return CliSystem{
 		Cwd: w,
 		Out: bufio.NewWriter(os.Stdout),
@@ -43,7 +44,8 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 				return filePath, c.MakeError("empty stack", nil)
 			}
 
-			p = path.Join(l, filePath)
+			dir := path.Dir(strings.ReplaceAll(l, "\\", "//"))
+			p = path.Join(dir, filePath)
 		} else {
 			p = path.Join(a.Cwd, filePath)
 		}

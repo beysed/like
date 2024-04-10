@@ -9,5 +9,5 @@ type Context struct {
 	Globals   Store
 	BuiltIn   BuiltIn
 	System    System
-	PathStack s.Stack[string]
+	PathStack *s.Stack[string]
 }

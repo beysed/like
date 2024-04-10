@@ -27,6 +27,10 @@ func (a Include) Evaluate(context *c.Context) (any, error) {
 	}
 
 	fileName, err = context.System.ResolvePath(context, fmt.Sprint(v))
+	if err != nil {
+		return fileName, err
+	}
+
 	file, err = os.ReadFile(fileName)
 	if err != nil {
 		return fileName, err

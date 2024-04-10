@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "${fileDirname}",
-      "args": ["D:\\prj\\FlagMap\\infra\\db\\backup.like"]
+      "args": ["D:\\prj\\FlagMap\\infra\\tf-like\\main.like"]
     }
   ]
 }

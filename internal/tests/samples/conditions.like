@@ -1,0 +1,46 @@
+# simple
+` ? T 1
+` ? '' 2
+
+#simple with else
+` ? T 3 % 4
+` ? '' 5 % 6
+
+# ternary
+` T ? 3
+` '' ? 4
+
+# ternary with else
+` T ? 5 % 6
+` '' ? 7 % 8
+
+# blocks
+? T {
+  ~ b1
+}
+
+? '' {
+  ` b1
+} % {
+  ` f1
+}
+
+# mixed blocks
+? '' a % {
+  ` f2
+}
+
+` ? '' {
+  ` a
+ } % b
+
+ #nested
+
+? T {
+  ? '' {
+  } % {
+    ` f3
+  }
+}
+
+# 1\n\n3\n6\n3\n\n5\n8\nb1f1\nf2\nb\nf3\n

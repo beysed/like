@@ -9,7 +9,11 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 		return nil, c.MakeError("syntax error", err)
 	}
 
-	context.PathStack.Push(filePath)
+	err = context.PathStack.Push(filePath)
+	if err != nil {
+		return nil, err
+	}
+
 	defer context.PathStack.Pop()
 
 	exprs := result.([]Expression)

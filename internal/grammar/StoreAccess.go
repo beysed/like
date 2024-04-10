@@ -67,20 +67,17 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 	}
 
 	if ref != "" {
-		if context.Locals[ref] != nil {
+		store := findStore(context, ref)
+		if store != nil {
 			return &StoreReference{
-				Store:     context.Locals,
-				Reference: ref}, nil
-		} else if context.Globals[ref] != nil {
-			return &StoreReference{
-				Store:     context.Globals,
-				Reference: ref}, nil
-		} else {
-			context.Locals[ref] = c.Store{}
-			return &StoreReference{
-				Store:     context.Locals,
+				Store:     store,
 				Reference: ref}, nil
 		}
+
+		_, store = context.Locals.Peek()
+		return &StoreReference{
+			Store:     store,
+			Reference: ref}, nil
 	}
 
 	if st, ok := a.Reference.(StoreAccess); ok {
@@ -100,8 +97,10 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 			s.Set(store)
 		}
 
-		local := MakeContext(store, store, context.BuiltIn, context.System)
+		// context.Locals.Push(store)
+		// defer context.Locals.Pop()
 
+		local := MakeContext(store, context.BuiltIn, context.System)
 		n := StoreAccess{
 			Reference: a.Index}
 

@@ -44,5 +44,6 @@ go_library(
         "//internal/grammar/parsers",
         "@com_github_beysed_shell//execute:go_default_library",
         "@com_github_samber_lo//:go_default_library",
+        "@com_github_zeroflucs_given_generics//collections/stack:go_default_library",
     ],
 )

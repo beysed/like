@@ -10,29 +10,40 @@ func (a Member) String() string {
 	return a.Identifier
 }
 
-func (a Member) Evaluate(context *c.Context) (any, error) {
-	var store c.Store
-	var stores []c.Store
+func findStore(context *c.Context, identifier string) c.Store {
+	s := context.Locals
+	stores := []c.Store{}
+	for {
+		b, t := s.Pop()
+		if !b {
+			break
+		}
 
-	if &context.Locals == &context.Globals {
-		stores = []c.Store{context.Locals}
-	} else {
-		stores = []c.Store{context.Locals, context.Globals}
+		stores = append(stores, t)
+	}
+
+	for i, _ := range stores {
+		s.Push(stores[len(stores)-1-i])
 	}
 
 	for _, v := range stores {
-		if v[a.Identifier] != nil {
-			store = v
-			break
+		if v[identifier] != nil {
+			return v
 		}
 	}
 
+	return nil
+}
+
+func (a Member) Evaluate(context *c.Context) (any, error) {
+	store := findStore(context, a.Identifier)
+
 	if store == nil {
-		store = context.Locals
+		_, store = context.Locals.Peek()
 	}
 
 	if store[a.Identifier] == nil {
-		store[a.Identifier] = c.Store{}
+		return nil, c.MakeError("undefined", nil)
 	}
 
 	return store[a.Identifier], nil

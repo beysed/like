@@ -44,7 +44,7 @@ var _ = Describe("Samples", func() {
 		Entry("samples/docker2", "samples/docker2.like", "a b c\n"),
 		Entry("samples/bom", "samples/bom.like", "a"),
 		Entry("samples/docker", "samples/docker.like", "docker exec -it abc a\n"),
-		Entry("samples/indexes", "samples/indexes.like", "bbbb"),
+		Entry("samples/indexes", "samples/indexes.like", "dcccc"),
 		Entry("samples/space", "samples/space.like", "Hello World"),
 		Entry("samples/interpolation", "samples/interpolation.like", "-asdf-"),
 		Entry("samples/yaml_parse", "samples/yaml_parse.like", "a stringtrue3f"),

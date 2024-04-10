@@ -17,3 +17,7 @@ func (a Constant) String() string {
 func (a Constant) Evaluate(context *c.Context) (any, error) {
 	return a.Value, nil
 }
+
+func MakeConstant(value any) Expression {
+	return Constant{Value: value}
+}

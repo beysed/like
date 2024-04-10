@@ -1,8 +1,6 @@
 {
   package grammar
-  import (
-    "strings"
-  )
+  import "github.com/beysed/like/internal/grammar/common"
 }
 
 bom = "\xEF\xBB\xBF" / "\xFE\xFF"
@@ -168,6 +166,7 @@ expression =
   literal /
   quotedString /
   list /
+  "{}" { return MakeConstant(common.Store{}), nil} /
   (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 

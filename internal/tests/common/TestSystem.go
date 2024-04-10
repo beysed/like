@@ -16,7 +16,7 @@ type TestSystem struct {
 
 func (t *TestSystem) ResolvePath(context *c.Context, filePath string) (string, error) {
 	f := File(filePath)
-	_, err := os.Stat(File(f))
+	_, err := os.Stat(f)
 
 	return f, err
 }
@@ -33,5 +33,5 @@ func MakeContext() (*c.Context, *strings.Builder) {
 	system := TestSystem{}
 	store := c.Store{}
 
-	return g.MakeContext(store, store, g.MakeDefaultBuiltIn(), &system), &system.Result
+	return g.MakeContext(store, g.MakeDefaultBuiltIn(), &system), &system.Result
 }

@@ -22,10 +22,14 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 	}
 
 	result := []any{}
+	local := c.Store{}
+
+	context.Locals.Push(local)
+	defer context.Locals.Pop()
 
 	var eval = func(key string, val any) (any, error) {
-		context.Locals["_k"] = fmt.Sprint(key)
-		context.Locals["_v"] = fmt.Sprint(val)
+		local["_k"] = fmt.Sprint(key)
+		local["_v"] = fmt.Sprint(val)
 
 		r, err := a.Body.Evaluate(context)
 		if err != nil {

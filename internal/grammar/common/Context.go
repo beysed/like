@@ -5,8 +5,7 @@ import (
 )
 
 type Context struct {
-	Locals    Store
-	Globals   Store
+	Locals    *s.Stack[Store]
 	BuiltIn   BuiltIn
 	System    System
 	PathStack *s.Stack[string]

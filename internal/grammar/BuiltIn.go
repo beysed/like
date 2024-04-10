@@ -27,9 +27,10 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 				break
 			}
 
-			if v, ok := r.([]any); ok {
+			if v, ok := r.(List); ok {
 				return len(v), nil
 			}
+
 			return 1, nil
 		},
 

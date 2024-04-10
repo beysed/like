@@ -26,6 +26,40 @@ func flat(a any) []any {
 			return
 		}
 
+		if a, ok := t.(List); ok {
+			for _, z := range a {
+				r(z)
+			}
+			return
+		}
+
+		result = append(result, t)
+	}
+
+	r(a)
+
+	return result
+}
+
+func halfflat(a any) []any {
+	result := []any{}
+
+	var r func(any)
+	r = func(t any) {
+		if a, ok := t.([]any); ok {
+			for _, z := range a {
+				r(z)
+			}
+			return
+		}
+
+		if a, ok := t.([]any); ok {
+			for _, z := range a {
+				r(z)
+			}
+			return
+		}
+
 		result = append(result, t)
 	}
 
@@ -43,8 +77,8 @@ func evaluate(a Expressions, context *c.Context) (string, error) {
 			return "", err
 		}
 
-		for _, s := range flat(r) {
-			data = append(data, fmt.Sprint(s))
+		for _, s := range halfflat(r) {
+			data = append(data, stringify(s))
 		}
 	}
 

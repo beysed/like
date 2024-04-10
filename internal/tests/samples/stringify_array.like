@@ -1,0 +1,2 @@
+a=[1 2 'a apple' bus]
+` $a

@@ -146,7 +146,7 @@ operator =
 list
   = '[' ws* _e:expression_list? ws* ']' {
   if (_e == nil) {
-    return Constant { Value : []any{} }, nil
+    return Constant { Value : List{} }, nil
   }
 
   return _e, nil

@@ -42,7 +42,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 
 	//todo map
 
-	if lst, ok := v.([]any); ok {
+	if lst, ok := v.(List); ok {
 		for k, l := range lst {
 			_, err = eval(fmt.Sprint(k), l)
 			if err != nil {

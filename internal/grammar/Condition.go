@@ -40,6 +40,8 @@ func (a Condition) Evaluate(context *c.Context) (any, error) {
 		result = len(t) > 0
 	case c.Store:
 		result = len(t) > 0
+	case List:
+		result = len(t) > 0
 	case []any:
 		result = len(t) > 0
 	case any:

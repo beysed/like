@@ -17,8 +17,10 @@ func (a ExpressionList) String() string {
 			}), " ")
 }
 
+type List []any
+
 func (a ExpressionList) Evaluate(context *c.Context) (any, error) {
-	var result []any
+	var result List
 
 	for _, v := range a {
 		r, err := v.Evaluate(context)

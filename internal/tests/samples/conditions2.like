@@ -1,0 +1,27 @@
+## nil or empty
+
+# not defined object
+~ ? $a y % n
+
+# empty object
+a={}
+~ ? $a y % n
+
+# empty array
+a=[]
+~ ? $a y % n
+
+# empty string
+a=''
+~ ? $a y % n
+
+# defined
+a=a
+~ ? $a y % n
+a={}
+a.a=1
+~ ? $a y % n
+a=[1]
+~ ? $a y % n
+a='1'
+~ ? $a y % n

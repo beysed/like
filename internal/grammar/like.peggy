@@ -20,7 +20,7 @@ code_line =ws* _c:code comment? eoa { return _c, nil }
 line = template / code_line / empty_line
 
 comment = "#" (any !eoa)* any? { return string(c.text), nil }
-code = operator / directive
+code = expression / directive
 
 directive = "#" directive:(include) { return directive, nil }
 include = "include" ws+ fn:expression { return Include {FileName: fn.(Expression)}, nil }
@@ -106,9 +106,6 @@ format_data
       Data: _d.(Expression) }, nil
   }
 
-pipe_receive = invoke / call
-pipe_send = invoke / call / reference / literal
-
 store =
   (_e:store _i:index {
     return StoreAccess {
@@ -133,16 +130,6 @@ condition
 each
   = '@' ws+ _e:expression ws+ _b:body { return MakeEach(_e.(Expression), _b.(Expression)), nil }
 
-operator =
-  call /
-  reference /
-  each /
-  condition /
-  assign /
-  write /
-  writeln /
-  invoke;
-
 list
   = '[' ws* _e:expression_list? ws* ']' {
   if (_e == nil) {
@@ -153,6 +140,9 @@ list
 }
 
 expression =
+  write /
+  writeln /
+  assign /
   parse_data /
   format_data /
   each /
@@ -160,6 +150,7 @@ expression =
   "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
+  _l:expression ws* pipe ws* _r:expression { return MakePipe(_l.(Expression), _r.(Expression)), nil } /
   call  /
   invoke /
   reference /
@@ -167,7 +158,6 @@ expression =
   quotedString /
   list /
   "{}" { return MakeConstant(common.Store{}), nil} /
-  (_l:pipe_send pipe _r:pipe_receive) /
   ( '(' _e: expression ')' { return _e, nil} )
 
 block= '{' eol _l:line* ws* '}' {
@@ -196,7 +186,7 @@ super_expression
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body = super_expression / block / operator
+body = super_expression / block
 
 lambda = _a:argument_decl ws*
   _e:body

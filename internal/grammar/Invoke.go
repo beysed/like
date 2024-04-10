@@ -106,7 +106,10 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	}
 
 	args = append(
-		lo.Map(cmd[1:], func(v any, _ int) string { return fmt.Sprint(v) }), args...)
+		lo.Map(cmd[1:],
+			func(v any, _ int) string {
+				return fmt.Sprint(v)
+			}), args...)
 
 	// todo: make lazy, one time
 	executable := cmd[0].(string)
@@ -127,6 +130,13 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	_, locals := context.Locals.Peek()
+	// todo: $_input to const
+	input := locals["$_input"]
+	if input != nil {
+		execution.Stdin <- []byte(stringify(input))
 	}
 
 	close(execution.Stdin)

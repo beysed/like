@@ -27,6 +27,7 @@ go_library(
         "Not.go",
         "ParseData.go",
         "ParsedString.go",
+        "Pipe.go",
         "Pointer.go",
         "Reference.go",
         "StoreAccess.go",

@@ -40,7 +40,7 @@ var _ = Describe("Grammar", func() {
 		Entry("single quoted", "#include 'asd'", "'asd'"),
 		Entry("double quoted", "#include \"asd\"", "\"asd\""))
 
-	DescribeTable("Parses: expression / memeber_list", func(input string) {
+	DescribeTable("Parses: expression / member", func(input string) {
 		var actual = ParseInupt(input, "expression")
 
 		result, ok := actual.(g.Expression)

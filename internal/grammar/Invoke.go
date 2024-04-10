@@ -115,7 +115,7 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 			if runtime.GOOS != "windows" {
 				executable = "sh"
 			} else {
-				return nil, c.MakeError("LIKE_SH environmnet variable is not set", nil)
+				return nil, c.MakeError("LIKE_SH environment variable is not set", nil)
 			}
 		} else {
 			executable = shell.(string)

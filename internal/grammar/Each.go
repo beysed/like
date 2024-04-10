@@ -50,7 +50,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 			}
 		}
 	} else if m, ok := v.(c.Store); ok {
-		for k, _ := range m {
+		for k := range m {
 			_, err = eval(k, m[k])
 			if err != nil {
 				return a.Body, err

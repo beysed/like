@@ -22,7 +22,7 @@ func findStore(context *c.Context, identifier string) c.Store {
 		stores = append(stores, t)
 	}
 
-	for i, _ := range stores {
+	for i := range stores {
 		s.Push(stores[len(stores)-1-i])
 	}
 

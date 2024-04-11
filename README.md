@@ -9,4 +9,4 @@
 
 [![Build](https://github.com/beysed/like/actions/workflows/build.yml/badge.svg)](https://github.com/beysed/like/actions/workflows/build.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/beysed/like.svg)](https://pkg.go.dev/github.com/beysed/like)
-[![Go Report Card](https://goreportcard.com/badge/github.com/beysed/like)](https://goreportcard.com/report/github.com/beysed/like)
+[![Go Report Card](https://goreportcard.com/badge/github.com/beysed/like?04112024)](https://goreportcard.com/report/github.com/beysed/like)

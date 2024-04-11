@@ -45,7 +45,15 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			return a, err
 		}
 
-		lambda, ok := store.(Value).Get().(Lambda)
+		var ok bool
+		var lambda Lambda
+		val, ok := store.(Value)
+		if ok {
+			lambda, ok = val.Get().(Lambda)
+		} else {
+			lambda, ok = store.(Lambda)
+		}
+
 		if !ok {
 			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()), nil)
 		}

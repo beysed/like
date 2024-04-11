@@ -80,32 +80,30 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 			Reference: ref}, nil
 	}
 
-	if st, ok := a.Reference.(StoreAccess); ok {
-		v, e := st.Evaluate(context)
-		if e != nil {
-			return v, e
-		}
-
-		s := v.(*StoreReference)
-		if a.Index == nil {
-			return s, nil
-		}
-
-		store, ok := s.Get().(c.Store)
-		if !ok {
-			store = c.Store{}
-			s.Set(store)
-		}
-
-		// context.Locals.Push(store)
-		// defer context.Locals.Pop()
-
-		local := MakeContext(store, context.BuiltIn, context.System)
-		n := StoreAccess{
-			Reference: a.Index}
-
-		return n.Evaluate(local)
+	v, e := a.Reference.Evaluate(context)
+	if e != nil {
+		return v, e
 	}
 
-	return nil, nil
+	s, ok := v.(*StoreReference)
+	if !ok {
+		return v, nil
+	}
+
+	if a.Index == nil {
+		return s, nil
+	}
+
+	store, ok := s.Get().(c.Store)
+	if !ok {
+		store = c.Store{}
+		s.Set(store)
+	}
+
+	local := MakeContext(store, context.BuiltIn, context.System)
+	n := StoreAccess{
+		Reference: a.Index}
+
+	return n.Evaluate(local)
+
 }

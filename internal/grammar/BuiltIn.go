@@ -9,6 +9,12 @@ import (
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"resolvePath": func(context *c.Context, args []any) (any, error) {
+			if len(args) != 1 {
+				return nil, c.MakeError("'resolvePath' accept only single argument", nil)
+			}
+			return context.System.ResolvePath(context, stringify(args[0]))
+		},
 		"len": func(context *c.Context, args []any) (any, error) {
 			if len(args) != 1 {
 				return nil, c.MakeError("'len' accept only single argument", nil)

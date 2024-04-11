@@ -7,12 +7,12 @@ import (
 )
 
 type Call struct {
-	Store     StoreAccess
+	Reference Reference
 	Arguments ExpressionList
 }
 
 func (a Call) String() string {
-	return fmt.Sprintf("%s(%s)", a.Store.String(), a.Arguments.String())
+	return fmt.Sprintf("%s(%s)", a.Reference.String(), a.Arguments.String())
 }
 
 func (a Call) Evaluate(context *c.Context) (any, error) {
@@ -33,29 +33,23 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 		return args, nil
 	}
 
-	if f, ok := a.Store.Reference.(Literal); ok {
-		funcName := f.Value.(string)
-		builtInFunc := context.BuiltIn[funcName]
-		evalFunc = builtInFunc
+	if store, ok := a.Reference.Expression.(StoreAccess); ok {
+		if f, ok := store.Reference.(Literal); ok {
+			funcName := f.Value.(string)
+			builtInFunc := context.BuiltIn[funcName]
+			evalFunc = builtInFunc
+		}
 	}
 
 	if evalFunc == nil {
-		store, err := a.Store.Evaluate(context)
+		val, err := a.Reference.Evaluate(context)
 		if err != nil {
 			return a, err
 		}
 
-		var ok bool
-		var lambda Lambda
-		val, ok := store.(Value)
-		if ok {
-			lambda, ok = val.Get().(Lambda)
-		} else {
-			lambda, ok = store.(Lambda)
-		}
-
+		lambda, ok := val.(Lambda)
 		if !ok {
-			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Store.String()), nil)
+			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Reference.String()), nil)
 		}
 
 		// todo: check len of argument lists

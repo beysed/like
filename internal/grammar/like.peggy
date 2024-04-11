@@ -33,7 +33,7 @@ expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
     return ExpressionList(listFrom[Expression](_e, _r)), nil
 }
 
-call = '$' _i:store ws* "(" ws* _m:expression_list? ws* ")" {
+call = _i:reference ws* "(" ws* _m:expression_list? ws* ")" {
   var t ExpressionList
 
   if _m != nil {
@@ -43,7 +43,7 @@ call = '$' _i:store ws* "(" ws* _m:expression_list? ws* ")" {
   }
 
   return Call {
-    Store: _i.(StoreAccess),
+    Reference: _i.(Reference),
     Arguments: t }, nil
 }
 

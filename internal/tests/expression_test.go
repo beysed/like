@@ -82,7 +82,7 @@ var _ = Describe("Grammar", func() {
 		Expect(res.String()).To(Equal(expexted))
 	},
 		Entry("no arg empty", "() {\n}", "() {\n\n}"),
-		Entry("one arg call", "(a) {\n$b()\n}", "(a) {\nb()\n}"),
+		Entry("one arg call", "(a) {\n$b()\n}", "(a) {\n$b()\n}"),
 		Entry("one arg assign", "(a) {\na=b\n}", "(a) {\na = b\n}"),
 		Entry("one arg operator", "(a) {\n` a\n}", "(a) {\n` a\n}"),
 		Entry("one arg space operator", "(a) {\n ` a\n}", "(a) {\n` a\n}"))

@@ -143,11 +143,13 @@ expression =
   write /
   writeln /
   assign /
+  assign_add /
   parse_data /
   format_data /
   each /
   condition /
   "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
+  _l:expression ws* "+" ws* _r:expression { return MakeAdd(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
   _l:expression ws* pipe ws* _r:expression { return MakePipe(_l.(Expression), _r.(Expression)), nil } /
@@ -203,6 +205,13 @@ assign = _i:store ws* eq ws* _e:(lambda / expression)
     Value: _e.(Expression) }, nil
 }
 
+assign_add = _i:store ws* "+=" ws* _e:expression
+{
+  return Assign{
+    Store: _i.(StoreAccess),
+    Value: MakeAdd(Reference{ Expression: _i.(StoreAccess)}, _e.(Expression)) }, nil
+}
+
 writeln = quot ws* _e:super_expression {
   return WriteLn { Expression : _e.(Expressions) }, nil }
 
@@ -225,14 +234,14 @@ literal
   / s:quotedString
 
 lit
-  = ("\\" _a:[@!={}()#=&|$<>~'"?%:` \][.\\] { return string(_a.([]byte)), nil })
+  = ("\\" _a:[@!={}()#=&|$<>~'"?%:`+ \][.\\] { return string(_a.([]byte)), nil })
   / (sym / let / dig)+ { return string(c.text), nil}
   / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 
 dig = [0-9]
 let = [a-zA-Z]
-sym = [^\\@!={}()#=&|$<>~'"?%:` \n\r\t\][.]
+sym = [^\\@!={}()#=&|$<>~'"?%:`+ \n\r\t\][.]
 
 ws = ' ' / '\t'
 dash = '-'

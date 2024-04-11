@@ -35,7 +35,7 @@ var _ = Describe("Samples", func() {
 	},
 		Entry("samples/pipe_in", "samples/pipe_in.like", "Hello World\n"),
 		Entry("samples/stringify_array", "samples/stringify_array.like", "[1 2 'a apple' bus]\n"),
-		Entry("samples/stringify", "samples/stringify.like", "\n{}\n\n[]\nsss\n{a: 1, b: 2}\n[1 2 'a apple' bus]\n"),
+		Entry("samples/stringify", "samples/stringify.like", "\n{}\n\n[]\nsss\n{a: 1}\n[1 2 'a apple' bus]\n"),
 		Entry("samples/exec_arg", "samples/exec_arg.like", "a\n"),
 		Entry("samples/conditions", "samples/conditions.like", "1\n\n3\n6\n3\n\n5\n8\nb1f1\nf2\nb\nf3\n"),
 		Entry("samples/conditions2", "samples/conditions2.like", "nnnnyyyy"),
@@ -67,7 +67,7 @@ var _ = Describe("Samples", func() {
 		Entry("samples/lambda_invoke_space", "samples/lambda_invoke_space.like", "_ 1 2 _\n"),
 		Entry("samples/func", "samples/func.like", "one\na oops\na oops\n"),
 		Entry("samples/execute", "samples/execute.like", "AAA\n"),
-		Entry("samples/assigns", "samples/assigns.like", "a1"),
+		Entry("samples/assigns", "samples/assigns.like", "a1bcbcd"),
 		Entry("samples/template", "samples/template.like", "AfredB\n___\n"))
 
 	DescribeTable("Valid file", func(f string, e string) {

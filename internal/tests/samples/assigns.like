@@ -4,3 +4,6 @@ q = a
 a.b.c = 1
 b = $a.b.c
 ~ $b
+
+~ a=b+c
+~ a+=d

@@ -47,7 +47,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			return a, err
 		}
 
-		lambda, ok := val.(Lambda)
+		la, ok := val.(BindedLambda)
 		if !ok {
 			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Reference.String()), nil)
 		}
@@ -58,7 +58,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			local := c.MakeLocals(c.Store{})
 
 			argc := len(args)
-			for i, v := range lambda.Arguments.Identifiers {
+			for i, v := range la.Lambda.Arguments.Identifiers {
 				if i >= argc {
 					return nil, c.MakeError("lambda arguments mismatch", nil)
 				}
@@ -66,13 +66,13 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 				local.Store[v] = args[i]
 			}
 
-			err = context.Locals.Push(local)
+			err = la.Context.Locals.Push(local)
 			if err != nil {
 				return nil, err
 			}
 
-			result, err := lambda.Body.Evaluate(context)
-			t, lambdaLocals := context.Locals.Pop()
+			result, err := la.Lambda.Body.Evaluate(la.Context)
+			t, lambdaLocals := la.Context.Locals.Pop()
 			_, current := context.Locals.Peek()
 			current.Output.WriteString(lambdaLocals.Output.String())
 

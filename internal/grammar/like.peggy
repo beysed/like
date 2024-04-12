@@ -159,6 +159,7 @@ expression =
   literal /
   quotedString /
   list /
+  lambda /
   "{}" { return MakeConstant(common.Store{}), nil} /
   ( '(' _e: expression ')' { return _e, nil} )
 
@@ -198,7 +199,7 @@ lambda = _a:argument_decl ws*
       Body: _e.(Expression) }, nil
   }
 
-assign = _i:store ws* eq ws* _e:(lambda / expression)
+assign = _i:store ws* eq ws* _e:expression
 {
   return Assign{
     Store: _i.(StoreAccess),

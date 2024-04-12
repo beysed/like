@@ -1,0 +1,7 @@
+l = () {
+  ~ echo Hello
+  exit
+}
+
+$l() | $a
+~ $a

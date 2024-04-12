@@ -82,7 +82,7 @@ func main() {
 		return code
 	}
 
-	context := g.MakeContext(globals, g.MakeDefaultBuiltIn(), system)
+	context := g.MakeContext(c.MakeLocals(globals), g.MakeDefaultBuiltIn(), system)
 	globals["args"] = make([]any, len(args))
 	for i, v := range args {
 		globals["args"].([]any)[i] = v

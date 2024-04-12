@@ -63,6 +63,11 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 			}
 			text := strings.Join(lines, "\n")
 			_, folder := context.PathStack.Peek()
+
+			// to avoid duplicated output
+			context.Locals.Push(c.MakeLocals(c.Store{}))
+			defer context.Locals.Pop()
+
 			return Execute(folder, context, []byte(text))
 		}}
 }

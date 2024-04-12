@@ -26,6 +26,8 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 			return expr, err
 		}
 	}
+	_, locals := context.Locals.Peek()
+	context.System.OutputText(locals.Output.String())
 
 	return last, nil
 }

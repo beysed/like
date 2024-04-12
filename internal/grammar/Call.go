@@ -55,7 +55,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 		// todo: check len of argument lists
 
 		evalFunc = func(_ *c.Context, args []any) (any, error) {
-			local := c.Store{}
+			local := c.MakeLocals(c.Store{})
 
 			argc := len(args)
 			for i, v := range lambda.Arguments.Identifiers {
@@ -63,7 +63,7 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 					return nil, c.MakeError("lambda arguments mismatch", nil)
 				}
 
-				local[v] = args[i]
+				local.Store[v] = args[i]
 			}
 
 			err = context.Locals.Push(local)
@@ -72,7 +72,9 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			}
 
 			result, err := lambda.Body.Evaluate(context)
-			t, _ := context.Locals.Pop()
+			t, lambdaLocals := context.Locals.Pop()
+			_, current := context.Locals.Peek()
+			current.Output.WriteString(lambdaLocals.Output.String())
 
 			if !t {
 				return nil, c.MakeError("can not pop context", nil)

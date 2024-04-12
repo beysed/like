@@ -87,8 +87,6 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 }
 
 func (a Invoke) Evaluate(context *c.Context) (any, error) {
-	output := strings.Builder{}
-
 	cmdEval, err := a.Expressions[0].Evaluate(context)
 	if err != nil {
 		return cmdEval, err
@@ -133,20 +131,20 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	}
 
 	_, locals := context.Locals.Peek()
-	// todo: $_input to const
-	input := locals["$_input"]
-	if input != nil {
+	input := locals.Input
+	if input != "" {
 		execution.Stdin <- []byte(stringify(input))
 	}
 
 	close(execution.Stdin)
 
 	run := true
+	var exitError error
 	for run {
 		select {
 		case out := <-execution.Stdout:
-			output.Write(out)
-		case <-execution.Exit:
+			locals.Output.WriteString(string(out))
+		case exitError = <-execution.Exit:
 			run = false
 		case <-time.After(time.Second * 10):
 			execution.Kill()
@@ -154,5 +152,5 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 		}
 	}
 
-	return output.String(), nil
+	return exitError, nil
 }

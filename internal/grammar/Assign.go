@@ -19,6 +19,10 @@ func (a Assign) Evaluate(context *c.Context) (any, error) {
 		return store, err
 	}
 
+	if store == nil {
+		return a.Store, c.MakeError("assign to nil value", nil)
+	}
+
 	v, err := a.Value.Evaluate(context)
 	if err != nil {
 		return v, err

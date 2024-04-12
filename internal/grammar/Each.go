@@ -22,14 +22,15 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 	}
 
 	result := []any{}
-	local := c.Store{}
+	locals := c.MakeLocals(c.Store{})
 
-	context.Locals.Push(local)
+	_, current := context.Locals.Peek()
+	context.Locals.Push(locals)
 	defer context.Locals.Pop()
 
 	var eval = func(key string, val any) (any, error) {
-		local["_k"] = fmt.Sprint(key)
-		local["_v"] = fmt.Sprint(val)
+		locals.Store["_k"] = fmt.Sprint(key)
+		locals.Store["_v"] = fmt.Sprint(val)
 
 		r, err := a.Body.Evaluate(context)
 		if err != nil {
@@ -62,7 +63,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 			return a.Body, err
 		}
 	}
-
+	current.Output.WriteString(locals.Output.String())
 	return result, nil
 }
 

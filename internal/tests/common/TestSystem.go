@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"strings"
 
 	"os"
@@ -22,7 +21,7 @@ func (t *TestSystem) ResolvePath(context *c.Context, filePath string) (string, e
 }
 
 func (t *TestSystem) OutputText(text string) {
-	t.Result.WriteString(fmt.Sprint(text))
+	t.Result.WriteString(text)
 }
 
 func (t *TestSystem) OutputError(text string) {
@@ -31,7 +30,5 @@ func (t *TestSystem) OutputError(text string) {
 
 func MakeContext() (*c.Context, *strings.Builder) {
 	system := TestSystem{}
-	store := c.Store{}
-
-	return g.MakeContext(store, g.MakeDefaultBuiltIn(), &system), &system.Result
+	return g.MakeContext(c.MakeLocals(c.Store{}), g.MakeDefaultBuiltIn(), &system), &system.Result
 }

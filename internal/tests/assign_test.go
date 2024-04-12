@@ -33,13 +33,13 @@ var _ = Describe("Assigns", func() {
 
 		var system = TestSystem{}
 
-		var globals = c.Store{}
+		var globals = c.MakeLocals(c.Store{})
 		var context = g.MakeContext(globals, g.MakeDefaultBuiltIn(), &system)
 
 		result, err := assign.Evaluate(context)
 		Expect(err).To(BeNil())
-		Expect(globals[indentifier]).Should(Equal(value))
-		Expect(globals[indentifier]).Should(Equal(result))
+		Expect(globals.Store[indentifier]).Should(Equal(value))
+		Expect(globals.Store[indentifier]).Should(Equal(result))
 	},
 		Entry("Evaluate: literal", "a = b", "a", "b"),
 		Entry("Evaluate: quoted string", "b = 'a'", "b", "a"),

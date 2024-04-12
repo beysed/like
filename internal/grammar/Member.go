@@ -12,23 +12,23 @@ func (a Member) String() string {
 
 func findStore(context *c.Context, identifier string) c.Store {
 	s := context.Locals
-	stores := []c.Store{}
+	locals := []*c.Locals{}
 	for {
 		b, t := s.Pop()
 		if !b {
 			break
 		}
 
-		stores = append(stores, t)
+		locals = append(locals, t)
 	}
 
-	for i := range stores {
-		s.Push(stores[len(stores)-1-i])
+	for i := range locals {
+		s.Push(locals[len(locals)-1-i])
 	}
 
-	for _, v := range stores {
-		if v[identifier] != nil {
-			return v
+	for _, v := range locals {
+		if v.Store[identifier] != nil {
+			return v.Store
 		}
 	}
 
@@ -39,7 +39,8 @@ func (a Member) Evaluate(context *c.Context) (any, error) {
 	store := findStore(context, a.Identifier)
 
 	if store == nil {
-		_, store = context.Locals.Peek()
+		_, locals := context.Locals.Peek()
+		store = locals.Store
 	}
 
 	if store[a.Identifier] == nil {

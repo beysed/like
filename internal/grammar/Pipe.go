@@ -16,15 +16,31 @@ func (a Pipe) String() string {
 }
 
 func (a Pipe) Evaluate(context *c.Context) (any, error) {
-	data, err := a.From.Evaluate(context)
+	_, err := a.From.Evaluate(context)
 	if err != nil {
 		return a.From, err
 	}
 
-	locals := c.Store{}
-	locals["$_input"] = data
+	_, current := context.Locals.Peek()
+
+	if ref, ok := a.To.(Reference); ok {
+		assign := Assign{
+			Store: ref.Expression,
+			Value: MakeConstant(current.Output.String())}
+		current.Output.Reset()
+
+		return assign.Evaluate(context)
+	}
+
+	locals := c.MakeLocals(c.Store{})
+	locals.Input = current.Output.String()
+	current.Output.Reset()
 	context.Locals.Push(locals)
-	defer context.Locals.Pop()
+
+	defer func() {
+		current.Output.WriteString(locals.Output.String())
+		context.Locals.Pop()
+	}()
 
 	return a.To.Evaluate(context)
 }

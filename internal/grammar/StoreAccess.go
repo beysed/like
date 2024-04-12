@@ -74,7 +74,8 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 				Reference: ref}, nil
 		}
 
-		_, store = context.Locals.Peek()
+		_, locals := context.Locals.Peek()
+		store = locals.Store
 		return &StoreReference{
 			Store:     store,
 			Reference: ref}, nil
@@ -100,7 +101,7 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 		s.Set(store)
 	}
 
-	local := MakeContext(store, context.BuiltIn, context.System)
+	local := MakeContext(c.MakeLocals(store), context.BuiltIn, context.System)
 	n := StoreAccess{
 		Reference: a.Index}
 

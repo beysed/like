@@ -33,6 +33,8 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/pipe_2_ref", "samples/pipe_2_ref.like", "echo Hello"),
+		Entry("samples/lambda_output", "samples/lambda_output.like", "Hello\n"),
 		Entry("samples/addressing", "samples/addressing.like", "() hello\nhello\nworld\n"),
 		Entry("samples/pipe_in", "samples/pipe_in.like", "Hello World\n"),
 		Entry("samples/stringify_array", "samples/stringify_array.like", "[1 2 'a apple' bus]\n"),

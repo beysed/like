@@ -103,6 +103,7 @@ func main() {
 	env, err := parser.Parse(senv)
 	if err != nil {
 		system.OutputError("unable to parse environment\n")
+		os.Exit(cleanup(128))
 	} else {
 		globals["env"] = env
 	}

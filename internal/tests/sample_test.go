@@ -19,7 +19,7 @@ var _ = Describe("Samples", func() {
 		_, err := g.Execute("a.like", context, c)
 		Expect(err).NotTo(BeNil())
 		errorText := err.Error()
-		Expect(strings.HasPrefix(errorText, e)).To(BeTrue())
+		Expect(strings.Contains(errorText, e)).To(BeTrue())
 	},
 		Entry("samples/len-error", "samples/len-error.like", "['len' accept only single argument]"),
 		Entry("samples/error", "samples/error.like", "[[error]]"))
@@ -33,6 +33,7 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/pipe_out", "samples/pipe_out.like", "HelloWorld"),
 		Entry("samples/extra_capture", "samples/extra_capture.like", "12---la"),
 		Entry("samples/lambda_context", "samples/lambda_context.like", "xy"),
 		Entry("samples/pipe_2_ref", "samples/pipe_2_ref.like", "echo Hello"),

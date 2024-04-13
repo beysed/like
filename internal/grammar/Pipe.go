@@ -7,23 +7,31 @@ import (
 )
 
 type Pipe struct {
-	From Expression
-	To   Expression
+	from Expression
+	to   Expression
+}
+
+func (a *Pipe) From() Ref[Expression] {
+	return MakeRef(&a.from)
+}
+
+func (a *Pipe) To() Ref[Expression] {
+	return MakeRef(&a.to)
 }
 
 func (a Pipe) String() string {
-	return fmt.Sprintf("%s | %s", a.From, a.To)
+	return fmt.Sprintf("%s | %s", a.from, a.to)
 }
 
 func (a Pipe) Evaluate(context *c.Context) (any, error) {
-	_, err := a.From.Evaluate(context)
+	_, err := a.from.Evaluate(context)
 	if err != nil {
-		return a.From, err
+		return a.from, err
 	}
 
 	_, current := context.Locals.Peek()
 
-	if ref, ok := a.To.(Reference); ok {
+	if ref, ok := a.to.(Reference); ok {
 		assign := Assign{
 			Store: ref.Expression,
 			Value: MakeConstant(current.Output.String())}
@@ -42,9 +50,5 @@ func (a Pipe) Evaluate(context *c.Context) (any, error) {
 		context.Locals.Pop()
 	}()
 
-	return a.To.Evaluate(context)
-}
-
-func MakePipe(from Expression, to Expression) Expression {
-	return Pipe{From: from, To: to}
+	return a.to.Evaluate(context)
 }

@@ -1,6 +1,10 @@
 package grammar
 
-import c "github.com/beysed/like/internal/grammar/common"
+import (
+	"fmt"
+
+	c "github.com/beysed/like/internal/grammar/common"
+)
 
 func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 	result, err := Parse(filePath, code, Entrypoint("file"))
@@ -19,6 +23,7 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 
 	exprs := result.([]Expression)
 	var last any
+
 	for _, expr := range exprs {
 		last, err = expr.Evaluate(context)
 		_, locals := context.Locals.Peek()
@@ -26,7 +31,7 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 		locals.Output.Reset()
 
 		if err != nil {
-			return expr, err
+			return expr, c.MakeError(fmt.Sprintf("while evaluating: { %s }", expr.String()), err)
 		}
 	}
 

@@ -36,7 +36,7 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 
 	var p string
 	if isAbs {
-		p = filePath
+		p = strings.ReplaceAll(filePath, "\\", "//")
 	} else {
 		if strings.HasPrefix(filePath, "./") {
 			f, l := context.PathStack.Peek()

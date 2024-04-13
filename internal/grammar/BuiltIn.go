@@ -2,13 +2,22 @@ package grammar
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
+	"github.com/samber/lo"
 )
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"joinPath": func(context *c.Context, args []any) (any, error) {
+			return path.Join(
+				lo.Map(args,
+					func(a any, _ int) string {
+						return stringify(a)
+					})...), nil
+		},
 		"resolvePath": func(context *c.Context, args []any) (any, error) {
 			if len(args) != 1 {
 				return nil, c.MakeError("'resolvePath' accept only single argument", nil)

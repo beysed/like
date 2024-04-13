@@ -13,7 +13,7 @@ var _ = Describe("Grammar Logic", func() {
 		_, err := Evaluate("$error(oops)")
 
 		Expect(err).ToNot(BeNil())
-		Expect(err.Error()).To(Equal("[[oops]]"))
+		Expect(err.Error()).To(Equal("[while evaluating: { $error(oops) }] because of:\n\t[[oops]]"))
 	})
 
 	DescribeTable("Not", func(input string, expected string) {

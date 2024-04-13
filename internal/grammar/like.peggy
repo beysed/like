@@ -62,14 +62,6 @@ reference = sign
     return Reference { Expression : _m.(Expression) }, nil
   }
 
-pointer = '^'
-  _m: (
-    store /
-    ('(' _m:store ')' { return _m, nil }))
-  {
-    return Pointer { Expression : _m.(Expression) }, nil
-  }
-
 string_content
   = _a:("$$" { return MakeLiteral("$"), nil}
   / call
@@ -152,7 +144,10 @@ expression =
   _l:expression ws* "+" ws* _r:expression { return MakeAdd(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
-  _l:expression ws* pipe ws* _r:expression { return MakePipe(_l.(Expression), _r.(Expression)), nil } /
+  _l:expression ws* "|" ws* _r:expression { return MakePiped[Pipe](_l.(Expression), _r.(Expression)), nil } /
+  _l:expression ws* ">>" ws* _r:expression { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression)), nil } /
+  _l:expression ws* ">" ws* _r:expression { return MakePiped[PipeOut](_l.(Expression), _r.(Expression)), nil } /
+  _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression)), nil } /
   call  /
   invoke /
   reference /

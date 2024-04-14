@@ -110,7 +110,7 @@ func main() {
 
 	_, err = g.Execute(fileName, context, input)
 	if err != nil {
-		system.OutputError(fmt.Sprintf("error: %s\n", err.Error()))
+		system.OutputError(fmt.Sprintf("error:\t%s\n", err.Error()))
 		os.Exit(cleanup(128))
 	}
 

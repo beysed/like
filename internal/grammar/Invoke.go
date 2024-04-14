@@ -133,7 +133,7 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	_, locals := context.Locals.Peek()
 	input := locals.Input
 	if input != "" {
-		execution.Stdin <- []byte(stringify(input))
+		execution.Stdin <- []byte(c.Stringify(input))
 	}
 
 	close(execution.Stdin)

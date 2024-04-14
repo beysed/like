@@ -26,8 +26,8 @@ func (a Equal) Evaluate(context *c.Context) (any, error) {
 		return a.Right, err
 	}
 
-	ls := stringify(l)
-	rs := stringify(r)
+	ls := c.Stringify(l)
+	rs := c.Stringify(r)
 
 	if ls == rs {
 		return "T", nil

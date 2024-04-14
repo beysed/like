@@ -44,7 +44,7 @@ func EvaluatePipeout[T PipeOutInstance](a T, context *c.Context, writer OutputWr
 		return aTo, err
 	}
 
-	file := stringify(to)
+	file := c.Stringify(to)
 	err = writer(file, output)
 
 	return from, err

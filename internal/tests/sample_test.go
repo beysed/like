@@ -34,6 +34,7 @@ var _ = Describe("Samples", func() {
 		Expect(result.String()).To(Equal(e))
 	},
 		Entry("samples/pipe_out", "samples/pipe_out.like", "HelloWorld"),
+		Entry("samples/named_args", "samples/named_args.like", "meab"),
 		Entry("samples/extra_capture", "samples/extra_capture.like", "12---la"),
 		Entry("samples/lambda_context", "samples/lambda_context.like", "xy"),
 		Entry("samples/pipe_2_ref", "samples/pipe_2_ref.like", "echo Hello"),

@@ -26,7 +26,7 @@ func flat(a any) []any {
 			return
 		}
 
-		if a, ok := t.(List); ok {
+		if a, ok := t.(c.List); ok {
 			for _, z := range a {
 				r(z)
 			}
@@ -78,7 +78,7 @@ func evaluate(a Expressions, context *c.Context) (string, error) {
 		}
 
 		for _, s := range halfflat(r) {
-			data = append(data, stringify(s))
+			data = append(data, c.Stringify(s))
 		}
 	}
 

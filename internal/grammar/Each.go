@@ -43,7 +43,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 
 	//todo map
 
-	if lst, ok := v.(List); ok {
+	if lst, ok := v.(c.List); ok {
 		for k, l := range lst {
 			_, err = eval(fmt.Sprint(k), l)
 			if err != nil {
@@ -64,6 +64,8 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		}
 	}
 	current.Output.WriteString(locals.Output.String())
+	locals.Output.Reset()
+
 	return result, nil
 }
 

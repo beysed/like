@@ -40,7 +40,7 @@ func (a Condition) Evaluate(context *c.Context) (any, error) {
 		result = len(t) > 0
 	case c.Store:
 		result = len(t) > 0
-	case List:
+	case c.List:
 		result = len(t) > 0
 	case []any:
 		result = len(t) > 0
@@ -48,7 +48,7 @@ func (a Condition) Evaluate(context *c.Context) (any, error) {
 		result = t != nil
 	case nil:
 	default:
-		str := trim(stringify(t))
+		str := trim(c.Stringify(t))
 		result = len(str) > 0
 	}
 

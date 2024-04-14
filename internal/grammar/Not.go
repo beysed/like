@@ -20,7 +20,7 @@ func (a Not) Evaluate(context *c.Context) (any, error) {
 		return nil, err
 	}
 
-	str := trim(stringify(v))
+	str := trim(c.Stringify(v))
 	if len(str) > 0 {
 		return "", nil
 	}

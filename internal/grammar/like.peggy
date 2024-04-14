@@ -33,13 +33,28 @@ expression_list = _e:expression _r:(ws* _e:expression { return _e, nil} )* {
     return ExpressionList(listFrom[Expression](_e, _r)), nil
 }
 
-call = _i:reference ws* "(" ws* _m:expression_list? ws* ")" {
-  var t ExpressionList
+named_expression = _i:(_i:identifier ws* ':' ws* {return _i, nil})? _e:expression {
+  var k string
+  if _i == nil {
+    k = ""
+  } else {
+    k = _i.(string)
+  }
+
+  return NamedExpression { Key: k, Value: _e.(Expression)}, nil
+}
+
+named_expression_list = _e:named_expression _r:(ws* _e:named_expression { return _e, nil} )* {
+    return NamedExpressionList(listFrom[NamedExpression](_e, _r)), nil
+}
+
+call = _i:reference ws* "(" ws* _m:named_expression_list? ws* ")" {
+  var t NamedExpressionList
 
   if _m != nil {
-    t = _m.(ExpressionList)
+    t = _m.(NamedExpressionList)
   } else {
-    t = ExpressionList {}
+    t = NamedExpressionList {}
   }
 
   return Call {
@@ -125,7 +140,7 @@ each
 list
   = '[' ws* _e:expression_list? ws* ']' {
   if (_e == nil) {
-    return Constant { Value : List{} }, nil
+    return Constant { Value : common.List{} }, nil
   }
 
   return _e, nil

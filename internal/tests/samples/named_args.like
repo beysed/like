@@ -1,0 +1,8 @@
+la = () {
+  name = "me"
+  te = (yy zz) $name$zz$yy
+
+  $te(zz:a yy:b)
+}
+
+~ $la()

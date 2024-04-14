@@ -26,6 +26,7 @@ go_library(
         "Literal.go",
         "LiteralList.go",
         "Member.go",
+        "NamedExpressionList.go",
         "Not.go",
         "ParseData.go",
         "ParsedString.go",

@@ -32,7 +32,7 @@ func (a PipeIn) Evaluate(context *c.Context) (any, error) {
 		return a.from, err
 	}
 
-	file := stringify(from)
+	file := c.Stringify(from)
 	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return a.from, c.MakeError(fmt.Sprintf("can not read file: %s", file), err)

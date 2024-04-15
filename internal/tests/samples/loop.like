@@ -1,3 +1,10 @@
+# map
 a={ a:1 }
 @ $a ~ $_k$_v
 
+# array
+b = [a b c]
+@ $b ~ $_k$_v
+
+# nil
+@ $c ~ $_k$_v

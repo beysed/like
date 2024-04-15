@@ -21,6 +21,10 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		return a.List, err
 	}
 
+	if v == nil {
+		return nil, nil
+	}
+
 	result := []any{}
 	locals := c.MakeLocals(c.Store{})
 
@@ -40,8 +44,6 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 
 		return r, nil
 	}
-
-	//todo map
 
 	if lst, ok := v.(c.List); ok {
 		for k, l := range lst {

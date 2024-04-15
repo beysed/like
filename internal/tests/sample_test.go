@@ -67,7 +67,7 @@ var _ = Describe("Samples", func() {
 		Entry("samples/json_format", "samples/json_format.like", "{\"b\":\"a\"}"),
 		Entry("samples/env_format", "samples/env_format.like", "b=a\n"),
 		Entry("samples/include_test", "samples/include_test.like", "Z"),
-		Entry("samples/loop", "samples/loop.like", "a1"),
+		Entry("samples/loop", "samples/loop.like", "a10a1b2c"),
 		Entry("samples/quotes", "samples/quotes.like", "\"a'"),
 		Entry("samples/sample", "samples/sample.like", "b\n"),
 		Entry("samples/simple_template", "samples/simple_template.like", "aaacbbb\n"),

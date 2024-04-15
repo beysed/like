@@ -95,7 +95,7 @@ func (a Write) Evaluate(context *c.Context) (any, error) {
 	_, locals := context.Locals.Peek()
 	locals.Output.WriteString(result)
 
-	return result, nil
+	return nil, nil
 }
 
 func (a WriteLn) Evaluate(context *c.Context) (any, error) {

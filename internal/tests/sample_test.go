@@ -73,10 +73,10 @@ var _ = Describe("Samples", func() {
 		Entry("samples/simple_template", "samples/simple_template.like", "aaacbbb\n"),
 		Entry("samples/lambda_invoke", "samples/lambda_invoke.like", "_1_2_\n"),
 		Entry("samples/lambda_invoke_space", "samples/lambda_invoke_space.like", "_ 1 2 _\n"),
-		Entry("samples/func", "samples/func.like", "one\na oops\na oops\n"),
+		Entry("samples/func", "samples/func.like", "one\nee\nww\na oops\n"),
 		Entry("samples/execute", "samples/execute.like", "AAA\n"),
 		Entry("samples/assigns", "samples/assigns.like", "a1bcbcd"),
-		Entry("samples/template", "samples/template.like", "AfredB\n___\n"))
+		Entry("samples/template", "samples/template.like", "AfredB\n--thing--\n\n___"))
 
 	DescribeTable("Valid file", func(f string, e string) {
 		context, result := MakeContext()

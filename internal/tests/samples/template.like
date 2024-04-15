@@ -1,5 +1,11 @@
-`` story(user)
+smth = (u) {
+  ` --$u--
+}
+
+`` story(user item)
 A$(user)B
+$smth($item)
 ___
 ``
-` $story(fred)
+
+~ $story(fred thing)

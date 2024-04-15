@@ -28,6 +28,7 @@ go_library(
         "Member.go",
         "NamedExpressionList.go",
         "Not.go",
+        "OutputCapture.go",
         "ParseData.go",
         "ParsedString.go",
         "Pipe.go",

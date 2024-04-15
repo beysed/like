@@ -1,8 +1,14 @@
+b = () {
+  ` ee
+  ` ww
+}
+
 a = (a) {
     ` one
     q = oops
+    $b()
     ` $a $q
 }
 
-~ $a(a)
+$a(a)
 

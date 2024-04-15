@@ -25,14 +25,14 @@ func (a Template) Evaluate(context *c.Context) (any, error) {
 			arr = arr[:len(arr)-1]
 		}
 
-		str, err := prepareString(arr)
+		exprs, err := prepareString(arr)
 		if err != nil {
 			return nil, err
 		}
 
 		a.Value = Lambda{
 			Arguments: a.Arguments,
-			Body:      str,
+			Body:      OutputCapture(exprs),
 		}
 	}
 

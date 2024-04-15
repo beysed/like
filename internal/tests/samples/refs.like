@@ -1,0 +1,5 @@
+a=a
+b=c
+c=1
+# double reference shoud be 1
+~ $$b

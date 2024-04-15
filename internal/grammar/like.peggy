@@ -122,7 +122,13 @@ store =
     return StoreAccess {
       Reference: _e.(Expression),
       Index: _i.(Expression)}, nil }) /
-  _e:literal {
+  _e:reference {
+    return StoreAccess {
+      Reference: _e.(Expression) }, nil} /
+  _e:identifier {
+    return StoreAccess {
+      Reference: MakeLiteral(_e.(string)) }, nil} /
+  _e:quotedString {
     return StoreAccess {
       Reference: _e.(Expression) }, nil}
 

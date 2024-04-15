@@ -20,7 +20,7 @@ var _ = Describe("String Content", func() {
 	},
 		Entry("case1", "aaa$a", "aaa$a"),
 		Entry("case2", "aaa", "aaa"),
-		Entry("case3", "\\\\", "\\\\"),
-		Entry("case4", "\\\\", "\\\\"),
+		Entry("case3", "\\$a", "$a"),
+		Entry("case4", "\\$", "$"),
 	)
 })

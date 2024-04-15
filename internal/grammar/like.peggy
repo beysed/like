@@ -74,12 +74,12 @@ reference = sign
   '(' _m:expression ')' { return _m, nil }
 
 string_content
-  = _a:("$$" { return MakeLiteral("$"), nil}
+  = _q:(_b:escaped { return MakeLiteral(_b.(string)), nil}
   / call
   / reference
-  / ws  { return MakeLiteral(string(c.text)), nil }
-  /_a:[^ \t$]+ { return MakeLiteral(string(c.text)), nil})* {
-    return Expressions(arrayify[Expression](_a)), nil
+  / ws { return MakeLiteral(string(c.text)), nil }
+  /_a:[^ \t\\$]+ { return MakeLiteral(string(c.text)), nil})* eof {
+    return Expressions(arrayify[Expression](_q)), nil
 }
 
 dblquot = quot quot
@@ -251,10 +251,12 @@ literal
   = a:lit+ { return MakeLiteral(convert(a)), nil }
   / s:quotedString
 
+escaped
+  = "\\" _a:[@!={}()#=&|$<>~'"?%:`+ \][.\\] { return string(_a.([]byte)), nil }
+
 lit
-  = ("\\" _a:[@!={}()#=&|$<>~'"?%:`+ \][.\\] { return string(_a.([]byte)), nil })
+  = escaped
   / (sym / let / dig)+ { return string(c.text), nil}
-  / "\\" _s:sym+ { return string(c.text[1:]), nil }
   / "\\" { return string(c.text), nil }
 
 dig = [0-9]
@@ -264,7 +266,6 @@ sym = [^\\@!={}()#=&|$<>~'"?%:`+ \n\r\t\][.]
 ws = ' ' / '\t'
 dash = '-'
 unds = '_'
-slsh = '/'
 bslh = '\\'
 quot = '`'
 dblsign = sign sign

@@ -51,17 +51,6 @@ func evaluateStringContent(context *c.Context, s []byte) (string, error) {
 			for _, v := range flat(r) {
 				result.WriteString(fmt.Sprint(v))
 			}
-
-			// if v, ok := r.([]any); ok {
-			// 	result.WriteString(
-			// 		strings.Join(
-			// 			lo.Map(v,
-			// 				func(v any, _ int) string {
-			// 					return
-			// 				}), " "))
-			// } else {
-			// 	result.WriteString(fmt.Sprint(r))
-			// }
 			break
 		}
 	}

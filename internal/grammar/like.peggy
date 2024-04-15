@@ -176,7 +176,12 @@ expression =
   quotedString /
   list /
   lambda /
-  "{}" { return MakeConstant(common.Store{}), nil} /
+  "{" ws* _n:named_expression_list? ws* "}" {
+    if _n == nil {
+      return MakeExpressionStore(NamedExpressionList{})
+    }
+    return MakeExpressionStore(_n.(NamedExpressionList))
+  } /
   ( '(' _e: expression ')' { return _e, nil} )
 
 block= '{' eol _l:line* ws* '}' {

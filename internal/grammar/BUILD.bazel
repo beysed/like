@@ -38,6 +38,7 @@ go_library(
         "Piped.go",
         "Ref.go",
         "Reference.go",
+        "Store.go",
         "StoreAccess.go",
         "Template.go",
         "Write.go",

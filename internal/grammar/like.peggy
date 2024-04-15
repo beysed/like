@@ -70,12 +70,8 @@ member = _m:(identifier / s:quotedString) {
 };
 
 reference = sign
-  _m: (
-    store /
-    ('(' _m:store ')' { return _m, nil }))
-  {
-    return Reference { Expression : _m.(Expression) }, nil
-  }
+  _a: store { return Reference { Expression : _a.(Expression) }, nil } /
+  '(' _m:expression ')' { return _m, nil }
 
 string_content
   = _a:("$$" { return MakeLiteral("$"), nil}
@@ -122,13 +118,13 @@ store =
     return StoreAccess {
       Reference: _e.(Expression),
       Index: _i.(Expression)}, nil }) /
-  _e:reference {
-    return StoreAccess {
-      Reference: _e.(Expression) }, nil} /
   _e:identifier {
     return StoreAccess {
       Reference: MakeLiteral(_e.(string)) }, nil} /
   _e:quotedString {
+    return StoreAccess {
+      Reference: _e.(Expression) }, nil} /
+  _e:reference {
     return StoreAccess {
       Reference: _e.(Expression) }, nil}
 
@@ -171,11 +167,11 @@ expression =
   _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression)), nil } /
   call  /
   invoke /
+  lambda /
   reference /
   literal /
   quotedString /
   list /
-  lambda /
   "{" ws* _n:named_expression_list? ws* "}" {
     if _n == nil {
       return MakeExpressionStore(NamedExpressionList{})

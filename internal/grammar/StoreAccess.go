@@ -55,15 +55,32 @@ func (a StoreAccess) String() string {
 
 func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 	var ref string
+	var v any
+	var err error
 
 	if s, ok := a.Reference.(Literal); ok {
 		ref = s.String()
+	} else if s, ok := a.Reference.(Reference); ok {
+		v, err = s.Evaluate(context)
+		if err != nil {
+			return s, err
+		}
+
+		if ref, ok = v.(string); ok {
+		} // else if expr, ok := v.(Expression); ok {
+		// 	return expr.Evaluate(context)
+		// }
 	} else if s, ok := a.Reference.(ParsedString); ok {
 		r, err := s.Evaluate(context)
 		if err != nil {
 			return ref, err
 		}
 		ref = r.(string)
+	} else {
+		v, err = a.Reference.Evaluate(context)
+		if err != nil {
+			return a.Reference, err
+		}
 	}
 
 	if ref != "" {
@@ -81,11 +98,6 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 			Reference: ref}, nil
 	}
 
-	v, e := a.Reference.Evaluate(context)
-	if e != nil {
-		return v, e
-	}
-
 	s, ok := v.(*StoreReference)
 	if !ok {
 		return v, nil
@@ -101,10 +113,45 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 		s.Set(store)
 	}
 
-	local := MakeContext(c.MakeLocals(store), context.BuiltIn, context.System)
-	n := StoreAccess{
-		Reference: a.Index}
+	// var index Expression
+	// if i, ok := a.Index.(Reference); ok {
+	// 	index, err = i.Evaluate(context)
+	// 	if err != nil {
+	// 		return i, err
+	// 	}
+	// } else {
+	// 	index = a.Index
+	// }
 
-	return n.Evaluate(local)
+	if i, ok := a.Index.(StoreAccess); ok {
+		local := MakeContext(c.MakeLocals(store), context.BuiltIn, context.System)
+		n := StoreAccess{Reference: i}
 
+		return n.Evaluate(local)
+	}
+
+	res, err := a.Index.Evaluate(context)
+	if expr, ok := res.(Expression); ok {
+		res, err = expr.Evaluate(context)
+		if err != nil {
+			return expr, err
+		}
+
+	}
+
+	idx := c.Stringify(unwrap(res))
+	return store[idx], nil
+}
+
+func unwrap(t any) any {
+	if a, ok := t.([]any); ok {
+		l := len(a)
+		if l == 0 {
+			return nil
+		} else if l == 1 {
+			return unwrap(a[0])
+		}
+	}
+
+	return t
 }

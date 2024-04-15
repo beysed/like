@@ -20,7 +20,7 @@ func (a OutputCapture) Evaluate(context *c.Context) (any, error) {
 			return v, err
 		}
 
-		locals.Output.Write([]byte(c.Stringify(res)))
+		locals.Output.Write([]byte(c.Stringify(unwrap(res))))
 	}
 	context.Locals.Pop()
 

@@ -276,7 +276,6 @@ eq = '='
 amper = '&'
 tilda = '~'
 colon = ':'
-pipe_in = sign lt // $<
 any = . { return string(c.text), nil }
 eof = !.
 

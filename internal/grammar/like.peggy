@@ -165,8 +165,8 @@ expression =
   _l:expression ws* ">>" ws* _r:expression { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression)), nil } /
   _l:expression ws* ">" ws* _r:expression { return MakePiped[PipeOut](_l.(Expression), _r.(Expression)), nil } /
   _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression)), nil } /
-  call  /
   invoke /
+  call  /
   lambda /
   reference /
   literal /

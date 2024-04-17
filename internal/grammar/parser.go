@@ -1950,11 +1950,11 @@ var g = &grammar{
 					},
 					&ruleRefExpr{
 						pos:  position{line: 168, col: 3, offset: 5216},
-						name: "call",
+						name: "invoke",
 					},
 					&ruleRefExpr{
-						pos:  position{line: 169, col: 3, offset: 5227},
-						name: "invoke",
+						pos:  position{line: 169, col: 3, offset: 5228},
+						name: "call",
 					},
 					&ruleRefExpr{
 						pos:  position{line: 170, col: 3, offset: 5239},

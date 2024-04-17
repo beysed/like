@@ -25,7 +25,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		return nil, nil
 	}
 
-	result := []any{}
+	//result := []any{}
 	locals := c.MakeLocals(c.Store{})
 
 	_, current := context.Locals.Peek()
@@ -40,7 +40,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		if err != nil {
 			return a.Body, err
 		}
-		result = append(result, r)
+		//result = append(result, r)
 
 		return r, nil
 	}
@@ -68,7 +68,7 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 	current.Output.WriteString(locals.Output.String())
 	locals.Output.Reset()
 
-	return result, nil
+	return nil, nil
 }
 
 func MakeEach(l Expression, b Expression) Expression {

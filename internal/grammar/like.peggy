@@ -124,9 +124,15 @@ store =
   _e:quotedString {
     return StoreAccess {
       Reference: _e.(Expression) }, nil} /
-  _e:reference {
+  _e:reference _i:index? {
+    var idx Expression
+    if _i != nil {
+      idx = _i.(Expression)
+    }
+
     return StoreAccess {
-      Reference: _e.(Expression) }, nil}
+      Reference: _e.(Expression),
+      Index: idx }, nil}
 
 condition
   =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {

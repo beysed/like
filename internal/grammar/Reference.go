@@ -12,6 +12,7 @@ type Reference struct {
 
 func (a Reference) Evaluate(context *c.Context) (any, error) {
 	var expr Expression
+
 	if e, ok := a.Expression.(Literal); ok {
 		i, _ := e.Evaluate(context)
 		expr = &StoreAccess{
@@ -21,6 +22,7 @@ func (a Reference) Evaluate(context *c.Context) (any, error) {
 	} else {
 		expr = a.Expression
 	}
+
 	// todo lists
 	ref, err := expr.Evaluate(context)
 	if err != nil {

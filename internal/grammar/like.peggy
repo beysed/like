@@ -44,11 +44,11 @@ named_expression = _i:(_i:identifier ws* ':' ws* {return _i, nil})? _e:expressio
   return NamedExpression { Key: k, Value: _e.(Expression)}, nil
 }
 
-named_expression_list = _e:named_expression _r:(ws* _e:named_expression { return _e, nil} )* {
+named_expression_list = _e:named_expression _r:( (ws / eol)+ _e:named_expression { return _e, nil} )* {
     return NamedExpressionList(listFrom[NamedExpression](_e, _r)), nil
 }
 
-call = _i:reference ws* "(" ws* _m:named_expression_list? ws* ")" {
+call = _i:reference ws* "(" (ws/eol)* _m:named_expression_list? (ws/eol)* ")" {
   var t NamedExpressionList
 
   if _m != nil {

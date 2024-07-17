@@ -212,7 +212,7 @@ super_expression
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body = super_expression / block
+body = super_expression / lambda / block
 
 lambda = _a:argument_decl ws*
   _e:body

@@ -49,7 +49,10 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 
 		la, ok := val.(BindedLambda)
 		if !ok {
-			return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", a.Reference.String()), nil)
+			l := unwrap(val)
+			if la, ok = l.(BindedLambda); !ok {
+				return nil, c.MakeError(fmt.Sprintf("'%s' is not lambda", c.Stringify(l)), nil)
+			}
 		}
 
 		evalFunc = func(_ *c.Context, args []c.NamedValue) (any, error) {

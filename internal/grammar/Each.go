@@ -3,6 +3,8 @@ package grammar
 import (
 	"fmt"
 
+	s "sort"
+
 	c "github.com/beysed/like/internal/grammar/common"
 )
 
@@ -40,7 +42,6 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		if err != nil {
 			return a.Body, err
 		}
-		//result = append(result, r)
 
 		return r, nil
 	}
@@ -53,7 +54,13 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 			}
 		}
 	} else if m, ok := v.(c.Store); ok {
+		keys := []string{}
 		for k := range m {
+			keys = append(keys, k)
+		}
+
+		s.Strings(keys)
+		for _, k := range keys {
 			_, err = eval(k, m[k])
 			if err != nil {
 				return a.Body, err

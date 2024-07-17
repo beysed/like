@@ -35,7 +35,7 @@ var _ = Describe("Samples", func() {
 	},
 		Entry("samples/newline_args", "samples/newline_args.like", "a b c"),
 		Entry("samples/lambda_binded", "samples/lambda_binded.like", "1"),
-		Entry("samples/lambda_exec", "samples/lambda_exec.like", "namespace = \"ns\"\nname = \"svc\"\n"),
+		Entry("samples/lambda_exec", "samples/lambda_exec.like", "name = \"svc\"\nnamespace = \"ns\"\n"),
 		Entry("samples/lambda_args", "samples/lambda_args.like", "q w 2\n0e1r\n"),
 		Entry("samples/nested_refs", "samples/nested_refs.like", "c\nc\n"),
 		Entry("samples/escaping", "samples/escaping.like", "echo $0/$1/$2/$3/$4/$5/$6/$7\na.disk\n"),

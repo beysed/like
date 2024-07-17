@@ -1997,11 +1997,11 @@ var g = &grammar{
 					},
 					&ruleRefExpr{
 						pos:  position{line: 175, col: 3, offset: 5360},
-						name: "call",
+						name: "lambda",
 					},
 					&ruleRefExpr{
-						pos:  position{line: 176, col: 3, offset: 5371},
-						name: "lambda",
+						pos:  position{line: 176, col: 3, offset: 5372},
+						name: "call",
 					},
 					&ruleRefExpr{
 						pos:  position{line: 177, col: 3, offset: 5383},
@@ -2326,11 +2326,11 @@ var g = &grammar{
 				alternatives: []any{
 					&ruleRefExpr{
 						pos:  position{line: 215, col: 8, offset: 6365},
-						name: "super_expression",
+						name: "lambda",
 					},
 					&ruleRefExpr{
-						pos:  position{line: 215, col: 27, offset: 6384},
-						name: "lambda",
+						pos:  position{line: 215, col: 17, offset: 6374},
+						name: "super_expression",
 					},
 					&ruleRefExpr{
 						pos:  position{line: 215, col: 36, offset: 6393},

@@ -172,8 +172,8 @@ expression =
   _l:expression ws* ">" ws* _r:expression { return MakePiped[PipeOut](_l.(Expression), _r.(Expression)), nil } /
   _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression)), nil } /
   invoke /
-  call  /
   lambda /
+  call  /
   reference /
   literal /
   quotedString /
@@ -212,7 +212,7 @@ super_expression
       return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
     }
 
-body = super_expression / lambda / block
+body = lambda / super_expression / block
 
 lambda = _a:argument_decl ws*
   _e:body

@@ -33,6 +33,7 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/lambda_arg_lambda", "samples/lambda_arg_lambda.like", "here -me-\n"),
 		Entry("samples/lambda_short_call", "samples/lambda_short_call.like", "bla asd 1\n"),
 		Entry("samples/lambda_short", "samples/lambda_short.like", "here\n"),
 		Entry("samples/newline_args", "samples/newline_args.like", "a b c"),

@@ -1,0 +1,9 @@
+exec_args = () {
+    $_a[0]()
+}
+
+meta = (o) {
+    () ~ $o
+}
+
+$exec_args($meta(1))

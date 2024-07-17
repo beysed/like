@@ -1,0 +1,9 @@
+exec_args = () {
+    @ $_a ~ $_v()
+}
+
+meta = (o) {
+    () @ $o ` '$_k = "$_v"'
+}
+
+$exec_args($meta({namespace: ns name: svc}))

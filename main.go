@@ -14,8 +14,12 @@ import (
 
 func ExitPrintUsage() {
 	d, _ := debug.ReadBuildInfo()
+	var version string
+	if d != nil {
+		version = d.Main.Version
+	}
 
-	fmt.Printf("Like, Template Scripting Language, %s\n", d.Main.Version)
+	fmt.Printf("Like, Template Scripting Language %s\n", version)
 	fmt.Println("  using file: like input.like [args...]")
 	fmt.Println("  using data from stdin: like [args...]")
 	os.Exit(1)

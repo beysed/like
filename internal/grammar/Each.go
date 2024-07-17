@@ -33,8 +33,8 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 	defer context.Locals.Pop()
 
 	var eval = func(key string, val any) (any, error) {
-		locals.Store["_k"] = fmt.Sprint(key)
-		locals.Store["_v"] = fmt.Sprint(val)
+		locals.Store["_k"] = key
+		locals.Store["_v"] = val
 
 		r, err := a.Body.Evaluate(context)
 		if err != nil {

@@ -3,6 +3,7 @@ package grammar
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
@@ -67,9 +68,7 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 		}
 
 		if ref, ok = v.(string); ok {
-		} // else if expr, ok := v.(Expression); ok {
-		// 	return expr.Evaluate(context)
-		// }
+		}
 	} else if s, ok := a.Reference.(ParsedString); ok {
 		r, err := s.Evaluate(context)
 		if err != nil {
@@ -107,21 +106,29 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 		return s, nil
 	}
 
-	store, ok := s.Get().(c.Store)
+	val := s.Get()
+	store, ok := val.(c.Store)
 	if !ok {
+		if val != nil {
+			if arr, ok := val.(c.List); ok {
+				if a.Index == nil {
+					return arr, nil
+				}
+				idx, err := a.Index.Evaluate(context)
+				if err != nil {
+					return a.Index, err
+				}
+				idxN, err := strconv.Atoi(c.Stringify(idx))
+				if err != nil {
+					return a.Index, c.MakeError("wrong index value", nil)
+				}
+				return arr[idxN], nil
+			}
+		}
+
 		store = c.Store{}
 		s.Set(store)
 	}
-
-	// var index Expression
-	// if i, ok := a.Index.(Reference); ok {
-	// 	index, err = i.Evaluate(context)
-	// 	if err != nil {
-	// 		return i, err
-	// 	}
-	// } else {
-	// 	index = a.Index
-	// }
 
 	if i, ok := a.Index.(StoreAccess); ok {
 		local := MakeContext(c.MakeLocals(store), context.BuiltIn, context.System)
@@ -131,6 +138,10 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 	}
 
 	res, err := a.Index.Evaluate(context)
+	if err != nil {
+		return a.Index, err
+	}
+
 	if expr, ok := res.(Expression); ok {
 		res, err = expr.Evaluate(context)
 		if err != nil {

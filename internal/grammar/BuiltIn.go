@@ -46,6 +46,10 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 				return len(v), nil
 			}
 
+			if v, ok := r.Value.(c.Store); ok {
+				return len(v), nil
+			}
+
 			return 1, nil
 		},
 		"error": func(context *c.Context, args []c.NamedValue) (any, error) {

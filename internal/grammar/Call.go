@@ -56,9 +56,14 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			if err != nil {
 				return nil, err
 			}
-			if len(args) > len(la.Lambda.Arguments.Identifiers) {
-				return nil, c.MakeError("call has extra arguments", nil)
+
+			local := c.MakeLocals(c.Store{})
+
+			all := c.Store{}
+			for k, v := range args {
+				all[c.Stringify(k)] = v.Value
 			}
+			local.Store["_a"] = all
 
 			var named bool
 			var unnamed bool
@@ -73,8 +78,6 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 					return nil, c.MakeError("can not use named and unnamed args together", nil)
 				}
 			}
-
-			local := c.MakeLocals(c.Store{})
 
 			if unnamed {
 				for i, v := range la.Lambda.Arguments.Identifiers {

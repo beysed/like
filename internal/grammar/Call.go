@@ -68,6 +68,12 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			}
 			local.Store["_a"] = all
 
+			rest := c.Store{}
+			for n := len(la.Lambda.Arguments.Identifiers); n < len(args); n++ {
+				rest[c.Stringify(n)] = args[n].Value
+			}
+			local.Store["_r"] = rest
+
 			var named bool
 			var unnamed bool
 			for _, v := range args {

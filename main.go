@@ -87,9 +87,9 @@ func main() {
 	}
 
 	context := g.MakeContext(c.MakeLocals(globals), g.MakeDefaultBuiltIn(), system)
-	globals["args"] = make([]any, len(args))
+	globals["_args"] = make([]any, len(args))
 	for i, v := range args {
-		globals["args"].([]any)[i] = v
+		globals["_args"].([]any)[i] = v
 	}
 
 	parser := p.EnvParser{}
@@ -109,7 +109,7 @@ func main() {
 		system.OutputError("unable to parse environment\n")
 		os.Exit(cleanup(128))
 	} else {
-		globals["env"] = env
+		globals["_env"] = env
 	}
 
 	_, err = g.Execute(fileName, context, input)

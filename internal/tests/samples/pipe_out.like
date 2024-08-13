@@ -1,4 +1,4 @@
-f = $joinPath($env[TEMP] 'my.txt')
+f = $joinPath($_env[TEMP] 'my.txt')
 (~ Hello) > $f
 (~ World) >> $f
 $t < $f

@@ -2,15 +2,40 @@ package grammar
 
 import (
 	"fmt"
-	"path"
-	"strings"
+	"os"
 
 	c "github.com/beysed/like/internal/grammar/common"
 	"github.com/samber/lo"
+
+	"path"
+	"strings"
 )
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"cwd": func(context *c.Context, args []c.NamedValue) (any, error) {
+			if len(args) > 0 {
+				return nil, c.MakeError("function does not accept arguments", nil)
+			}
+			return os.Getwd()
+		},
+		"file": func(context *c.Context, args []c.NamedValue) (any, error) {
+			if len(args) != 1 {
+				return nil, c.MakeError("function accepts single argument", nil)
+			}
+
+			file, ok := args[0].Value.(string)
+			if !ok {
+				return nil, c.MakeError("function accepts string argument", nil)
+			}
+
+			file, err := context.System.ResolvePath(context, file)
+			if err != nil {
+				return nil, err
+			}
+			content, err := os.ReadFile(file)
+			return string(content), err
+		},
 		"joinPath": func(context *c.Context, args []c.NamedValue) (any, error) {
 			return path.Join(
 				lo.Map(args,

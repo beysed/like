@@ -28,7 +28,3 @@ func MakePiped[T PipedInstance, U PipedRef[T]](from Expression, to Expression) E
 
 	return t
 }
-
-func a() {
-	MakePiped[Pipe](nil, nil)
-}

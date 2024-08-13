@@ -1,0 +1,4 @@
+(& cat "samples/file.json") | $f
+a = :< json $f
+` $a
+

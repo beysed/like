@@ -11,6 +11,30 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/beysed/like.svg)](https://pkg.go.dev/github.com/beysed/like)
 [![Go Report Card](https://goreportcard.com/badge/github.com/beysed/like?04112024)](https://goreportcard.com/report/github.com/beysed/like)
 
+- [Like | Template Engine](#like--template-engine)
+  - [Motivation / Get started](#motivation--get-started)
+  - [Hello World](#hello-world)
+  - [Data types](#data-types)
+  - [String interpolation](#string-interpolation)
+  - [Control Symbols](#control-symbols)
+  - [Output operators](#output-operators)
+  - [References and variables](#references-and-variables)
+    - [Assigments](#assigments)
+  - [Operators and code blocks](#operators-and-code-blocks)
+  - [Loops](#loops)
+  - [Condition operator](#condition-operator)
+  - [Lambdas](#lambdas)
+  - [Templates](#templates)
+  - [Builtin functions](#builtin-functions)
+  - [Closures](#closures)
+  - [Parse operator](#parse-operator)
+  - [Format opertor](#format-opertor)
+  - [Supported parsers formatters](#supported-parsers-formatters)
+  - [Arguments](#arguments)
+  - [Environmnet variables](#environmnet-variables)
+  - [Directives](#directives)
+    - [Include](#include)
+
 ## Motivation / Get started
 
 During setup a [k8s](https://kubernetes.io/) cluster I start thinking about a language that can make esier to handle tons of mostly identical parts of text and can be/have abilities to be template/meta language. Language as simple as powerful and without extra expressions, so here we are...
@@ -19,14 +43,14 @@ During setup a [k8s](https://kubernetes.io/) cluster I start thinking about a la
 
 Following example writes 'Hello World' to console
 ```
-~ Hello World
+` Hello World
 ```
 
-``~`` is output operator with new line ending, ``Hello World`` string expression that should be output
+`` ` `` is output operator with new line ending, ``Hello World`` string expression that should be output
 
 ## Data types
 
-The language supports the following data types
+The language supports the following data types:
 
 - String expression
 
@@ -38,7 +62,7 @@ The language supports single and double quoted strings, all the difference that 
 
 - Objects
 
-Objects(or key value storage) can be defined following way
+Objects(or key value storage) can be defined following way:
 
 ```
 a = { my_prop:a other_prop: 'Hello' }
@@ -46,7 +70,7 @@ a = { my_prop:a other_prop: 'Hello' }
 
 - Arrays
 
-Arrays can be defined following way
+Arrays can be defined following way:
 ```
 a = [1 a 'asd' {a: 'object_property'} ]
 @ $a `$_v
@@ -172,9 +196,9 @@ a = Hello
 
 Condition operator consider empty(empty string, array, or object) as false and vice versa
 
-### Lambdas
+## Lambdas
 
-Functions or lambdas can be defined and invoked following way
+Functions or lambdas can be defined and invoked following way:
 
 ```
 # without arguments
@@ -192,7 +216,7 @@ $a([] TRUE FALSE)
 
 Lambda returns a value of last evaluated expression
 
-### Templates
+## Templates
 
 Templates can be considered as lambdas but with specific format e.g. temlate consists only with string template
 
@@ -211,14 +235,14 @@ This template text, where
 p1 = a and p2 = b
 ```
 
-### Builtin functions
+## Builtin functions
 - joinPath - accepts multiple arguments which will be joined into single path
 - resolvePath - acts same as [include](#include) and returns full path
 - len - returns length of an expression
 - error - raises error and stop further execution
 - eval - accept string and executes it as Like program
 
-### Closures
+## Closures
 
 In Like it is possible to create functions on the fly using closures for example
 ```
@@ -240,7 +264,7 @@ will output
 it was Hello
 ```
 
-### Parse operator
+## Parse operator
 
 `:<` - parse operator it can be useful when you need JSON or other supported by the operator values
 
@@ -260,7 +284,7 @@ a = :< json $f
 # outputs: dev
 ```
 
-### Format opertor
+## Format opertor
 
 Format operator turns objects into specified [format](#supported-parsers-formatters)
 
@@ -272,13 +296,13 @@ a = { env: dev }
 env: dev
 ```
 
-### Supported parsers formatters
+## Supported parsers formatters
 
 - json
 - yaml
 - env
 
-### Arguments
+## Arguments
 
 Arguments passed via command line are accessible via predefined variable $args
 
@@ -287,7 +311,7 @@ Arguments passed via command line are accessible via predefined variable $args
 @ $_args ` $_v
 ```
 
-### Environmnet variables
+## Environmnet variables
 
 Environmnet variables are accessible via predefined variable `_env`
 
@@ -297,3 +321,12 @@ Environmnet variables are accessible via predefined variable `_env`
 
 also Like try to get file with name ``.env`` from current directory and add/replace environment variables from it
 
+## Directives
+
+### Include
+
+```
+#include './some.like'
+```
+
+Includes and evaluates the specified file, prefix `` ./ `` means that path spcified from the location of the file(not current directory)

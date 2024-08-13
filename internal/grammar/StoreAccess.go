@@ -99,7 +99,20 @@ func (a StoreAccess) Evaluate(context *c.Context) (any, error) {
 
 	s, ok := v.(*StoreReference)
 	if !ok {
-		return v, nil
+		if a.Index == nil {
+			return v, nil
+		}
+
+		if s, ok := v.(c.Store); ok {
+			if i, ok := a.Index.(StoreAccess); ok {
+				local := MakeContext(c.MakeLocals(s), context.BuiltIn, context.System)
+				n := StoreAccess{Reference: i}
+
+				return n.Evaluate(local)
+			}
+		}
+
+		return v, c.MakeError("don't know, fix me", nil)
 	}
 
 	if a.Index == nil {

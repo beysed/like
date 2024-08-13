@@ -92,7 +92,7 @@ var _ = Describe("Samples", func() {
 		Entry("samples/lambda_invoke_space", "samples/lambda_invoke_space.like", "_ 1 2 _\n"),
 		Entry("samples/func", "samples/func.like", "one\nee\nww\na oops\n"),
 		Entry("samples/execute", "samples/execute.like", "AAA\n"),
-		Entry("samples/assigns", "samples/assigns.like", "a1bcbcd"),
+		Entry("samples/assigns", "samples/assigns.like", "a-1-bc-bcd-bcd"),
 		Entry("samples/template", "samples/template.like", "AfredB\n--thing--\n\n___"))
 
 	DescribeTable("Valid file", func(f string, e string) {

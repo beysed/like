@@ -175,7 +175,6 @@ expression =
   lambda /
   call  /
   reference /
-  literal /
   quotedString /
   list /
   "{" ws* _n:named_expression_list? ws* "}" {
@@ -184,7 +183,9 @@ expression =
     }
     return MakeExpressionStore(_n.(NamedExpressionList))
   } /
-  ( '(' _e: expression ')' { return _e, nil} )
+  ( '(' _e: expression ')' { return _e, nil} ) /
+  literal
+
 
 block= '{' eol _l:line* ws* '}' {
   return Block(arrayify[Expression](_l)) ,nil
@@ -222,18 +223,18 @@ lambda = _a:argument_decl ws*
       Body: _e.(Expression) }, nil
   }
 
-assign = _i:store ws* eq ws* _e:expression
+assign = _i:store ws* eq ws* _e:super_expression
 {
   return Assign{
     Store: _i.(StoreAccess),
     Value: _e.(Expression) }, nil
 }
 
-assign_add = _i:store ws* "+=" ws* _e:expression
+assign_add = _i:store ws* "+=" ws* _e:super_expression
 {
   return Assign{
     Store: _i.(StoreAccess),
-    Value: MakeAdd(Reference{ Expression: _i.(StoreAccess)}, _e.(Expression)) }, nil
+    Value: MakeAdd(Reference{ Expression: _i.(StoreAccess)}, MakeUnwrap(_e.(Expression))) }, nil
 }
 
 writeln = quot ws* _e:super_expression {
@@ -247,11 +248,6 @@ invoke = amper ws* _e:super_expression {
 
 identifier = (unds / let) (dig / unds / let)* {
   return string(c.text), nil }
-
-literal_list = l:literal r:(ws+ t:literal {
-  return t, nil} )* {
-    return (LiteralList)(listFrom[Literal](l, r)), nil
-  }
 
 literal
   = a:lit+ { return MakeLiteral(convert(a)), nil }

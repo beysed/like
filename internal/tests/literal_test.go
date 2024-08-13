@@ -48,15 +48,4 @@ var _ = Describe("Literals", func() {
 		Entry("'asd'", "asd"),
 		Entry("\"asd\"", "asd"),
 		Entry("10", "10"))
-
-	DescribeTable("Parses: literal list", func(input string, expected []string) {
-		var actual = ParseInupt(input, "literal_list")
-
-		result, ok := actual.(g.LiteralList)
-		Expect(ok).To(BeTrue())
-		Expect(result).To(Equal(g.MakeLiteralList(expected)))
-	},
-		Entry("single", "a", []string{"a"}),
-		Entry("multi", "a b", []string{"a", "b"}),
-		Entry("multi extra space", "_\ta	0", []string{"_", "a", "0"}))
 })

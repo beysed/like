@@ -87,9 +87,10 @@ func main() {
 	}
 
 	context := g.MakeContext(c.MakeLocals(globals), g.MakeDefaultBuiltIn(), system)
-	globals["_args"] = make([]any, len(args))
+	gArgs := c.Store{}
+	globals["_args"] = gArgs
 	for i, v := range args {
-		globals["_args"].([]any)[i] = v
+		gArgs[c.Stringify(i)] = v
 	}
 
 	parser := p.EnvParser{}

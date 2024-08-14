@@ -21,6 +21,7 @@ func unwrap_single(v any) any {
 				continue
 			}
 		}
+
 		return v
 	}
 }

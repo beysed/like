@@ -16,6 +16,21 @@ func stringifyExpressions[T ~[]Expression](a T) []string {
 		})
 }
 
+func flatTop(a []any) []any {
+	res := []any{}
+	for _, v := range a {
+		r, ok := v.([]any)
+		if ok {
+			for _, f := range r {
+				res = append(res, f)
+			}
+		} else {
+			res = append(res, v)
+		}
+	}
+	return res
+}
+
 func evaluateExpressions[T ~[]Expression](a T, context *c.Context) ([]any, Expression, error) {
 	b := []any{}
 	for _, v := range a {
@@ -27,7 +42,7 @@ func evaluateExpressions[T ~[]Expression](a T, context *c.Context) ([]any, Expre
 		b = append(b, res)
 	}
 
-	return b, nil, nil
+	return flatTop(b), nil, nil
 }
 
 func (a Expressions) String() string {

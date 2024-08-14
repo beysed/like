@@ -236,6 +236,8 @@ p1 = a and p2 = b
 ```
 
 ## Builtin functions
+- cwd - return current working directory
+- file - returns contents of the file
 - joinPath - accepts multiple arguments which will be joined into single path
 - resolvePath - acts same as [include](#include) and returns full path
 - len - returns length of an expression
@@ -244,7 +246,7 @@ p1 = a and p2 = b
 
 ## Closures
 
-In Like it is possible to create functions on the fly using closures for example
+In Like it is possible to create functions on the fly using closures, for example:
 ```
 a = (b) {
     () {

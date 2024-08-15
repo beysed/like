@@ -21,8 +21,9 @@ func (a Template) Evaluate(context *c.Context) (any, error) {
 	if a.Value == nil {
 		// trim orphan \r
 		arr := []byte(a.Text)
-		if arr[len(arr)-1] < 32 {
-			arr = arr[:len(arr)-1]
+		l := len(arr)
+		if l > 0 && arr[l-1] < 32 {
+			arr = arr[:l-1]
 		}
 
 		exprs, err := prepareString(arr)

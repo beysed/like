@@ -77,6 +77,7 @@ string_content
   = _q:(_b:escaped { return MakeLiteral(_b.(string)), nil}
   / call
   / reference
+  / "${" _e: expression '}' { return _e, nil }
   / ws { return MakeLiteral(string(c.text)), nil }
   /_a:[^ \t\\$]+ { return MakeLiteral(string(c.text)), nil})* eof {
     return Expressions(arrayify[Expression](_q)), nil
@@ -123,7 +124,15 @@ store =
       Reference: MakeLiteral(_e.(string)) }, nil} /
   _e:quotedString {
     return StoreAccess {
-      Reference: _e.(Expression) }, nil}
+      Reference: _e.(Expression) }, nil} /
+  _e:reference _i:index? {
+    var idx Expression
+    if _i != nil {
+      idx = _i.(Expression)
+    }
+    return StoreAccess {
+      Reference: _e.(Expression),
+      Index: idx }, nil}
 
 condition
   =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {

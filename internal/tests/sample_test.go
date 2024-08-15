@@ -33,6 +33,7 @@ var _ = Describe("Samples", func() {
 		Expect(err).To(BeNil())
 		Expect(result.String()).To(Equal(e))
 	},
+		Entry("samples/esc-codes", "samples/esc-codes.like", "\b\f\n\r\t\na\\b\n\\\\\n"),
 		Entry("samples/code-in-template", "samples/code-in-template.like", "it is\nit YES\nit \nit ${was}\n"),
 		Entry("samples/expressions-array", "samples/expressions-array.like", "{\"b\":[\"one\",\" \",\"two\",\" \",\"three\",\" \",\"four\"]}"),
 		Entry("samples/obj_in_array", "samples/obj_in_array.like", "prop\nprop\n"),

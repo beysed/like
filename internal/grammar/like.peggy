@@ -75,6 +75,11 @@ reference = sign
 
 string_content
   = _q:(_b:escaped { return MakeLiteral(_b.(string)), nil}
+  / "\\b" { return MakeLiteral("\b"), nil}
+  / "\\f" { return MakeLiteral("\f"), nil}
+  / "\\n" { return MakeLiteral("\n"), nil}
+  / "\\r" { return MakeLiteral("\r"), nil}
+  / "\\t" { return MakeLiteral("\t"), nil}
   / call
   / reference
   / "${" _e: expression '}' { return _e, nil }
@@ -254,12 +259,12 @@ literal
   / s:quotedString
 
 escaped
-  = "\\" _a:[@!={}()#=&|$<>~'"?%:`+ \][.\\] { return string(_a.([]byte)), nil }
+  = '\\' _a:[@!={}()#=&|$<>~'"?%:`+ \][.] { return string(_a.([]byte)), nil }
 
 lit
   = escaped
   / (sym / let / dig)+ { return string(c.text), nil}
-  / "\\" { return string(c.text), nil }
+  / '\\' { return "\\", nil }
 
 dig = [0-9]
 let = [a-zA-Z]
@@ -268,7 +273,6 @@ sym = [^\\@!={}()#=&|$<>~'"?%:`+ \n\r\t\][.]
 ws = ' ' / '\t'
 dash = '-'
 unds = '_'
-bslh = '\\'
 quot = '`'
 dblsign = sign sign
 sign = '$'

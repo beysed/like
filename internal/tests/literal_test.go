@@ -26,7 +26,7 @@ var _ = Describe("Literals", func() {
 
 		Expect(result.String()).To(Equal(expected))
 	},
-		Entry("dbl bslsh", "\\\\", "\\"),
+		Entry("dbl bslsh", "\\", "\\"),
 		Entry("bslsh b", "\\b", "\\b"),
 		Entry("bslsh", "\\", "\\"),
 		Entry("bslsh @", "\\@", "@"))

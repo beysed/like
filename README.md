@@ -136,7 +136,7 @@ The variable ``a`` can be referenced by ``$`` operator so
 ` $a
 ```
 
-will output value of ``$a``
+will output value of ``a``
 
 ## Operators and code blocks
 
@@ -184,7 +184,7 @@ Common form of conditional opertors looks following
 also there is a ternary form for conditions
 
 ```
-<reference> ? <true-operator> : <else-operator>
+<reference> ? <true-operator> % <else-operator>
 ```
 
 ```
@@ -194,7 +194,7 @@ a = Hello
 # will output World
 ```
 
-Condition operator consider empty(empty string, array, or object) as false and vice versa
+Condition operator consider empty(empty string, empty array, or empty object) as false and any value as true
 
 ## Lambdas
 

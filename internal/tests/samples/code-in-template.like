@@ -1,0 +1,16 @@
+`` test1(a)
+it $a
+``
+
+`` test2(a)
+it ${? $a "YES"}
+``
+
+`` test3(a)
+it \${$a}
+``
+
+` $test1(is)
+` $test2(1)
+` $test2()
+` $test3(was)

@@ -1,2 +1,2 @@
-docker = (cmd p) & \$shell -c 'echo docker exec -it $cmd $p'
+docker = (cmd p) & $_shell -c 'echo docker exec -it $cmd $p'
 ~ $docker([a b c] a)

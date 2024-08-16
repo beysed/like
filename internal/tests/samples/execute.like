@@ -1,2 +1,2 @@
-a = & \$shell -c 'echo AAA'
+a = & $_shell -c 'echo AAA'
 ~ $a

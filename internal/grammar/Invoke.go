@@ -2,21 +2,12 @@ package grammar
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
-	"time"
 
 	c "github.com/beysed/like/internal/grammar/common"
-	p "github.com/beysed/like/internal/grammar/parsers"
-	"github.com/beysed/shell/execute"
 	"github.com/samber/lo"
 )
-
-// todo: make something better with these globals
-var environ = os.Environ()
-var environment, _ = p.GetParser("env").Parse(strings.Join(environ, "\n"))
-var shell = environment["LIKE_SH"]
 
 type Invoke struct {
 	Expressions Expressions
@@ -89,7 +80,7 @@ func flattern(exprs []Expression, context *c.Context) ([]string, error) {
 func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	cmdEval, err := a.Expressions[0].Evaluate(context)
 	if err != nil {
-		return cmdEval, err
+		return a.Expressions[0], err
 	}
 
 	cmd, ok := cmdEval.([]any)
@@ -106,25 +97,22 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	args = append(
 		lo.Map(cmd[1:],
 			func(v any, _ int) string {
-				return fmt.Sprint(v)
+				return c.Stringify(v)
 			}), args...)
 
 	// todo: make lazy, one time
-	executable := cmd[0].(string)
-	if executable == "$shell" {
-		if shell == nil {
-			if runtime.GOOS != "windows" {
-				executable = "sh"
-			} else {
-				return nil, c.MakeError("LIKE_SH environment variable is not set", nil)
-			}
-		} else {
-			executable = shell.(string)
-		}
+	var executable string
+	if cmd[0] != nil {
+		executable = cmd[0].(string)
 	}
 
-	command := execute.MakeCommand(executable, args...)
-	execution, err := execute.Execute(command)
+	if executable == "" {
+		if runtime.GOOS != "windows" {
+			executable = "sh"
+		} else {
+			return nil, c.MakeError("LIKE_SH environment variable is not set", nil)
+		}
+	}
 
 	if err != nil {
 		return nil, err
@@ -132,25 +120,9 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 
 	_, locals := context.Locals.Peek()
 	input := locals.Input
-	if input != "" {
-		execution.Stdin <- []byte(c.Stringify(input))
-	}
 
-	close(execution.Stdin)
+	stdout, _, err := context.System.Invoke(executable, args, input)
+	locals.Output.WriteString(stdout)
 
-	run := true
-	var exitError error
-	for run {
-		select {
-		case out := <-execution.Stdout:
-			locals.Output.WriteString(string(out))
-		case exitError = <-execution.Exit:
-			run = false
-		case <-time.After(time.Second * 10):
-			execution.Kill()
-			run = false
-		}
-	}
-
-	return exitError, nil
+	return err, nil
 }

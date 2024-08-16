@@ -24,10 +24,7 @@ gazelle(
 
 go_library(
     name = "like_lib",
-    srcs = [
-        "SystemContext.go",
-        "main.go",
-    ],
+    srcs = ["main.go"],
     importpath = "github.com/beysed/like",
     visibility = ["//visibility:private"],
     deps = [

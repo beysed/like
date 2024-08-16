@@ -1,2 +1,2 @@
 docker = () a b c
-~ & \$shell -c 'echo $docker()'
+~ & $_shell -c 'echo $docker()'

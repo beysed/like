@@ -78,7 +78,7 @@ func main() {
 	}
 
 	globals := c.Store{}
-	system := MakeSystemContext()
+	system := c.MakeSystemContext()
 	cleanup := func(code int) int {
 		system.Out.Flush()
 		system.Err.Flush()
@@ -111,6 +111,7 @@ func main() {
 		os.Exit(cleanup(128))
 	} else {
 		globals["_env"] = env
+		globals["_shell"] = env["LIKE_SH"]
 	}
 
 	_, err = g.Execute(fileName, context, input)

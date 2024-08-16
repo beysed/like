@@ -28,6 +28,7 @@ go_test(
     deps = [
         "//internal/grammar",
         "//internal/grammar/common",
+        "//internal/grammar/parsers",
         "//internal/tests/common",
         "@com_github_onsi_ginkgo_v2//:go_default_library",
         "@com_github_onsi_gomega//:go_default_library",

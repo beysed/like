@@ -1,14 +1,15 @@
-package main
+package common
 
 import (
 	"bufio"
+	"bytes"
 	"os"
-	"strings"
-
 	"path"
 	"path/filepath"
+	"strings"
+	"time"
 
-	c "github.com/beysed/like/internal/grammar/common"
+	"github.com/beysed/shell/execute"
 )
 
 type CliSystem struct {
@@ -31,7 +32,7 @@ func MakeSystemContext() CliSystem {
 		Err: bufio.NewWriter(os.Stderr)}
 }
 
-func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, error) {
+func (a CliSystem) ResolvePath(context *Context, filePath string) (string, error) {
 	isAbs := filepath.IsAbs(filePath)
 
 	var p string
@@ -41,7 +42,7 @@ func (a CliSystem) ResolvePath(context *c.Context, filePath string) (string, err
 		if strings.HasPrefix(filePath, "./") {
 			f, l := context.PathStack.Peek()
 			if !f {
-				return filePath, c.MakeError("empty stack", nil)
+				return filePath, MakeError("empty stack", nil)
 			}
 
 			dir := path.Dir(strings.ReplaceAll(l, "\\", "//"))
@@ -61,4 +62,41 @@ func (a CliSystem) OutputText(text string) {
 
 func (a CliSystem) OutputError(text string) {
 	a.Err.WriteString(text)
+}
+
+func (a CliSystem) Invoke(executable string, args []string, stdin string) (string, string, error) {
+	command := execute.MakeCommand(executable, args...)
+	execution, err := execute.Execute(command)
+
+	if err != nil {
+		return "", "", err
+	}
+
+	if stdin != "" {
+		execution.Stdin <- []byte(stdin)
+	}
+
+	close(execution.Stdin)
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	run := true
+	var exitError error
+	for run {
+		select {
+		case out := <-execution.Stderr:
+			stderr.Write(out)
+		case out := <-execution.Stdout:
+			stdout.Write(out)
+		case exitError = <-execution.Exit:
+			run = false
+		case <-time.After(time.Second * 10):
+			execution.Kill()
+			run = false
+		}
+	}
+
+	return stdout.String(), stderr.String(), exitError
+
 }

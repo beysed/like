@@ -10,7 +10,9 @@
       "request": "launch",
       "mode": "auto",
       "program": "${fileDirname}",
-      "args": ["D:\\prj\\FlagMap\\infra\\tf-like\\main.like"]
+      "args": [
+        "D:\\prj\\like\\bazel-out\\x64_windows-fastbuild\\bin\\like_\\a.like "
+      ]
     }
   ]
 }

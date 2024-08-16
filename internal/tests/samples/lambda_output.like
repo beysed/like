@@ -3,5 +3,5 @@ l = () {
   exit
 }
 
-a = $l() | & \$shell
+a = $l() | & $_shell
 ~ $a

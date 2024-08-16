@@ -28,7 +28,13 @@ func (t *TestSystem) OutputError(text string) {
 	t.OutputText(text)
 }
 
+func (t *TestSystem) Invoke(executable string, args []string, stdin string) (string, string, error) {
+	var a c.CliSystem
+	return a.Invoke(executable, args, stdin)
+}
+
 func MakeContext() (*c.Context, *strings.Builder) {
 	system := TestSystem{}
-	return g.MakeContext(c.MakeLocals(c.Store{}), g.MakeDefaultBuiltIn(), &system), &system.Result
+	locals := c.MakeLocals(c.Store{})
+	return g.MakeContext(locals, g.MakeDefaultBuiltIn(), &system), &system.Result
 }

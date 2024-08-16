@@ -1,2 +1,2 @@
 execute = (a) & $a
-~ $execute([\$shell -c 'echo a'])
+~ $execute([$_shell -c 'echo a'])

@@ -37,7 +37,10 @@
 
 ## Motivation / Get started
 
-During setup a [k8s](https://kubernetes.io/) cluster I start thinking about a language that can make esier to handle tons of mostly identical parts of text and can be/have abilities to be template/meta language. Language as simple as powerful and without extra expressions, so here we are...
+During setup a [k8s](https://kubernetes.io/) cluster I start thinking about a language that can make easier to handle tons of mostly identical parts of text and can be/have abilities to be template/meta language. Language as simple as powerful and without extra expressions, so here we are...
+
+Looking ahead there is [small example](https://github.com/beysed/tf-like/tree/main/k8s_registry) of usage Like with [Terraform](https://www.terraform.io/)
+
 
 ## Hello World
 

@@ -100,7 +100,6 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 				return c.Stringify(v)
 			}), args...)
 
-	// todo: make lazy, one time
 	var executable string
 	if cmd[0] != nil {
 		executable = cmd[0].(string)
@@ -112,10 +111,6 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 		} else {
 			return nil, c.MakeError("LIKE_SH environment variable is not set", nil)
 		}
-	}
-
-	if err != nil {
-		return nil, err
 	}
 
 	_, locals := context.Locals.Peek()

@@ -98,5 +98,4 @@ func (a CliSystem) Invoke(executable string, args []string, stdin string) (strin
 	}
 
 	return stdout.String(), stderr.String(), exitError
-
 }

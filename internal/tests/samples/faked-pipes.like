@@ -1,0 +1,5 @@
+(~ Hello) | & fake
+Hello | & fake
+"Hello World" | & fake
+a = Hello
+$a | & fake

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"strings"
 
 	"os"
@@ -29,6 +30,10 @@ func (t *TestSystem) OutputError(text string) {
 }
 
 func (t *TestSystem) Invoke(executable string, args []string, stdin string) (string, string, error) {
+	if executable == "fake" {
+		return fmt.Sprintf("faked(%s:%s)", stdin, strings.Join(args, ";")), "fake-err", nil
+	}
+
 	var a c.CliSystem
 	return a.Invoke(executable, args, stdin)
 }

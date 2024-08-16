@@ -24,31 +24,43 @@ func (a Pipe) String() string {
 }
 
 func (a Pipe) Evaluate(context *c.Context) (any, error) {
-	_, err := a.from.Evaluate(context)
+	res_from, err := a.from.Evaluate(context)
 	if err != nil {
 		return a.from, err
 	}
 
+	var input string
 	_, current := context.Locals.Peek()
+
+	_, isRef := a.from.(Reference)
+	_, isLit := a.from.(Literal)
+	_, isConst := a.from.(Constant)
+	_, isString := a.from.(ParsedString)
+	_, isExpressions := a.from.(Expressions)
+
+	if isRef || isLit || isConst || isString || isExpressions {
+		input = c.Stringify(res_from)
+	} else {
+		input = current.Output.String()
+		current.Output.Reset()
+	}
 
 	if ref, ok := a.to.(Reference); ok {
 		assign := Assign{
 			Store: ref.Expression,
-			Value: MakeConstant(current.Output.String())}
-		current.Output.Reset()
+			Value: MakeConstant(input)}
 
 		return assign.Evaluate(context)
 	}
 
 	locals := c.MakeLocals(c.Store{})
-	locals.Input = current.Output.String()
-	current.Output.Reset()
+	locals.Input = input
 	context.Locals.Push(locals)
 
-	defer func() {
-		current.Output.WriteString(locals.Output.String())
-		context.Locals.Pop()
-	}()
+	res, err := a.to.Evaluate(context)
 
-	return a.to.Evaluate(context)
+	current.Output.WriteString(locals.Output.String())
+	context.Locals.Pop()
+
+	return res, err
 }

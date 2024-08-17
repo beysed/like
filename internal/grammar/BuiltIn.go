@@ -13,6 +13,23 @@ import (
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"exec": func(context *c.Context, args []c.NamedValue) (any, error) {
+			if len(args) == 0 {
+				return nil, c.MakeError("nothing to exec, too few arguments", nil)
+			}
+
+			expressions := Expressions(
+				lo.Map(args,
+					func(i c.NamedValue, _ int) Expression {
+						return MakeConstant([]any{i.Value})
+					}))
+
+			invoke := Invoke{
+				Expressions: expressions,
+			}
+
+			return invoke.Evaluate(context)
+		},
 		"cwd": func(context *c.Context, args []c.NamedValue) (any, error) {
 			if len(args) > 0 {
 				return nil, c.MakeError("function does not accept arguments", nil)

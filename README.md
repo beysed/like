@@ -239,13 +239,14 @@ p1 = a and p2 = b
 ```
 
 ## Builtin functions
-- cwd - return current working directory
-- file - returns contents of the file
-- joinPath - accepts multiple arguments which will be joined into single path
-- resolvePath - acts same as [include](#include) and returns full path
-- len - returns length of an expression
-- error - raises error and stop further execution
-- eval - accept string and executes it as Like program
+- cwd() - return current working directory
+- file(fileName) - returns contents of the file
+- joinPath(path1 path2 ... pathN) - accepts multiple arguments which will be joined into single path
+- resolvePath(path) - acts same as [include](#include) and returns full path
+- len(expression) - returns length of an expression
+- error(expression) - raises error and stop further execution
+- eval(string) - accept string and executes it as Like program
+- exec(cmd arg1 arg2 ... argN) - same as ``&`` executes command
 
 ## Closures
 

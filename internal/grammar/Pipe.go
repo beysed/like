@@ -28,44 +28,90 @@ func (a Pipe) String() string {
 	return fmt.Sprintf("%s | %s", a.from, a.to)
 }
 
+func makeAssign(store Expression, val any) Expression {
+	assign := Assign{
+		Store: store,
+		Value: MakeConstant(val)}
+	return assign
+}
+
+func isVal(expr Expression) bool {
+	_, isRef := expr.(Reference)
+	_, isLit := expr.(Literal)
+	_, isConst := expr.(Constant)
+	_, isString := expr.(ParsedString)
+	_, isExpressions := expr.(Expressions)
+
+	return isRef || isLit || isConst || isString || isExpressions
+}
+
 func (a Pipe) Evaluate(context *c.Context) (any, error) {
-	res_from, err := a.from.Evaluate(context)
+	resFrom, err := a.from.Evaluate(context)
 	if err != nil {
 		return a.from, err
 	}
 
-	var input string
+	var inputOut string
+	var inputErr string
+
+	isValFrom := isVal(a.from)
+
 	_, current := context.Locals.Peek()
 
-	_, isRef := a.from.(Reference)
-	_, isLit := a.from.(Literal)
-	_, isConst := a.from.(Constant)
-	_, isString := a.from.(ParsedString)
-	_, isExpressions := a.from.(Expressions)
-
-	if isRef || isLit || isConst || isString || isExpressions {
-		input = c.Stringify(res_from)
+	if isValFrom {
+		inputOut = c.Stringify(resFrom)
 	} else {
-		input = current.Output.String()
+		inputOut = current.Output.String()
+		inputErr = current.Errors.String()
 		current.Reset()
 	}
 
-	if ref, ok := a.to.(Reference); ok {
-		assign := Assign{
-			Store: ref.Expression,
-			Value: MakeConstant(input)}
+	refTo, isRefTo := a.to.(Reference)
+	refErr, isRefErr := a.err.(Reference)
 
-		return assign.Evaluate(context)
+	execPipe := func(input string, expr Expression) (any, error) {
+		locals := c.MakeLocals(c.Store{})
+		locals.Input = input
+		context.Locals.Push(locals)
+
+		res, err := expr.Evaluate(context)
+
+		current.Output.WriteString(locals.Output.String())
+		current.Errors.WriteString(locals.Errors.String())
+		context.Locals.Pop()
+
+		return res, err
 	}
 
-	locals := c.MakeLocals(c.Store{})
-	locals.Input = input
-	context.Locals.Push(locals)
+	var res any
 
-	res, err := a.to.Evaluate(context)
+	if isRefTo {
+		assign := makeAssign(refTo.Expression, MakeConstant(inputOut))
+		res, err = assign.Evaluate(context)
+		if err != nil {
+			return assign, err
+		}
+	} else {
+		res, err = execPipe(inputOut, a.to)
+		if err != nil {
+			return a.to, err
+		}
+	}
 
-	current.Output.WriteString(locals.Output.String())
-	context.Locals.Pop()
+	if a.err != nil {
+		if isRefErr {
+			assign := makeAssign(refErr.Expression, MakeConstant(inputErr))
+			res, err = assign.Evaluate(context)
+			if err != nil {
+				return assign, err
+			}
+		} else {
+			res, err = execPipe(inputErr, a.err)
+			if err != nil {
+				return a.to, err
+			}
+		}
+	}
 
 	return res, err
 }

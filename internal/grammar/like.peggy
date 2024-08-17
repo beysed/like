@@ -172,10 +172,10 @@ expression =
   _l:expression ws* "+" ws* _r:expression { return MakeAdd(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
-  _l:expression ws* "|" ws* _r:expression { return MakePiped[Pipe](_l.(Expression), _r.(Expression)), nil } /
-  _l:expression ws* ">>" ws* _r:expression { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression)), nil } /
-  _l:expression ws* ">" ws* _r:expression { return MakePiped[PipeOut](_l.(Expression), _r.(Expression)), nil } /
-  _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression)), nil } /
+  _l:expression ws* "|" ws* _r:expression _e:expression? { return MakePiped[Pipe](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:expression ws* ">>" ws* _r:expression _e:expression? { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:expression ws* ">" ws* _r:expression _e:expression? { return MakePiped[PipeOut](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression), nil), nil } /
   invoke /
   lambda /
   call  /
@@ -276,7 +276,6 @@ unds = '_'
 quot = '`'
 dblsign = sign sign
 sign = '$'
-pipe = '|'
 gt = '>'
 lt = '<'
 eq = '='

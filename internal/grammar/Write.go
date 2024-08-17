@@ -94,6 +94,7 @@ func (a Write) Evaluate(context *c.Context) (any, error) {
 
 	_, locals := context.Locals.Peek()
 	locals.Output.WriteString(result)
+	locals.Mixed.WriteString(result)
 
 	return nil, nil
 }

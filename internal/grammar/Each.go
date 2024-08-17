@@ -73,7 +73,8 @@ func (a Each) Evaluate(context *c.Context) (any, error) {
 		}
 	}
 	current.Output.WriteString(locals.Output.String())
-	locals.Output.Reset()
+	current.Mixed.WriteString(locals.Output.String())
+	locals.Reset()
 
 	return nil, nil
 }

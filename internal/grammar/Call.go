@@ -118,7 +118,8 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 
 			_, current := context.Locals.Peek()
 			current.Output.WriteString(lambdaLocals.Output.String())
-			lambdaLocals.Output.Reset()
+			current.Mixed.WriteString(lambdaLocals.Output.String())
+			lambdaLocals.Reset()
 
 			if err != nil {
 				return result, err

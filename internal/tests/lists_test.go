@@ -16,7 +16,7 @@ var _ = Describe("List tests", func() {
 
 		_, err := g.Execute("a.like", context, ([]byte)(input))
 		Expect(err).To(BeNil())
-		Expect(builder.String()).To(Equal(expected))
+		Expect(builder.Stdout.String()).To(Equal(expected))
 	},
 		Entry("test echo", "~ & $_shell -c 'echo 1 2 3'", "1 2 3\n"),
 		Entry("assign list", "a=[1 2 3]\n~ $a", "[1 2 3]"),

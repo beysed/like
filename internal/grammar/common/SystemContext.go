@@ -64,12 +64,12 @@ func (a CliSystem) OutputError(text string) {
 	a.Err.WriteString(text)
 }
 
-func (a CliSystem) Invoke(executable string, args []string, stdin string) (string, string, error) {
+func (a CliSystem) Invoke(executable string, args []string, stdin string) (string, string, string, error) {
 	command := execute.MakeCommand(executable, args...)
 	execution, err := execute.Execute(command)
 
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 
 	if stdin != "" {
@@ -80,6 +80,7 @@ func (a CliSystem) Invoke(executable string, args []string, stdin string) (strin
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
+	var stdmixed bytes.Buffer
 
 	run := true
 	var exitError error
@@ -87,8 +88,10 @@ func (a CliSystem) Invoke(executable string, args []string, stdin string) (strin
 		select {
 		case out := <-execution.Stderr:
 			stderr.Write(out)
+			stdmixed.Write(out)
 		case out := <-execution.Stdout:
 			stdout.Write(out)
+			stdmixed.Write(out)
 		case exitError = <-execution.Exit:
 			run = false
 		case <-time.After(time.Second * 10):
@@ -97,5 +100,5 @@ func (a CliSystem) Invoke(executable string, args []string, stdin string) (strin
 		}
 	}
 
-	return stdout.String(), stderr.String(), exitError
+	return stdout.String(), stderr.String(), stdmixed.String(), exitError
 }

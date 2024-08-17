@@ -9,6 +9,7 @@ import (
 type Pipe struct {
 	from Expression
 	to   Expression
+	err  Expression
 }
 
 func (a *Pipe) From() Ref[Expression] {
@@ -17,6 +18,10 @@ func (a *Pipe) From() Ref[Expression] {
 
 func (a *Pipe) To() Ref[Expression] {
 	return MakeRef(&a.to)
+}
+
+func (a *Pipe) Err() Ref[Expression] {
+	return MakeRef(&a.err)
 }
 
 func (a Pipe) String() string {
@@ -42,7 +47,7 @@ func (a Pipe) Evaluate(context *c.Context) (any, error) {
 		input = c.Stringify(res_from)
 	} else {
 		input = current.Output.String()
-		current.Output.Reset()
+		current.Reset()
 	}
 
 	if ref, ok := a.to.(Reference); ok {

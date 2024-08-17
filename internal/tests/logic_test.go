@@ -20,7 +20,7 @@ var _ = Describe("Grammar Logic", func() {
 		result, err := Evaluate(input)
 
 		Expect(err).To(BeNil())
-		Expect(result).To(Equal(expected))
+		Expect(result.Stdout.String()).To(Equal(expected))
 	},
 		Entry("eval", "$eval('~ a')", "a"),
 		Entry("simple loop", "@ [a b c] ~ -$_k$_v", "-0a-1b-2c"),

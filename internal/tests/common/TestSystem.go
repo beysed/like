@@ -11,7 +11,9 @@ import (
 )
 
 type TestSystem struct {
-	Result strings.Builder
+	Stdout strings.Builder
+	Stderr strings.Builder
+	Stdmix strings.Builder
 }
 
 func (t *TestSystem) ResolvePath(context *c.Context, filePath string) (string, error) {
@@ -22,24 +24,28 @@ func (t *TestSystem) ResolvePath(context *c.Context, filePath string) (string, e
 }
 
 func (t *TestSystem) OutputText(text string) {
-	t.Result.WriteString(text)
+	t.Stdout.WriteString(text)
+	t.Stdmix.WriteString(text)
 }
 
 func (t *TestSystem) OutputError(text string) {
-	t.OutputText(text)
+	t.Stderr.WriteString(text)
+	t.Stdmix.WriteString(text)
 }
 
-func (t *TestSystem) Invoke(executable string, args []string, stdin string) (string, string, error) {
+func (t *TestSystem) Invoke(executable string, args []string, stdin string) (string, string, string, error) {
 	if executable == "fake" {
-		return fmt.Sprintf("faked(%s:%s)", stdin, strings.Join(args, ";")), "fake-err", nil
+		stdout := fmt.Sprintf("faked(%s:%s)", stdin, strings.Join(args, ";"))
+		stderr := "fake-err"
+		return stdout, stderr, stdout + stderr, nil
 	}
 
 	var a c.CliSystem
 	return a.Invoke(executable, args, stdin)
 }
 
-func MakeContext() (*c.Context, *strings.Builder) {
+func MakeContext() (*c.Context, *TestSystem) {
 	system := TestSystem{}
 	locals := c.MakeLocals(c.Store{})
-	return g.MakeContext(locals, g.MakeDefaultBuiltIn(), &system), &system.Result
+	return g.MakeContext(locals, g.MakeDefaultBuiltIn(), &system), &system
 }

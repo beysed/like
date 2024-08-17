@@ -17,6 +17,10 @@ func (a *PipeAppend) To() Ref[Expression] {
 	return (*Pipe)(a).To()
 }
 
+func (a *PipeAppend) Err() Ref[Expression] {
+	return (*Pipe)(a).Err()
+}
+
 func (a PipeAppend) String() string {
 	return fmt.Sprintf("%s >> %s", a.from.String(), a.to.String())
 }

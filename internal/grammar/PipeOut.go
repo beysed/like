@@ -17,6 +17,10 @@ func (a *PipeOut) To() Ref[Expression] {
 	return (*Pipe)(a).To()
 }
 
+func (a *PipeOut) Err() Ref[Expression] {
+	return (*Pipe)(a).Err()
+}
+
 func (a PipeOut) String() string {
 	return fmt.Sprintf("%s > %s", a.from.String(), a.to.String())
 }

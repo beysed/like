@@ -25,27 +25,57 @@ func Writer(mode int) OutputWriter {
 	}
 }
 
-func EvaluatePipeout[T PipeOutInstance](a T, context *c.Context, writer OutputWriter) (any, error) {
-	aFrom := *a.From().Get()
-	aTo := *a.To().Get()
+func getOutput(ref Ref[Expression], context *c.Context) (string, *Expression, error) {
+	a := ref.Get()
+	if *a == nil {
+		return "", nil, nil
+	}
 
-	from, err := aFrom.Evaluate(context)
+	v, err := (*a).Evaluate(context)
 	if err != nil {
-		return aFrom, err
+		return "", a, err
+	}
+
+	return c.Stringify(v), nil, nil
+}
+
+func EvaluatePipeout[T PipeOutInstance](a T, context *c.Context, writer OutputWriter) (any, error) {
+	_, expr, err := getOutput(a.From(), context)
+	if err != nil {
+		return expr, err
 	}
 
 	_, current := context.Locals.Peek()
 	output := current.Output.String()
-	current.Output.Reset()
+	errs := current.Errors.String()
+	mixed := current.Mixed.String()
+	current.Reset()
 
-	to, err := aTo.Evaluate(context)
-
+	aTo, expr, err := getOutput(a.To(), context)
 	if err != nil {
-		return aTo, err
+		return expr, err
 	}
 
-	file := c.Stringify(to)
-	err = writer(file, output)
+	aErr, expr, err := getOutput(a.Err(), context)
+	if err != nil {
+		return expr, err
+	}
 
-	return from, err
+	if aErr == "" {
+		err = writer(aTo, mixed)
+		if err != nil {
+			return aTo, err
+		}
+	} else {
+		err = writer(aTo, output)
+		if err != nil {
+			return aTo, err
+		}
+		err = writer(aErr, errs)
+		if err != nil {
+			return aTo, err
+		}
+	}
+
+	return a.From(), nil
 }

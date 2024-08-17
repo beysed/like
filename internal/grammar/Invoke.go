@@ -116,8 +116,11 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 	_, locals := context.Locals.Peek()
 	input := locals.Input
 
-	stdout, _, err := context.System.Invoke(executable, args, input)
+	stdout, stderr, stmixed, err := context.System.Invoke(executable, args, input)
+
 	locals.Output.WriteString(stdout)
+	locals.Errors.WriteString(stderr)
+	locals.Mixed.WriteString(stmixed)
 
 	return err, nil
 }

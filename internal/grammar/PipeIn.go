@@ -21,6 +21,10 @@ func (a *PipeIn) To() Ref[Expression] {
 	return (*Pipe)(a).To()
 }
 
+func (a *PipeIn) Err() Ref[Expression] {
+	return (*Pipe)(a).Err()
+}
+
 func (a PipeIn) Evaluate(context *c.Context) (any, error) {
 	toRef, ok := a.to.(Reference)
 	if !ok {

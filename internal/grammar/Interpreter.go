@@ -28,7 +28,7 @@ func Execute(filePath string, context *c.Context, code []byte) (any, error) {
 		last, err = expr.Evaluate(context)
 		_, locals := context.Locals.Peek()
 		context.System.OutputText(locals.Output.String())
-		locals.Output.Reset()
+		locals.Reset()
 
 		if err != nil {
 			return expr, c.MakeError(fmt.Sprintf("while evaluating: { %s }", expr.String()), err)

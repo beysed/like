@@ -44,7 +44,7 @@ var _ = Describe("Samples", func() {
 
 		_, err := g.Execute("a.like", context, c)
 		Expect(err).To(BeNil())
-		Expect(result.String()).To(Equal(e))
+		Expect(result.Stdout.String()).To(Equal(e))
 	},
 		Entry("samples/exec", "samples/exec.like", "faked(:1;2;3)"),
 		Entry("samples/faked-pipes2", "samples/faked-pipes2.like", "faked(:1;2;3)"),
@@ -119,7 +119,7 @@ var _ = Describe("Samples", func() {
 
 		_, err := g.Execute("a.like", context, []byte(f))
 		Expect(err).To(BeNil())
-		Expect(result.String()).To(Equal(e))
+		Expect(result.Stdout.String()).To(Equal(e))
 	},
 		Entry("empty", "", ""),
 		Entry("line w/o line break", "` a", "a\n"),

@@ -10,6 +10,7 @@ import (
 
 type Write struct {
 	Expression Expressions
+	Error      bool
 }
 
 type WriteLn Write
@@ -93,14 +94,25 @@ func (a Write) Evaluate(context *c.Context) (any, error) {
 	}
 
 	_, locals := context.Locals.Peek()
-	locals.Output.WriteString(result)
+
+	var output *strings.Builder
+	if a.Error {
+		output = &locals.Errors
+	} else {
+		output = &locals.Output
+	}
+
+	output.WriteString(result)
 	locals.Mixed.WriteString(result)
 
 	return nil, nil
 }
 
 func (a WriteLn) Evaluate(context *c.Context) (any, error) {
-	w := Write{Expression: Expressions{a.Expression, Constant{MakeLiteral("\n")}}}
+	w := Write{
+		Expression: Expressions{
+			a.Expression, Constant{MakeLiteral("\n")}}, Error: a.Error}
+
 	return w.Evaluate(context)
 }
 
@@ -113,10 +125,19 @@ func stringifyList(prefix string, a Expressions) string {
 				}), " "))
 }
 
+func getWrite(op string, err bool) string {
+	var suf string
+	if err {
+		suf = "*"
+	}
+
+	return fmt.Sprintf("%s%s", op, suf)
+}
+
 func (a Write) String() string {
-	return stringifyList("~", a.Expression)
+	return stringifyList(getWrite("~", a.Error), a.Expression)
 }
 
 func (a WriteLn) String() string {
-	return stringifyList("`", a.Expression)
+	return stringifyList(getWrite("`", a.Error), a.Expression)
 }

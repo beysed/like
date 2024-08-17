@@ -19,6 +19,8 @@ go_test(
         "literal_test.go",
         "logic_test.go",
         "sample_test.go",
+        "shell_test.go",
+        "stderr_test.go",
         "string_content_test.go",
     ],
     args = [

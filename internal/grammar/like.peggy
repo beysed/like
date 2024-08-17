@@ -160,6 +160,8 @@ list
 }
 
 expression =
+  writeErr /
+  writeErrLn /
   write /
   writeln /
   assign /
@@ -247,6 +249,12 @@ writeln = quot ws* _e:super_expression {
 
 write = tilda ws* _e:super_expression {
   return Write { Expression : _e.(Expressions) }, nil }
+
+writeErrLn = quot '*' ws* _e:super_expression {
+  return WriteLn { Expression : _e.(Expressions), Error: true }, nil }
+
+writeErr = tilda '*' ws* _e:super_expression {
+  return Write { Expression : _e.(Expressions), Error: true }, nil }
 
 invoke = amper ws* _e:super_expression {
   return Invoke{Expressions: _e.(Expressions)}, nil }

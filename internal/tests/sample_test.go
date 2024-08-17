@@ -4,20 +4,11 @@ import (
 	"strings"
 
 	g "github.com/beysed/like/internal/grammar"
-	p "github.com/beysed/like/internal/grammar/parsers"
 	. "github.com/beysed/like/internal/tests/common"
-
-	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
-
-func getShell() any {
-	var environ = os.Environ()
-	var environment, _ = p.GetParser("env").Parse(strings.Join(environ, "\n"))
-	return environment["LIKE_SH"]
-}
 
 var _ = Describe("Samples", func() {
 	DescribeTable("Sample Incorrect", func(f string, e string) {

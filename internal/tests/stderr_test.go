@@ -21,7 +21,8 @@ var _ = Describe("Stderr", func() {
 		Expect(result.Stdout.String()).To(Equal(stdout))
 		Expect(result.Stderr.String()).To(Equal(stderr))
 	},
-
+		Entry("samples/stderr_lose", "samples/stderr_lose.like", "", "fake-err"),
+		Entry("samples/stderr_pipe2pipe2", "samples/stderr_pipe2pipe2.like", "faked(ascd:)\nfake-err\n", ""),
 		Entry("samples/stderr_pipe2pipe", "samples/stderr_pipe2pipe.like", "faked(faked(:):)faked(fake-err:)", "fake-errfake-err"),
 		Entry("samples/stderr", "samples/stderr.like", "stdout1stdout2\n", "stderr1stderr2\n"),
 		Entry("samples/stderr_pipe", "samples/stderr_pipe.like", "faked(:)\nfake-err\n", ""),

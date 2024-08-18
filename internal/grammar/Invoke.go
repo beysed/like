@@ -102,7 +102,7 @@ func (a Invoke) Evaluate(context *c.Context) (any, error) {
 
 	var executable string
 	if cmd[0] != nil {
-		executable = cmd[0].(string)
+		executable = c.Stringify(cmd[0])
 	}
 
 	if executable == "" {

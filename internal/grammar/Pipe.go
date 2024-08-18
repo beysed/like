@@ -111,6 +111,8 @@ func (a Pipe) Evaluate(context *c.Context) (any, error) {
 				return a.to, err
 			}
 		}
+	} else {
+		context.System.OutputError(inputErr)
 	}
 
 	return res, err

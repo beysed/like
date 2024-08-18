@@ -1,0 +1,4 @@
+a = "ascd"
+($a | & fake) | $b $c
+` $b
+` $c

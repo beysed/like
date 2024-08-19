@@ -62,7 +62,9 @@ call = _i:reference ws* "(" (ws/eol)* _m:named_expression_list? (ws/eol)* ")" {
     Arguments: t }, nil
 }
 
-index = '[' _e:expression ']' { return _e, nil };
+index
+    = '[' _e:expression ']' { return _e, nil }
+    / '.' _s:store { return _s, nil };
 
 member = _m:(identifier / s:quotedString) {
   return Member{
@@ -70,8 +72,9 @@ member = _m:(identifier / s:quotedString) {
 };
 
 reference = sign
-  _a: store { return Reference { Expression : _a.(Expression) }, nil } /
-  '(' _m:expression ')' { return _m, nil }
+  _a: store { return Reference { Expression : _a.(Expression) }, nil }
+
+reference_paren = sign '(' _m:expression ')' { return Reference { Expression : _m.(Expression) }, nil }
 
 string_content
   = _q:(_b:escaped { return MakeLiteral(_b.(string)), nil}
@@ -82,6 +85,7 @@ string_content
   / "\\t" { return MakeLiteral("\t"), nil}
   / call
   / reference
+  / reference_paren
   / "${" _e: expression '}' { return _e, nil }
   / ws { return MakeLiteral(string(c.text)), nil }
   /_a:[^ \t\\$]+ { return MakeLiteral(string(c.text)), nil})* eof {
@@ -182,6 +186,7 @@ expression =
   lambda /
   call  /
   reference /
+  reference_paren /
   quotedString /
   list /
   "{" ws* _n:named_expression_list? ws* "}" {

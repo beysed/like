@@ -38,6 +38,7 @@ var _ = Describe("Samples", func() {
 		Expect(result.Stdout.String()).To(Equal(e))
 	},
 
+		Entry("samples/ref_dot", "samples/ref_dot.like", "httpd.local"),
 		Entry("samples/split_test", "samples/split_test.like", "a!b!c!d!e!f!"),
 		Entry("samples/exec", "samples/exec.like", "faked(:1;2;3)"),
 		Entry("samples/faked-pipes2", "samples/faked-pipes2.like", "faked(:1;2;3)"),

@@ -55,12 +55,15 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 			}
 		}
 
-		evalFunc = func(_ *c.Context, args []c.NamedValue) (any, error) {
+		evalFunc = func(context *c.Context, args []c.NamedValue) (any, error) {
 			if err != nil {
 				return nil, err
 			}
 
+			_, current := context.Locals.Peek()
+
 			local := c.MakeLocals(c.Store{})
+			local.Store["_i"] = current.Input
 
 			all := c.Store{}
 			for k, v := range args {
@@ -116,8 +119,9 @@ func (a Call) Evaluate(context *c.Context) (any, error) {
 				return nil, c.MakeError("can not pop context", nil)
 			}
 
-			_, current := context.Locals.Peek()
+			_, current = context.Locals.Peek()
 			current.Output.WriteString(lambdaLocals.Output.String())
+			current.Errors.WriteString(lambdaLocals.Errors.String())
 			current.Mixed.WriteString(lambdaLocals.Output.String())
 			lambdaLocals.Reset()
 

@@ -13,6 +13,28 @@ import (
 
 func MakeDefaultBuiltIn() c.BuiltIn {
 	return c.BuiltIn{
+		"split": func(context *c.Context, args []c.NamedValue) (any, error) {
+			var spl string
+			var sep string
+
+			if len(args) != 2 {
+				if len(args) != 1 {
+					return nil, c.MakeError("split accepts 2 argument: string, separator or piped input and separator", nil)
+				} else {
+					_, l := context.Locals.Peek()
+					spl = l.Input
+					sep = c.Stringify(args[0].Value)
+				}
+			} else {
+				spl = c.Stringify(args[0].Value)
+				sep = c.Stringify(args[1].Value)
+			}
+
+			splArr := strings.Split(spl, sep)
+			res := c.List(lo.Map(splArr, func(s string, _ int) any { return s }))
+
+			return res, nil
+		},
 		"exec": func(context *c.Context, args []c.NamedValue) (any, error) {
 			if len(args) == 0 {
 				return nil, c.MakeError("nothing to exec, too few arguments", nil)

@@ -1,0 +1,6 @@
+a = "a\nb\nc"
+@ $split($a '\n') ~ "$_v!"
+
+a = "d\ne\nf" | $split('\n')
+@ $a ~ "$_v!"
+

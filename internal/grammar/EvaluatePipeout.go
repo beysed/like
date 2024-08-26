@@ -25,7 +25,7 @@ func Writer(mode int) OutputWriter {
 	}
 }
 
-func getOutput(ref Ref[Expression], context *c.Context) (string, *Expression, error) {
+func getOutput(ref Ref[Expression], context *c.Context) (any, *Expression, error) {
 	a := ref.Get()
 	if *a == nil {
 		return "", nil, nil
@@ -36,11 +36,11 @@ func getOutput(ref Ref[Expression], context *c.Context) (string, *Expression, er
 		return "", a, err
 	}
 
-	return c.Stringify(v), nil, nil
+	return v, nil, nil
 }
 
 func EvaluatePipeout[T PipeOutInstance](a T, context *c.Context, writer OutputWriter) (any, error) {
-	_, expr, err := getOutput(a.From(), context)
+	aFrom, expr, err := getOutput(a.From(), context)
 	if err != nil {
 		return expr, err
 	}
@@ -62,20 +62,20 @@ func EvaluatePipeout[T PipeOutInstance](a T, context *c.Context, writer OutputWr
 	}
 
 	if aErr == "" {
-		err = writer(aTo, mixed)
+		err = writer(c.Stringify(aTo), mixed)
 		if err != nil {
 			return aTo, err
 		}
 	} else {
-		err = writer(aTo, output)
+		err = writer(c.Stringify(aTo), output)
 		if err != nil {
 			return aTo, err
 		}
-		err = writer(aErr, errs)
+		err = writer(c.Stringify(aErr), errs)
 		if err != nil {
 			return aTo, err
 		}
 	}
 
-	return a.From(), nil
+	return aFrom, nil
 }

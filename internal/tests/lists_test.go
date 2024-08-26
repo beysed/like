@@ -12,7 +12,7 @@ var _ = Describe("List tests", func() {
 	DescribeTable("Execs", func(input string, expected string) {
 		context, builder := MakeContext()
 		_, locals := context.Locals.Peek()
-		locals.Store["_shell"] = getShell()
+		locals.Store["_shell"] = GetShell()
 
 		_, err := g.Execute("a.like", context, ([]byte)(input))
 		Expect(err).To(BeNil())

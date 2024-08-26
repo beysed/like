@@ -58,10 +58,3 @@ func Read(fileName string) []byte {
 
 	return buf
 }
-
-func Evaluate(code string) (*TestSystem, any, error) {
-	context, system := MakeContext()
-	wd, _ := os.Getwd()
-	result, err := g.Execute(wd, context, []byte(code))
-	return system, result, err
-}

@@ -1,8 +1,6 @@
 package tests
 
 import (
-	. "github.com/beysed/like/internal/tests/common"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )

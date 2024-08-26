@@ -134,7 +134,7 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 
 			result, err := Parse(folder, []byte(text), Entrypoint("file"))
 			if err != nil {
-				return "invalid code", err
+				return text, err
 			}
 
 			exprs := Expressions(result.([]Expression))

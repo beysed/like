@@ -16,19 +16,25 @@ var _ = Describe("Precedence", func() {
 		Expect(sys.Stdout.String()).To(BeEmpty())
 		Expect(res).To(Equal(expected))
 	},
-		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "faked(stdin:A; args:fmt, -)"))
+		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "faked(stdin:A; args:fmt, -)"),
+		Entry("bash 3 in one", "tf='echo A'\n(err = $tf | & $_shell -) | $fmt", "A\n"))
 
 	DescribeTable("Debug Pipes", func(input string, expected string) {
 		var expr = ParseInupt(input, "file")
 		Expect(g.Expressions(expr.([]g.Expression)).Debug()).To(Equal(expected))
 	},
+		Entry("output pipeout", "~ a > b", "~(>(a b))"), // need to fix to >(~(a) b))
 		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "=(tf A)|(=(err |($tf &(fake fmt -))) $fmt)"),
 		Entry("simple", "& grep | & sort", "|(&(grep) &(sort))"),
 		Entry("call simple", "$grep() | $sort()", "|($grep() $sort())"),
 		Entry("call with pipe", "& grep ($a | & some) | & sort", "|(&(grep |($a &(some))) &(sort))"))
-	It("debug function", func() {
-		_, result, err := Evaluate("$debug('& grep | & sort')")
+	DescribeTable("debug function", func(input string, expected string, stdout string) {
+		sys, result, err := Evaluate(input)
 		Expect(err).To(BeNil())
-		Expect(c.Stringify(result)).To(Equal("|(&(grep) &(sort))"))
-	})
+		Expect(c.Stringify(result)).To(Equal(expected))
+		Expect(c.Stringify(sys.Stdout.String())).To(Equal(stdout))
+	},
+		Entry("call with pipe", "$debug('& grep | & sort')", "|(&(grep) &(sort))", ""),
+		Entry("call str", "$debug('\\$a')", "$a", ""),
+		Entry("output", "'a' > 'a.tf'", "a", ""))
 })

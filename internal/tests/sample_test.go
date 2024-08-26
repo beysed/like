@@ -16,7 +16,7 @@ var _ = Describe("Samples", func() {
 
 		context, _ := MakeContext()
 		_, locals := context.Locals.Peek()
-		locals.Store["_shell"] = getShell()
+		locals.Store["_shell"] = GetShell()
 
 		_, err := g.Execute("a.like", context, c)
 		Expect(err).NotTo(BeNil())
@@ -31,7 +31,7 @@ var _ = Describe("Samples", func() {
 
 		context, result := MakeContext()
 		_, locals := context.Locals.Peek()
-		locals.Store["_shell"] = getShell()
+		locals.Store["_shell"] = GetShell()
 
 		_, err := g.Execute("a.like", context, c)
 		Expect(err).To(BeNil())

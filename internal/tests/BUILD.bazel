@@ -12,6 +12,7 @@ go_test(
     srcs = [
         "assign_test.go",
         "comments_test.go",
+        "evaluate_test.go",
         "expression_test.go",
         "general_test.go",
         "grammar_test.go",

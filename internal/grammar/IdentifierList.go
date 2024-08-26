@@ -10,6 +10,10 @@ type IdentifierList struct {
 	Identifiers []string
 }
 
+func (a IdentifierList) Debug() string {
+	return a.String()
+}
+
 func (a IdentifierList) String() string {
 	return strings.Join(a.Identifiers, " ")
 }

@@ -12,6 +12,10 @@ type ParsedString struct {
 	RawBody string
 }
 
+func (a ParsedString) Debug() string {
+	return a.String()
+}
+
 func (a ParsedString) String() string {
 	return fmt.Sprintf("%s%s%s", a.Quote, a.RawBody, a.Quote)
 }

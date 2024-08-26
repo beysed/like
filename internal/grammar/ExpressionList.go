@@ -8,6 +8,10 @@ import (
 
 type ExpressionList []Expression
 
+func (a ExpressionList) Debug() string {
+	return strings.Join(debugifyExpressions(a), " ")
+}
+
 func (a ExpressionList) String() string {
 	return strings.Join(stringifyExpressions(a), " ")
 }

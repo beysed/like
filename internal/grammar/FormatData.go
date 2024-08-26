@@ -12,6 +12,10 @@ type FormatData struct {
 	Data   Expression
 }
 
+func (v FormatData) Debug() string {
+	return fmt.Sprintf(":>(%s %s)", v.Format.Debug(), v.Data.Debug())
+}
+
 func (v FormatData) String() string {
 	return fmt.Sprintf(":> %s %s", v.Format.String(), v.Data.String())
 }

@@ -125,6 +125,15 @@ func stringifyList(prefix string, a Expressions) string {
 				}), " "))
 }
 
+func debugifyList(prefix string, a Expressions) string {
+	return fmt.Sprintf("%s(%s)", prefix,
+		strings.Join(
+			lo.Map(a,
+				func(e Expression, _ int) string {
+					return e.Debug()
+				}), " "))
+}
+
 func getWrite(op string, err bool) string {
 	var suf string
 	if err {
@@ -132,6 +141,14 @@ func getWrite(op string, err bool) string {
 	}
 
 	return fmt.Sprintf("%s%s", op, suf)
+}
+
+func (a Write) Debug() string {
+	return debugifyList(getWrite("~", a.Error), a.Expression)
+}
+
+func (a WriteLn) Debug() string {
+	return debugifyList(getWrite("`", a.Error), a.Expression)
 }
 
 func (a Write) String() string {

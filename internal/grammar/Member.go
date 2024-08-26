@@ -9,6 +9,10 @@ type Member struct {
 	Identifier string
 }
 
+func (a Member) Debug() string {
+	return a.String()
+}
+
 func (a Member) String() string {
 	return a.Identifier
 }

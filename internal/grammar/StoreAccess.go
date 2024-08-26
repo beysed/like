@@ -33,6 +33,10 @@ func (a StoreReference) Set(v any) any {
 	return v
 }
 
+func (a StoreAccess) Debug() string {
+	return a.String()
+}
+
 func (a StoreAccess) String() string {
 	ref := a.Reference.String()
 	if a.Index == nil {

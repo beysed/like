@@ -20,6 +20,14 @@ func (a BindedLambda) Evaluate(context *c.Context) (any, error) {
 	return nil, c.MakeError("can not be evaluated directly", nil)
 }
 
+func (a Lambda) Debug() string {
+	return fmt.Sprintf("(%s) %s", a.Arguments.Debug(), a.Body.Debug())
+}
+
+func (a BindedLambda) Debug() string {
+	return a.Lambda.Debug()
+}
+
 func (a BindedLambda) String() string {
 	return a.Lambda.String()
 }

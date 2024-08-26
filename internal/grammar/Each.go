@@ -13,6 +13,10 @@ type Each struct {
 	Body Expression
 }
 
+func (a Each) Debug() string {
+	return fmt.Sprintf("@(%s %s)", a.List.Debug(), a.Body.Debug())
+}
+
 func (a Each) String() string {
 	return fmt.Sprintf("@ %s %s", a.List.String(), a.Body.String())
 }

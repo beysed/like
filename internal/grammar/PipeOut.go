@@ -21,6 +21,10 @@ func (a *PipeOut) Err() Ref[Expression] {
 	return (*Pipe)(a).Err()
 }
 
+func (a PipeOut) Debug() string {
+	return fmt.Sprintf(">(%s %s)", a.from.Debug(), a.to.Debug())
+}
+
 func (a PipeOut) String() string {
 	return fmt.Sprintf("%s > %s", a.from.String(), a.to.String())
 }

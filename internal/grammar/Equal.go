@@ -11,6 +11,10 @@ type Equal struct {
 	Right Expression
 }
 
+func (v Equal) Debug() string {
+	return fmt.Sprintf("==(%s %s)", v.Left.Debug(), v.Right.Debug())
+}
+
 func (v Equal) String() string {
 	return fmt.Sprintf("%s == %s", v.Left.String(), v.Right.String())
 }

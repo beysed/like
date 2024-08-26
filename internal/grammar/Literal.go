@@ -10,6 +10,10 @@ type Literal struct {
 	Value any
 }
 
+func (v Literal) Debug() string {
+	return v.String()
+}
+
 func (v Literal) String() string {
 	switch v := v.Value.(type) {
 	case fmt.Stringer:

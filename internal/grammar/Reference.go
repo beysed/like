@@ -47,17 +47,15 @@ func (a Reference) Evaluate(context *c.Context) (any, error) {
 		return ref, err
 	}
 
-	// if ref2, ok := expr.(Reference); ok {
-	// 	expr = &StoreAccess{
-	// 		Reference: ref2}
-	// 	return expr.Evaluate(context)
-	// }
-
 	if ref, ok := ref.(Value); ok {
 		return ref.Get(), nil
 	}
 
 	return ref, err
+}
+
+func (a Reference) Debug() string {
+	return a.String()
 }
 
 func (a Reference) String() string {

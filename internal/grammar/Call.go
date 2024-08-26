@@ -11,6 +11,10 @@ type Call struct {
 	Arguments NamedExpressionList
 }
 
+func (a Call) Debug() string {
+	return fmt.Sprintf("%s(%s)", a.Reference.Debug(), a.Arguments.Debug())
+}
+
 func (a Call) String() string {
 	return fmt.Sprintf("%s(%s)", a.Reference.String(), a.Arguments.String())
 }

@@ -163,11 +163,14 @@ list
   return _e, nil
 }
 
-expression =
+output =
   writeErr /
   writeErrLn /
   write /
-  writeln /
+  writeln;
+
+expression =
+  output /
   assign /
   assign_add /
   parse_data /

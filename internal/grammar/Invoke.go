@@ -13,6 +13,10 @@ type Invoke struct {
 	Expressions Expressions
 }
 
+func (a Invoke) Debug() string {
+	return fmt.Sprintf("&(%s)", a.Expressions.Debug())
+}
+
 func (a Invoke) String() string {
 	return fmt.Sprintf("& %s", a.Expressions.String())
 }

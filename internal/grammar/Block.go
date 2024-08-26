@@ -10,6 +10,16 @@ import (
 
 type Block []Expression
 
+func (a Block) Debug() string {
+	body := strings.Join(
+		lo.Map(a,
+			func(v Expression, _ int) string {
+				return v.Debug()
+			}), "\n")
+
+	return fmt.Sprintf("{\n%s\n}", body)
+}
+
 func (a Block) String() string {
 	body := strings.Join(
 		lo.Map(a,

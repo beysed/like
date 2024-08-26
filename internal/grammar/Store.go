@@ -4,6 +4,10 @@ import c "github.com/beysed/like/internal/grammar/common"
 
 type ExpressionStore c.Store
 
+func (a ExpressionStore) Debug() string {
+	return a.String()
+}
+
 func (a ExpressionStore) String() string {
 	return c.Stringify(c.Store(a))
 }

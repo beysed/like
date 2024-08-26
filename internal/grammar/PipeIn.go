@@ -9,6 +9,10 @@ import (
 
 type PipeIn Pipe
 
+func (a PipeIn) Debug() string {
+	return fmt.Sprintf("<(%s %s)", a.to.Debug(), a.from.Debug())
+}
+
 func (a PipeIn) String() string {
 	return fmt.Sprintf("%s < %s", a.to.String(), a.from.String())
 }

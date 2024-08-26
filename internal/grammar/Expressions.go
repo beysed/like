@@ -16,6 +16,13 @@ func stringifyExpressions[T ~[]Expression](a T) []string {
 		})
 }
 
+func debugifyExpressions[T ~[]Expression](a T) []string {
+	return lo.Map(a,
+		func(e Expression, _ int) string {
+			return e.Debug()
+		})
+}
+
 func flatTop(a []any) []any {
 	res := []any{}
 	for _, v := range a {
@@ -43,6 +50,10 @@ func evaluateExpressions[T ~[]Expression](a T, context *c.Context) ([]any, Expre
 	}
 
 	return flatTop(b), nil, nil
+}
+
+func (a Expressions) Debug() string {
+	return strings.Join(debugifyExpressions(a), "")
 }
 
 func (a Expressions) String() string {

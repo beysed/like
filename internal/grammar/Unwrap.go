@@ -8,6 +8,10 @@ type Unwrap struct {
 	Expression Expression
 }
 
+func (v Unwrap) Debug() string {
+	return v.Expression.Debug()
+}
+
 func (v Unwrap) String() string {
 	return v.Expression.String()
 }

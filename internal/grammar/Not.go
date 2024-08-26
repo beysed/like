@@ -10,6 +10,10 @@ type Not struct {
 	Expression Expression
 }
 
+func (v Not) Debug() string {
+	return fmt.Sprintf("!(%s)", v.Expression.Debug())
+}
+
 func (v Not) String() string {
 	return fmt.Sprintf("!%s", v.Expression.String())
 }

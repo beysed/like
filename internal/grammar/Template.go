@@ -13,6 +13,10 @@ type Template struct {
 	Text      string
 }
 
+func (a Template) Debug() string {
+	return a.String()
+}
+
 func (a Template) String() string {
 	return fmt.Sprintf("`` %s(%s)\n%s\n``", a.Store.String(), a.Arguments.String(), a.Text)
 }

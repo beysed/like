@@ -12,6 +12,14 @@ type NamedExpression c.KeyValue[string, Expression]
 
 type NamedExpressionList []NamedExpression
 
+func (a NamedExpression) Debug() string {
+	if len(a.Key) == 0 {
+		return a.Value.Debug()
+	}
+
+	return fmt.Sprintf("%s: %s", a.Key, a.Value.Debug())
+}
+
 func (a NamedExpression) String() string {
 	if len(a.Key) == 0 {
 		return a.Value.String()
@@ -27,6 +35,14 @@ func (a NamedExpression) Evaluate(context *c.Context) (any, error) {
 	}
 
 	return c.NamedValue{Key: a.Key, Value: r}, nil
+}
+
+func (a NamedExpressionList) Debug() string {
+	r := lo.Map(a, func(q NamedExpression, _ int) Expression {
+		return Expression(q)
+	})
+
+	return strings.Join(debugifyExpressions(r), " ")
 }
 
 func (a NamedExpressionList) String() string {

@@ -6,6 +6,10 @@ import (
 
 type OutputCapture Expressions
 
+func (a OutputCapture) Debug() string {
+	return Expressions(a).Debug()
+}
+
 func (a OutputCapture) String() string {
 	return Expressions(a).String()
 }

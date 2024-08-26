@@ -11,6 +11,10 @@ type Add struct {
 	Right Expression
 }
 
+func (v Add) Debug() string {
+	return fmt.Sprintf("+(%s %s)", v.Left.Debug(), v.Right.Debug())
+}
+
 func (v Add) String() string {
 	return fmt.Sprintf("%s + %s", v.Left.String(), v.Right.String())
 }

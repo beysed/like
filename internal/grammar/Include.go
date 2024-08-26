@@ -11,6 +11,10 @@ type Include struct {
 	FileName Expression
 }
 
+func (a Include) Debug() string {
+	return fmt.Sprintf("#include(%s)", a.FileName.Debug())
+}
+
 func (a Include) String() string {
 	return fmt.Sprintf("#include %s", a.FileName.String())
 }

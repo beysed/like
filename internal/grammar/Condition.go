@@ -5,12 +5,25 @@ import (
 	"strings"
 
 	c "github.com/beysed/like/internal/grammar/common"
+	"github.com/samber/lo"
 )
 
 type Condition struct {
 	Condition Expression
 	True      Expression
 	False     Expression
+}
+
+func (a Condition) Debug() string {
+	args := []Expression{a.Condition, a.True, a.False}
+	strs := lo.FilterMap(args, func(i Expression, _ int) (string, bool) {
+		if i == nil {
+			return "", false
+		}
+		return i.Debug(), true
+	})
+
+	return fmt.Sprintf("?(%s)", strings.Join(strs, " "))
 }
 
 func (a Condition) String() string {

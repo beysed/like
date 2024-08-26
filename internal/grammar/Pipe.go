@@ -24,6 +24,10 @@ func (a *Pipe) Err() Ref[Expression] {
 	return MakeRef(&a.err)
 }
 
+func (a Pipe) Debug() string {
+	return fmt.Sprintf("|(%s %s)", a.from.Debug(), a.to.Debug())
+}
+
 func (a Pipe) String() string {
 	return fmt.Sprintf("%s | %s", a.from, a.to)
 }

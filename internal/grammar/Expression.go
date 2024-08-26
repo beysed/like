@@ -9,6 +9,7 @@ import (
 
 type Expression interface {
 	String() string
+	Debug() string
 	Evaluate(context *c.Context) (any, error)
 }
 

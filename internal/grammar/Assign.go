@@ -1,6 +1,8 @@
 package grammar
 
 import (
+	"fmt"
+
 	c "github.com/beysed/like/internal/grammar/common"
 )
 
@@ -9,8 +11,12 @@ type Assign struct {
 	Value Expression
 }
 
+func (a Assign) Debug() string {
+	return fmt.Sprintf("=(%s %s)", a.Store.Debug(), a.Value.Debug())
+}
+
 func (a Assign) String() string {
-	return a.Store.String() + " = " + a.Value.String()
+	return fmt.Sprintf("%s = %s", a.Store.String(), a.Value.String())
 }
 
 func unwrap_single(v any) any {

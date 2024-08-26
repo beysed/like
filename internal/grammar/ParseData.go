@@ -12,6 +12,10 @@ type ParseData struct {
 	Data   Expression
 }
 
+func (v ParseData) Debug() string {
+	return fmt.Sprintf(":<(%s %s)", v.Format.Debug(), v.Data.Debug())
+}
+
 func (v ParseData) String() string {
 	return fmt.Sprintf(":< %s %s", v.Format.String(), v.Data.String())
 }

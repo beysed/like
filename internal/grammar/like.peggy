@@ -194,7 +194,6 @@ piped =
   literal;
 
 expression =
-  output /
   assign /
   assign_add /
   parse_data /
@@ -210,6 +209,7 @@ expression =
   _l:piped ws* ">" ws* _r:piped ws* _e:piped? { return MakePiped[PipeOut](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
   _l:piped ws* "<" ws* _r:piped { return MakePiped[PipeIn](_r.(Expression), _l.(Expression), nil), nil } /
   invoke /
+  output /
   lambda /
   call  /
   reference /

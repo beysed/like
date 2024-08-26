@@ -10,17 +10,17 @@ import (
 var _ = Describe("Grammar Logic", func() {
 
 	It("Error", func() {
-		_, err := Evaluate("$error(oops)")
+		_, _, err := Evaluate("$error(oops)")
 
 		Expect(err).ToNot(BeNil())
 		Expect(err.Error()).To(Equal("[while evaluating: { $error(oops) }] because of:\n\t[[oops]]"))
 	})
 
 	DescribeTable("Not", func(input string, expected string) {
-		result, err := Evaluate(input)
+		system, _, err := Evaluate(input)
 
 		Expect(err).To(BeNil())
-		Expect(result.Stdout.String()).To(Equal(expected))
+		Expect(system.Stdout.String()).To(Equal(expected))
 	},
 		Entry("eval", "$eval('~ a')", "a"),
 		Entry("simple loop", "@ [a b c] ~ -$_k$_v", "-0a-1b-2c"),

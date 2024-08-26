@@ -120,25 +120,32 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 			err := c.Stringify(args)
 			return nil, c.MakeError(err, nil)
 		},
-		"eval": func(context *c.Context, args []c.NamedValue) (any, error) {
-			var err error
-
-			lines := []string{}
-			for _, a := range args {
-				var last any
-
-				if t, ok := a.Value.(Expression); ok {
-					last, err = t.Evaluate(context)
-					if err != nil {
-						return t, err
-					}
-				} else {
-					last = a
-				}
-
-				lines = append(lines, fmt.Sprint(last))
+		"debug": func(context *c.Context, args []c.NamedValue) (any, error) {
+			if len(args) != 1 {
+				return nil, c.MakeError("'debug' accept only single argument", nil)
 			}
-			text := strings.Join(lines, "\n")
+
+			_, folder := context.PathStack.Peek()
+
+			text, err := composeText(context, args)
+			if err != nil {
+				return "invalid args", err
+			}
+
+			result, err := Parse(folder, []byte(text), Entrypoint("file"))
+			if err != nil {
+				return "invalid code", err
+			}
+
+			exprs := Expressions(result.([]Expression))
+			return exprs.Debug(), nil
+		},
+		"eval": func(context *c.Context, args []c.NamedValue) (any, error) {
+			text, err := composeText(context, args)
+			if err != nil {
+				return "invalid args", err
+			}
+
 			_, folder := context.PathStack.Peek()
 
 			// to avoid duplicated output
@@ -147,4 +154,25 @@ func MakeDefaultBuiltIn() c.BuiltIn {
 
 			return Execute(folder, context, []byte(text))
 		}}
+}
+
+func composeText(context *c.Context, args []c.NamedValue) (string, error) {
+	var err error
+
+	lines := []string{}
+	for _, a := range args {
+		var last any
+
+		if t, ok := a.Value.(Expression); ok {
+			last, err = t.Evaluate(context)
+			if err != nil {
+				return c.Stringify(t), err
+			}
+		} else {
+			last = a
+		}
+
+		lines = append(lines, fmt.Sprint(last))
+	}
+	return strings.Join(lines, "\n"), nil
 }

@@ -18,6 +18,7 @@ go_test(
         "lists_test.go",
         "literal_test.go",
         "logic_test.go",
+        "precedence_test.go",
         "sample_test.go",
         "shell_test.go",
         "stderr_test.go",

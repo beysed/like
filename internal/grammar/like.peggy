@@ -76,6 +76,8 @@ reference = sign
 
 reference_paren = sign '(' _m:expression ')' { return Reference { Expression : _m.(Expression) }, nil }
 
+reference_block = "${" _e: expression '}' { return _e, nil }
+
 string_content
   = _q:(_b:escaped { return MakeLiteral(_b.(string)), nil}
   / "\\b" { return MakeLiteral("\b"), nil}
@@ -86,7 +88,7 @@ string_content
   / call
   / reference
   / reference_paren
-  / "${" _e: expression '}' { return _e, nil }
+  / reference_block
   / ws { return MakeLiteral(string(c.text)), nil }
   /_a:[^ \t\\$]+ { return MakeLiteral(string(c.text)), nil})* eof {
     return Expressions(arrayify[Expression](_q)), nil
@@ -163,11 +165,33 @@ list
   return _e, nil
 }
 
+object
+  = "{" ws* _n:named_expression_list? ws* "}" {
+    if _n == nil {
+      return MakeExpressionStore(NamedExpressionList{})
+    }
+    return MakeExpressionStore(_n.(NamedExpressionList))
+  } /
+  ( '(' _e: expression ')' { return _e, nil} );
+
 output =
   writeErr /
   writeErrLn /
   write /
   writeln;
+
+piped =
+  invoke /
+  output /
+  parse_data /
+  format_data /
+  call  /
+  reference /
+  reference_paren /
+  quotedString /
+  list /
+  object /
+  literal;
 
 expression =
   output /
@@ -181,10 +205,10 @@ expression =
   _l:expression ws* "+" ws* _r:expression { return MakeAdd(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
   _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
-  _l:expression ws* "|" ws* _r:expression ws* _e:expression? { return MakePiped[Pipe](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
-  _l:expression ws* ">>" ws* _r:expression ws* _e:expression? { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
-  _l:expression ws* ">" ws* _r:expression ws* _e:expression? { return MakePiped[PipeOut](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
-  _l:expression ws* "<" ws* _r:expression { return MakePiped[PipeIn](_r.(Expression), _l.(Expression), nil), nil } /
+  _l:piped ws* "|" ws* _r:piped ws* _e:piped? { return MakePiped[Pipe](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:piped ws* ">>" ws* _r:piped ws* _e:piped? { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:piped ws* ">" ws* _r:piped ws* _e:piped? { return MakePiped[PipeOut](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
+  _l:piped ws* "<" ws* _r:piped { return MakePiped[PipeIn](_r.(Expression), _l.(Expression), nil), nil } /
   invoke /
   lambda /
   call  /
@@ -192,15 +216,8 @@ expression =
   reference_paren /
   quotedString /
   list /
-  "{" ws* _n:named_expression_list? ws* "}" {
-    if _n == nil {
-      return MakeExpressionStore(NamedExpressionList{})
-    }
-    return MakeExpressionStore(_n.(NamedExpressionList))
-  } /
-  ( '(' _e: expression ')' { return _e, nil} ) /
-  literal
-
+  object /
+  literal;
 
 block= '{' eol _l:line* ws* '}' {
   return Block(arrayify[Expression](_l)) ,nil
@@ -218,6 +235,15 @@ argument_decl = '(' ws* _i:identifier_list? ws* ')' {
 
   return _i, nil
 }
+
+super_piped_expression
+  = _s:piped+ _r:(_w:ws+ _l:piped+ {
+      return Expressions{
+        MakeLiteral(" "),
+        Expressions(arrayify[Expression](_l)) } , nil})*
+    {
+      return Expressions(listFrom[Expression](Expressions(arrayify[Expression](_s)), _r)), nil
+    }
 
 super_expression
   = _s:expression+ _r:(_w:ws+ _l:expression+ {
@@ -264,7 +290,7 @@ writeErrLn = quot '*' ws* _e:super_expression {
 writeErr = tilda '*' ws* _e:super_expression {
   return Write { Expression : _e.(Expressions), Error: true }, nil }
 
-invoke = amper ws* _e:super_expression {
+invoke = amper ws* _e:super_piped_expression {
   return Invoke{Expressions: _e.(Expressions)}, nil }
 
 identifier = (unds / let) (dig / unds / let)* {

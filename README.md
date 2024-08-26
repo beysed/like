@@ -248,7 +248,7 @@ p1 = a and p2 = b
 - eval(string) - accept string and executes it as Like program
 - exec(cmd arg1 arg2 ... argN) - same as ``&`` executes command
 - split(string sep) or $s | split(sep) - splits string and returns a list
-
+- debug(string) - outputs given expression in debug notation, mostly for debugging operator precedence
 
 ## Closures
 

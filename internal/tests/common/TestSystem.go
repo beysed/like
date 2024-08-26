@@ -35,7 +35,7 @@ func (t *TestSystem) OutputError(text string) {
 
 func (t *TestSystem) Invoke(executable string, args []string, stdin string) (string, string, string, error) {
 	if executable == "fake" {
-		stdout := fmt.Sprintf("faked(%s:%s)", stdin, strings.Join(args, ";"))
+		stdout := fmt.Sprintf("faked(stdin:%s; args:%s)", stdin, strings.Join(args, ", "))
 		stderr := "fake-err"
 		return stdout, stderr, stdout + stderr, nil
 	}

@@ -17,6 +17,10 @@ func (a Constant) String() string {
 }
 
 func (a Constant) Evaluate(context *c.Context) (any, error) {
+	if expr, ok := a.Value.(Expression); ok {
+		return expr.Evaluate(context)
+	}
+
 	return a.Value, nil
 }
 

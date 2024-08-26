@@ -40,9 +40,9 @@ var _ = Describe("Samples", func() {
 
 		Entry("samples/ref_dot", "samples/ref_dot.like", "httpd.local"),
 		Entry("samples/split_test", "samples/split_test.like", "a!b!c!d!e!f!"),
-		Entry("samples/exec", "samples/exec.like", "faked(:1;2;3)"),
-		Entry("samples/faked-pipes2", "samples/faked-pipes2.like", "faked(:1;2;3)"),
-		Entry("samples/faked-pipes", "samples/faked-pipes.like", "faked(Hello:)faked(Hello:)faked(Hello World:)faked(Hello:)"),
+		Entry("samples/exec", "samples/exec.like", "faked(stdin:; args:1, 2, 3)"),
+		Entry("samples/faked-pipes2", "samples/faked-pipes2.like", "faked(stdin:; args:1, 2, 3)"),
+		Entry("samples/faked-pipes", "samples/faked-pipes.like", "faked(stdin:Hello; args:)faked(stdin:Hello; args:)faked(stdin:Hello World; args:)faked(stdin:Hello; args:)"),
 		Entry("samples/esc-codes", "samples/esc-codes.like", "\b\f\n\r\t\na\\b\n\\\\\n"),
 		Entry("samples/code-in-template", "samples/code-in-template.like", "it is\nit YES\nit \nit ${was}\n"),
 		Entry("samples/expressions-array", "samples/expressions-array.like", "{\"b\":[\"one\",\" \",\"two\",\" \",\"three\",\" \",\"four\"]}"),

@@ -15,7 +15,8 @@ var _ = Describe("Precedence", func() {
 		Expect(g.Expressions(expr.([]g.Expression)).Debug()).To(Equal(expected))
 	},
 		Entry("simple", "& grep | & sort", "|(&(grep) &(sort))"),
-		Entry("call simple", "$grep() | $sort()", "|($grep() $sort())"))
+		Entry("call simple", "$grep() | $sort()", "|($grep() $sort())"),
+		Entry("call with pipe", "& grep ($a | & some) | & sort", "|(&(grep |($a &(some))) &(sort))"))
 
 	It("debug function", func() {
 		_, result, err := Evaluate("$debug('& grep | & sort')")

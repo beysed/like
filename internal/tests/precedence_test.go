@@ -23,11 +23,12 @@ var _ = Describe("Precedence", func() {
 		var expr = ParseInupt(input, "file")
 		Expect(g.Expressions(expr.([]g.Expression)).Debug()).To(Equal(expected))
 	},
-		Entry("output pipeout", "~ a > b", ">(~(a) b)"), // need to fix to
+		Entry("output pipeout", "~ a > b", ">(~(a) b)"),
 		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "=(tf A)|(=(err |($tf &(fake fmt -))) $fmt)"),
 		Entry("simple", "& grep | & sort", "|(&(grep) &(sort))"),
 		Entry("call simple", "$grep() | $sort()", "|($grep() $sort())"),
 		Entry("pipe assign", "a = $grep() | $sort()", "=(a |($grep() $sort()))"),
+		Entry("3 pipes", "$a | $b | $c", "|(|($a $b) $c)"),
 		Entry("call with pipe", "& grep ($a | & some) | & sort", "|(&(grep |($a &(some))) &(sort))"))
 	DescribeTable("debug function", func(input string, expected string, stdout string) {
 		sys, result, err := Evaluate(input)
@@ -36,6 +37,6 @@ var _ = Describe("Precedence", func() {
 		Expect(c.Stringify(sys.Stdout.String())).To(Equal(stdout))
 	},
 		Entry("call with pipe", "$debug('& grep | & sort')", "|(&(grep) &(sort))", ""),
-		Entry("call str", "$debug('\\$a')", "$a", ""),
+		Entry("str", "$debug('\\$a')", "$a", ""),
 		Entry("output", "'a' > 'a.tf'", "a", ""))
 })

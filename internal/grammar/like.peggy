@@ -146,7 +146,7 @@ store =
       Index: idx }, nil}
 
 condition
-  =  _c:expression ws+ '?' ws+ _t:expression _f:(ws+ '%' ws+ _f:expression { return _f, nil})? {
+  =  _c:piped ws+ '?' ws+ _t:piped _f:(ws+ '%' ws+ _f:piped { return _f, nil})? {
     return MakeCondition(_c.(Expression), _t.(Expression), castify[Expression](_f)), nil
   }
   / '?' ws+ _c:expression ws+ _t:body _f:(ws+ '%' ws+ _f:body {return _f, nil})? {
@@ -181,10 +181,14 @@ output =
   writeln;
 
 piped =
-  invoke /
+  not /
+  equal /
+  not_equal /
   output /
+  invoke /
   parse_data /
   format_data /
+  condition/
   call  /
   reference /
   reference_paren /
@@ -193,6 +197,18 @@ piped =
   object /
   literal;
 
+not
+  = "!" ws* e:piped { return MakeNot(e.(Expression)), nil };
+
+equal
+    = _l:piped ws* "==" ws* _r:piped { return MakeEqual(_l.(Expression), _r.(Expression)), nil};
+
+not_equal
+    = _l:piped ws* "!=" ws* _r:piped { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil};
+
+add
+    = _l:piped ws* "+" ws* _r:piped { return MakeAdd(_l.(Expression), _r.(Expression)), nil};
+
 expression =
   assign /
   assign_add /
@@ -200,10 +216,10 @@ expression =
   format_data /
   each /
   condition /
-  "!" ws* e:expression { return MakeNot(e.(Expression)), nil } /
-  _l:expression ws* "+" ws* _r:expression { return MakeAdd(_l.(Expression), _r.(Expression)), nil} /
-  _l:expression ws* "==" ws* _r:expression { return MakeEqual(_l.(Expression), _r.(Expression)), nil} /
-  _l:expression ws* "!=" ws* _r:expression { return MakeNot(MakeEqual(_l.(Expression), _r.(Expression))), nil} /
+  not /
+  add /
+  equal /
+  not_equal /
   _l:piped ws* "|" ws* _r:piped ws* _e:piped? { return MakePiped[Pipe](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
   _l:piped ws* ">>" ws* _r:piped ws* _e:piped? { return MakePiped[PipeAppend](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
   _l:piped ws* ">" ws* _r:piped ws* _e:piped? { return MakePiped[PipeOut](_l.(Expression), _r.(Expression), castify[Expression](_e)), nil } /
@@ -278,16 +294,16 @@ assign_add = _i:store ws* "+=" ws* _e:super_expression
     Value: MakeAdd(Reference{ Expression: _i.(StoreAccess)}, MakeUnwrap(_e.(Expression))) }, nil
 }
 
-writeln = quot ws* _e:super_expression {
+writeln = quot ws* _e:super_piped_expression {
   return WriteLn { Expression : _e.(Expressions) }, nil }
 
-write = tilda ws* _e:super_expression {
+write = tilda ws* _e:super_piped_expression {
   return Write { Expression : _e.(Expressions) }, nil }
 
-writeErrLn = quot '*' ws* _e:super_expression {
+writeErrLn = quot '*' ws* _e:super_piped_expression {
   return WriteLn { Expression : _e.(Expressions), Error: true }, nil }
 
-writeErr = tilda '*' ws* _e:super_expression {
+writeErr = tilda '*' ws* _e:super_piped_expression {
   return Write { Expression : _e.(Expressions), Error: true }, nil }
 
 invoke = amper ws* _e:super_piped_expression {

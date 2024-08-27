@@ -23,6 +23,8 @@ var _ = Describe("Precedence", func() {
 		var expr = ParseInupt(input, "file")
 		Expect(g.Expressions(expr.([]g.Expression)).Debug()).To(Equal(expected))
 	},
+		Entry("assign pipe paren", "(a=$b | $c) | (b=$d | $e)", "|(=(a |($b $c)) =(b |($d $e)))"),
+		Entry("pipe paren", "($b | $c) | ($d | $e)", "|(|($b $c) |($d $e))"),
 		Entry("output pipeout", "~ a > b", ">(~(a) b)"),
 		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "=(tf A)|(=(err |($tf &(fake fmt -))) $fmt)"),
 		Entry("simple", "& grep | & sort", "|(&(grep) &(sort))"),

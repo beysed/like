@@ -27,6 +27,7 @@ var _ = Describe("Precedence", func() {
 		Entry("3 in one", "tf=A\n(err = $tf | & fake fmt -) | $fmt", "=(tf A)|(=(err |($tf &(fake fmt -))) $fmt)"),
 		Entry("simple", "& grep | & sort", "|(&(grep) &(sort))"),
 		Entry("call simple", "$grep() | $sort()", "|($grep() $sort())"),
+		Entry("pipe assign", "a = $grep() | $sort()", "=(a |($grep() $sort()))"),
 		Entry("call with pipe", "& grep ($a | & some) | & sort", "|(&(grep |($a &(some))) &(sort))"))
 	DescribeTable("debug function", func(input string, expected string, stdout string) {
 		sys, result, err := Evaluate(input)
